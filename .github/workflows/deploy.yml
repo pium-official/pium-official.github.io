@@ -27,3 +27,13 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: public
+
+      - name: action-slack
+        uses: 8398a7/action-slack@v3.15.1
+        with:
+          status: ${{ job.status }}
+          author_name: 기술블로그 빌드 결과
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
