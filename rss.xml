@@ -1,24 +1,269 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 08 Jul 2023 11:46:56 GMT</lastBuildDate><item><title><![CDATA[피움 블로그의 첫 게시글입니다!]]></title><description><![CDATA[피움의 기술 블로그 첫 개시! 피움의 기술 블로그를 처음으로 개시했습니다! 많은 관심 부탁드립니다~]]></description><link>https://pium-official.github.io/first-post/</link><guid isPermaLink="false">https://pium-official.github.io/first-post/</guid><pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;피움의 기술 블로그 첫 개시!&lt;/h1&gt;
-&lt;p&gt;피움의 기술 블로그를 처음으로 개시했습니다!&lt;/p&gt;
-&lt;p&gt;많은 관심 부탁드립니다~&lt;/p&gt;</content:encoded></item><item><title><![CDATA[우리 블로그는요...]]></title><description><![CDATA[우리 블로그는요... 할일 1 할일 2 코드도 작성할 수 있습니다. 인용구도 있습니다 이미지도 붙여넣는답니다]]></description><link>https://pium-official.github.io/test/</link><guid isPermaLink="false">https://pium-official.github.io/test/</guid><pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;우리 블로그는요...&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; disabled&gt; 할일 1&lt;/li&gt;
-&lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; disabled&gt; 할일 2&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;코드도 작성할 수 있습니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;token class-name&quot;&gt;SpringApplication&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;PiumApplication&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;인용구도 있습니다&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;이미지도 붙여넣는답니다&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 08 Jul 2023 12:01:19 GMT</lastBuildDate><item><title><![CDATA[구글 스프린트 기반 아이디어 도출]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/sprint-idea/</link><guid isPermaLink="false">https://pium-official.github.io/sprint-idea/</guid><pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;서론&lt;/h1&gt;
+&lt;p&gt;기획부터 개발까지 하나의 프로그램이 생성되는 모든 프로세스를 경험할 수 있는 시간을 가졌다.&lt;/p&gt;
+&lt;p&gt;피움팀에서 어떤 방식을 통해 아이디어와 기능을 도출해나갔는지 기록해두고자 한다.&lt;/p&gt;
+&lt;h1&gt;스프린트란?&lt;/h1&gt;
+&lt;p&gt;스프린트는 팀이 일정량의 작업을 완료하는 시간이 정해진 짧은 기간을 의미한다.&lt;/p&gt;
+&lt;p&gt;여기서는 기획부터 데모수준의 프로그램이 나오는 단계까지를 하나의 스프린트라고 생각해볼 수 있겠다.&lt;/p&gt;
+&lt;p&gt;피움 팀은 구글 스프린트의 방법론을 차용해서 기능을 도출했다.&lt;/p&gt;
+&lt;h2&gt;구글 스프린트&lt;/h2&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1948c44d39683bc6013ec5da1f542771/98085/3900f3d1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 34.705882352941174%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA8klEQVR42pWRS0rEQBCG5wDJJnHS6SSQB0iSSdqdA2acXCC3yM65hIh4BI+hcxTXbkTRwcdanOUn3TgiykRd/FRVV9UH9fdISkkQBDiOg2VZeEKg34QQ+L5v8v9otIG1bcviaEGxm5tGkiSEYfgJ/qpBoOu6NLOGu5tbnnnl7OKc6f6Uruuo65ooikjTlDiOiePExEGgbdv0fc/6bc3q5ZGrp2ua+ZyD5pByUpHnObVSVLVCKUU5KY1FW4H6pCzLuFwuWd0/cHp8Ys6t1B5SBnie90O/eqiHtDdFUbAzHptafHyO7n/XIHCzpKMG/XVxG/Ad3vvNnEDRDwoAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3900f3d1&apos; title=&apos;&apos; src=&apos;/static/1948c44d39683bc6013ec5da1f542771/ca1dc/3900f3d1.png&apos; srcset=&apos;/static/1948c44d39683bc6013ec5da1f542771/e7570/3900f3d1.png 170w,
-/static/1948c44d39683bc6013ec5da1f542771/f46e7/3900f3d1.png 340w,
-/static/1948c44d39683bc6013ec5da1f542771/ca1dc/3900f3d1.png 680w,
-/static/1948c44d39683bc6013ec5da1f542771/98085/3900f3d1.png 762w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/42a9ee4a83f74684b69e8c94baa4b74d/8b93e/googlesprint.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 35.29411764705882%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABm0lEQVR42k2RS2/aUBSE/QfbtNvkb7RdsWyrqtn3+Q8akuCmIJKolsHgxFgNmCAHjEN4CD8wkEAJ0NDoq3wlS12MzpyZq5HuHGl+N+F/TKKA37Op4LPbseB300jMZF/Mb4Ufz0RPPOlhfc/mz5LHzVoI+dwP/OGAjtuipKmsVwtU5ZSyViDwBoKPo4BfpkEU+qyWc/5uHoBHlos5Uu3CxDgviwdX9iVnuk7dsmg2mzQaDUqaRsUw8DxPeK7rIssZFEVhP52mXCqSOUjz+eMHujcu0ts3r3n+bIutp0/Yff+OgqqSzWaxbRvj3CCXy4ngne1tZFmm1+uhaRq6rpNKpUjvfePrl0+8evkCu2EhxX8fj3wmI5/pJKRWveDadRn0+1hWjWKxQKVicHKcx207WLUqozCg7bQwzQrXbUdUFle3XMyQ4mJjsrqfi6KP5EN+nh7TvWnzPXOAaZxxWa8KzW7UyR7JmIZOx3U43N8TPDliDCleEiEOLqoKJ/kc03EoOvGHfeENB12i0MNp2bRbV4yCIYNeRyDJiK/8Dxc+6LsGB+CcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;googlesprint&apos; title=&apos;&apos; src=&apos;/static/42a9ee4a83f74684b69e8c94baa4b74d/ca1dc/googlesprint.png&apos; srcset=&apos;/static/42a9ee4a83f74684b69e8c94baa4b74d/e7570/googlesprint.png 170w,
+/static/42a9ee4a83f74684b69e8c94baa4b74d/f46e7/googlesprint.png 340w,
+/static/42a9ee4a83f74684b69e8c94baa4b74d/ca1dc/googlesprint.png 680w,
+/static/42a9ee4a83f74684b69e8c94baa4b74d/02d09/googlesprint.png 1020w,
+/static/42a9ee4a83f74684b69e8c94baa4b74d/9d567/googlesprint.png 1360w,
+/static/42a9ee4a83f74684b69e8c94baa4b74d/8b93e/googlesprint.png 2662w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
   &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;5일간 결과물을 도출하는 방법론으로 다음과 같은 17단계로 이어진다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;현재 상황에 대한 구성원들의 생각과 문제 상황 공유&lt;/li&gt;
+&lt;li&gt;스프린트를 통해 해결하고자 하는 목표 설정&lt;/li&gt;
+&lt;li&gt;스프린트 질문 도출&lt;/li&gt;
+&lt;li&gt;이해관계자의 구매 여정 Map 작성&lt;/li&gt;
+&lt;li&gt;전문가 조언&lt;/li&gt;
+&lt;li&gt;HMW(어떻게 하면 ~할 수 있을까) 작성 및 선정&lt;/li&gt;
+&lt;li&gt;스프린트 기간에 주력하고자 하는 1순위 타깃과 질문 선정&lt;/li&gt;
+&lt;li&gt;번갯불 대화 및 솔루션 스케치&lt;/li&gt;
+&lt;li&gt;고객 선정을 위한 설문지 작성&lt;/li&gt;
+&lt;li&gt;프로토타입 제작을 위한 최종 솔루션 선정&lt;/li&gt;
+&lt;li&gt;프로토타입 제작을 위한 스토리보드 만들기&lt;/li&gt;
+&lt;li&gt;프로토타입 제작&lt;/li&gt;
+&lt;li&gt;프로토타입 완성 및 시연&lt;/li&gt;
+&lt;li&gt;고객 인터뷰용 질문 만들기 (인터뷰 담당자)&lt;/li&gt;
+&lt;li&gt;타깃 고객 인터뷰 및 학습&lt;/li&gt;
+&lt;li&gt;스프린트 이후의 개발 플랜 점검 및 향후 일정 논의&lt;/li&gt;
+&lt;li&gt;성찰&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Figma - Figjam&lt;/h2&gt;
+&lt;p&gt;오프라인 환경에서 종이, 캔버스, 포스트잇을 이용해서 각자의 의견을 종합해볼 수도 있지만 시간, 공간적 제약이 있을 때는 Figma를 사용해볼 수도 있다.&lt;/p&gt;
+&lt;p&gt;디자인 툴인 Figma에는 Figjam이라는 기능을 제공한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/220b3658614f0cbf96a85c33b623f225/eeb59/figjam.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 49.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA/0lEQVR42oVRQU7DMBD053kBJx7AH7hxq7jBoQVUVVWrVkGkSRqL2LW9Xg9KS0JotnStlbW74/F4rLZTj4N14MSQIqWEQAEUojA77WXpsFsxKAaoIt+hrjSYjpCepMv+8M86v2yIizFCPUwe8ZEVcI2ssKMbKhpNOaF9YEusbu5vMXt7B7n/CH8VSb2hSpUowlmCN/EqwR8LkmyP4kEhgUQ/L8yPT77oTdvsgCwTS+qVBDrVqf+Ma76OFJ7HwVmUuUa1qrF5+UK2WOMzm2GdN7CNAUVCCEFW6L1Hmx2AOSGwxeLJYnIX8Trf4Hm6xHI7R1bUCN7DGAOt9YhsX5X4BjBnEoQB0n4SAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;figjam&apos; title=&apos;&apos; src=&apos;/static/220b3658614f0cbf96a85c33b623f225/ca1dc/figjam.png&apos; srcset=&apos;/static/220b3658614f0cbf96a85c33b623f225/e7570/figjam.png 170w,
+/static/220b3658614f0cbf96a85c33b623f225/f46e7/figjam.png 340w,
+/static/220b3658614f0cbf96a85c33b623f225/ca1dc/figjam.png 680w,
+/static/220b3658614f0cbf96a85c33b623f225/02d09/figjam.png 1020w,
+/static/220b3658614f0cbf96a85c33b623f225/9d567/figjam.png 1360w,
+/static/220b3658614f0cbf96a85c33b623f225/eeb59/figjam.png 1915w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Figjam에서는 포스트잇, 연필그리기, 스티커붙이기, 타이머 등의 기능들을 제공한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;개인적으로 타이머 기능을 적극 활용하는 것이 좋다고 생각했다.
+위 &lt;a href=&quot;##%EA%B5%AC%EA%B8%80-%EC%8A%A4%ED%94%84%EB%A6%B0%ED%8A%B8&quot;&gt;구글 스프린트&lt;/a&gt;의 &lt;code class=&quot;language-text&quot;&gt;8. 번갯불 대화 및 솔루션 스케치&lt;/code&gt; 항목에서 추구하는 목적이 무엇인지 생각해보면 정해진 시간내로 서로의 의견을 제시하여 회의가 늘어지지 않게 하기 위함임을 알 수 있다.
+정해야할 내용이 많은 만큼 시간이 늘어지는 것만큼은 가장 경계해야한다고 생각한다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;서비스 주제&lt;/h1&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6944fe6d40ce96200429ad63128f9d7c/e96ee/b95b5dfe.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 56.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC2UlEQVR42jWT/2sbdRjH75LmW7NspW2uaceiDNxgs9pVt4K1XSer7Xq5L/ly7SV16Maqq9WpqAT2iyA4wdnL5S7JJZu0SzsRUahW0G344xwT94uC4n/zkrvgD29eH958eHie9+fzCOLmIn32IlFLIeEoxF2NhKsSreWI1X0pRO0eI3bPi9oK8cBXSPh+zWeOvpqC8EJng0nvbYTbKn17y4h7Jfp+MIhsFxC/lBn2TKa/+YBTuxuMd68y9fU1Um6JcC1HyFKDYj794qKlIsxvf0hpb53sr+/x0m83KD5xWPrDQtx/nZinMuAWePbOWqBjW5c4sX0ZyVthrGOSaZc53CmTaVcYbBZ6HYo3F5D2Vcw/ZT76J8e1v8tU/1Ux/zpL/7d5hpoVJnff4cW77zLUMknU8xxwSxxsFAMONAxSrkHS0XsdRm2V1HcVJh+q6E9yzD4qcP6xyuzvSyS/LyK1Vji29QaZtknaWybdMhhqGaS9EoNNg5G2wbC3wkBTDzIWxJsyF7YWyTx4k9T9DQYerHPo/jrxX64geiqZVoWJ3Q3GOqtIXiUY73DnIumWyXCrzIhnMtj0z8tEbB1B+nwJ5eJpMl/phO6Vif1kEvnZJHq3SMKWSboqx7cu8Vy3l+PzO2uc3L7CaGeFRF3jUEOj39E46GqENv2RLZ3UpkbcKTLy6TxK/gTSZwsIdf+CzHDLZLy7HmQXq+v0O3ni9TxJtxAw4WjEawWSjsxT3QsIEVsh1ZQRGhpHP57l8qkxjlyfI9TQidZk0p7BxM5Vxu+skb31GpJnMNouM9bxX7oS5Hp8Z5XcjyUmds8jZG4v8er+OYRGnmx1DvN0lhl3hql7C4Q3leAr+IraGmFLIWzJiFaOsJULGLIVpOrLvHV9jqM3VIQDNZkjtXmEls7T1bOsTmWZ/mKaM91XiLsKMfv/jeltS9xRAvY7CuG6gmRrnHn/HKPVGZ75ZJH/AFlquduLVW04AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;b95b5dfe&apos; title=&apos;&apos; src=&apos;/static/6944fe6d40ce96200429ad63128f9d7c/ca1dc/b95b5dfe.png&apos; srcset=&apos;/static/6944fe6d40ce96200429ad63128f9d7c/e7570/b95b5dfe.png 170w,
+/static/6944fe6d40ce96200429ad63128f9d7c/f46e7/b95b5dfe.png 340w,
+/static/6944fe6d40ce96200429ad63128f9d7c/ca1dc/b95b5dfe.png 680w,
+/static/6944fe6d40ce96200429ad63128f9d7c/02d09/b95b5dfe.png 1020w,
+/static/6944fe6d40ce96200429ad63128f9d7c/9d567/b95b5dfe.png 1360w,
+/static/6944fe6d40ce96200429ad63128f9d7c/e96ee/b95b5dfe.png 3200w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;식물을 잘 키울 수 있도록 도와주는 서비스&lt;/code&gt;라는 주제로 팀이 이뤄졌다.&lt;/p&gt;
+&lt;p&gt;위 포스터를 확인했을 때 큰 주제로 추상적인 목표들이 즐비해있음을 확인할 수 있다.
+주어진 시간이 짧기 때문에 핵심기능을 추려야할 필요가 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;💡 모든 과정을 진행할 때 이야기를 듣는 사람들은 형광펜 혹은 스티커 기능을 이용해 중요하다고 생각하는 부분에 색칠을 하며 듣는다. 형광펜과 스티커를 이용한 호응을 이용해 공통 관심사에 집중할 수 있으며 집중력이 분산되는 것도 예방할 수 있다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 모든 과정에는 제한시간이 존재한다.
+제한시간을 두고 회의가 루즈해지는 것을 막아야만한다!!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서비스의 목적과 가치&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8d5ecc06de673c5ea99b5f3142bd3d10/2ab73/959281a8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 92.94117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAAAsTAAALEwEAmpwYAAAEA0lEQVR42oXTaUycRRzHcdLoC2N8YWJ8aXytL7QcsRRUKIeUAFtsC7TxBjxqGqQB44vi0WIosLuw7O6zwMq1yCFFIqVFyrWAgOUolJbDZUuXYwuUlruc3ef5ml1aEaU6yS8z82I+M5n/jBPA8v1F6pur6enrpL2zmcaWWjquttJ9rZ2WtkaqaytpaWvAMm7mYk0FQ6Z++zIkSWKrPerBacYEls4HNJXdpPXncYw/jVD3o4mG0mGMZTdpKrfQUjFGQ6mZzkvT1JeM8HvVFNZrMN4jOXp7Jnrg7gg4FX8Iaa9BrgzyDz/MEcgJkjCEQKEMDDIoCIacgzaKZDYMQQ/ICVhF8LaR8TpovEDpBpVx4FQaJaHYC7W6Ka72dNHZ3sv1G/20ZCxgUY1jzR1iOt/EuDDHQMKvTCoTmUhVMKdJoeYDM8r9IPiIjkNVxtvBaAmFM9RlT9E32MW13j4GTNdp0y1yS2XGmn+DuRIzk9nzDH59EavyNMNJZ5hRn6HmIxNKDxB8RdL2/Q2U74XGvDuMzQwzOjbK6PQtftPNM5lpRayaheoFZvPXGPrmEpu5Kaxkq7HlKbkcObwbCHJnaNYuYR2cwdJ9l7HrM7Qmr3BHWGKlbJG1sgUmhFUGE4ysZ+lZ0RWyoc+l+v0RlJ52UNoGSyJBtQ9SZfOcCR8jMcxKYriVxNBphLc2yfIXyfS3keknkelrn6+S5b/miOBjQ+MNWh+2waIokUxX8DqtZ8/5UJ4yHOeJoqM8mxNJYuAsujdA7S05Ftqrqf5H/g1Gi+hcwOuswJP1h3j6QgR7qoJ5pjiC7wPmyTxpRaVuRhCuoPt0BrUHaA483MB7F7A4SkTnBkFxpTynj+QFIYbndZ/wYvopknyX+eG7W+hra8mrbyLry9uo3UHj8x+g/Q7T3SEt0EaybIOU4HVSQjZQHtxwnEZ/1oKhrp2Cmnay4yZR7/8fsDgK1K4Q9+0G4WX3eK/0Psd+uU9CrITOHbSh6+jeWUL37jLaoE00b7ID2xXUuMJJ+SqBDZOE1txD1rFMXDyUvT3KoCGGodwvMBk+ozdD6fgVj4qxOxgNGheISV0nxDjH4ep5QluXiT8FFceGuNfmxXKHN2K/B7erTqD9C5QeD6pdIFYucuSKyPEmCOsQiY+FiggT690ypN5DMBDAVGUc2gOi4/k8Fiz9GFSeoJJJpIaJyI+KKMIfoPCD8shBxH4fpD98weLJncsnEPxEND6g9ZXQ+uKI4A/pHnDhK3AqiICkl0HpDMpXtiN/1V79NXKDzeSFmMmXDaMPmEDuIiF3YUcUbpD0EpR/Dk5dhdCQAk2qrRjTpa1xuoRRAXXnoC4Zas9BfQoYlRJNaexMuuQw+iok/gTOEXP16FvviAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;959281a8&apos; title=&apos;&apos; src=&apos;/static/8d5ecc06de673c5ea99b5f3142bd3d10/ca1dc/959281a8.png&apos; srcset=&apos;/static/8d5ecc06de673c5ea99b5f3142bd3d10/e7570/959281a8.png 170w,
+/static/8d5ecc06de673c5ea99b5f3142bd3d10/f46e7/959281a8.png 340w,
+/static/8d5ecc06de673c5ea99b5f3142bd3d10/ca1dc/959281a8.png 680w,
+/static/8d5ecc06de673c5ea99b5f3142bd3d10/2ab73/959281a8.png 749w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;서비스의 목적과 가치에 대해 구상한다.&lt;/p&gt;
+&lt;p&gt;이 단계에서는 &lt;code class=&quot;language-text&quot;&gt;서비스가 어떤 기능을 제공함으로서 어떤 문제를 해결한다&lt;/code&gt;를 이야기하며 각자가 추상적인 목표를 어떤 방향으로 구체화하고 있는지 공유한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 3분&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서비스의 대상&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 482px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1565d40b7b67d5c466f4c07c539338e6/b58a3/db53c739.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 131.1764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAaCAYAAAC3g3x9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFNklEQVR42pWTSWxb1RrHs4CyABaskFiyQQ+JBSxALWJ45RUoQh3EUGgRbAD1Pb0F4kkMopQhQFullFIILUlKkmYoiTM1TYc8mpTMsd3YN87QkNaJXceJHcexY9/ra/uec34oU5PQIsEn/c8gne+n/3e+c3Isy8LtdjM6OsrAwACJRGJhrWkawWCQ6elpfD4fw8PDBAIBPB4PXq+XUCjEfCilWB0584AfCwo4UVZGQWEhdoeDw4cPs2fPHurq6mi50EJNjY2iwiIaGhrYf+AAeXl5OByOBYAQYg00Z36IxWJIITD0JMKy0JNJMukM4UiYcCyGaVkk9CRZyyIcCjM+Po5hGDd3OD9kLUGzNkqDa5gL2igdA16uRWOgg3CNkXE6UK4AUc1LKBVbSJyKRLnsm+BqMIgjGMCfiK4AU5ksX5Q08p9D7/F+4W72Hf0Oz+VJCEuix7oZ+8bGTIGdwIluItOzC4k9w3YKfqmluUujvK+L02POFaCZyVJxupeC+jMc/KWcqjwb0a4piEOgvJ+u0hquFvcQrZ4mOhNnvkjvaA/ujnK6+u00DWlEZ+dWOUxnKTvvpLSpj/JzGp+dOY3LF4AIREoGCBxpx3/GQ6K6A+fECElhkH/p/5S4+ukp76WzspUremitw/qLbmwtfdRddPHzOSeXJ8IQEljlURJHZhC1MagLw6zCQuD1j3E1GGC6b4rebie+xNQK0JKCVDZNOpMhlTExMiamzGIlLTI+nfSkgRjTyY4bCCONkhYym0Vm0giRxVLyerdzltutUAgEfxZySSvnV62Vur5fAFb6f+WF1jw+6qzmufZP2N72JZta99IaGkBPp5gZ8cDQMIbHS3ywk+RQO2JoADmooSYDN77DvdpP3Hr8CdbbPiDn5BZuqdxOTtEGTo630Bzspy3/Pc5+vpOSr17GkXsf53MfofHg/7jy6edw2L7oTq0C7husZV3Ni9zT/AZ3N27jjprN3FX5MqW+dtDTpItyGSx+l86KQ6R+3I+34EN8RXsx8o8gm1uX614B5o80cWfNa9xes5N1Vc+wrupx/lGxmwp/DxgmqqSQRGUxkZPHoLQIdeI4VByH0x+jOs6uudUF4JeDNnLKnuaO6h3c9vMObq/excaqfdQGLoFuYBZ/iyr5DlXyA6L0e6zSfKyyo4iyg8iLZ2+8w6Sl44uH8euTBMwJrhkB+uK/Ec0mF1prxU1E3Lw+y7iBjOtY0TRCz9wIHEoY1NonOHdV0HhN0RyUZOTiI1FzdpT/M1TgAPLaftTEp+hXaolfboGpXJQ/F6WPLFUtyUFl+G/fBe6t+ZVN1Z08aetne0uK2Yy1eChsw2x/kOCZ9QRPbSDU9DD2+vvRzj9A1vkIVs96iLUvAcW8Q8mpkST/tqXY5ZDs6FG8fgnmloGRRoyup/BXbsZZtIH2Y0/gLHmUoeKNRI6+Tap7IyR6VzkEut0pDh4Ksf0SvNgJ73TBXHoRqKYboO+fhM9tpaV6J22nHqK36WGqGl7B/dM34HgVOde1Flg/IdjWbfGmXbK7V1LQaZEwl4DheeCTMPgKKcf3GI6vofctsm1vMzv4DomOXEi0rQWmLEnEsJgxBRFTEE4LpBSrHG4E7XlU/zMYjneRrm0o9xai7UcRrq0Q71wLvGmoZeApcP8LPNtA2wL9mxbh2hak9gLK9SzEe9YC1U20DGS6Hsv+GKLvOdA2g3tpXtCz4HoKFev+Gw4jZzEdW0m7diE9O/+gXUjtJVTc+ReAS39TWjrSnECak4jUzRRECfP6T/kdanAX3ZuDJuEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;db53c739&apos; title=&apos;&apos; src=&apos;/static/1565d40b7b67d5c466f4c07c539338e6/b58a3/db53c739.png&apos; srcset=&apos;/static/1565d40b7b67d5c466f4c07c539338e6/e7570/db53c739.png 170w,
+/static/1565d40b7b67d5c466f4c07c539338e6/f46e7/db53c739.png 340w,
+/static/1565d40b7b67d5c466f4c07c539338e6/b58a3/db53c739.png 482w&apos; sizes=&apos;(max-width: 482px) 100vw, 482px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;어떤 사용자가 이 서비스를 사용할 지 떠올리고 각자의 생각을 작성한다.&lt;/p&gt;
+&lt;p&gt;이후 각자가 자신의 생각을 이야기하는 시간을 가진다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 3분&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;어떻게 하면 ~문제를 해결할 수 있을까?&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/b0779a001d5012f919647c1262166104/cf75f/1c560fdf.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 64.11764705882354%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAADC0lEQVR42m2TzU/bdhjH8w9uPXKbduyhh0nTJlW9TEXVTpVWDXVsQCHEdmz/bOwYGychBNshEIe8brCssLZTeQlxktIdxqG8fCayMmnSHumr7/Py1ef2pPhY19fXE+/3+0RRhXq9Tu+3HnFcJ4qiifb392i325PbxcXFJH9zc/MfT90B7xZJktDpdGi3WjQbDV6/fjW5ffhwydXVFZeX1xPBDf9XqfF4zGAwmICGwyGDZMDxySnHp31O+2ccnQwZj4ckw7ckwzPGwxNGt30yJBmMGCcJo7MR4+P3nI/fkfJ9H0VR0IVBFAYE5SJCmCyLMpLps2huoQuLF4ZPxsjxS/4+51ufsGJmOVS6vFyqs6tV+FM+YnOtfAfMTiCFgkep4KPoNsaKhxAW0koeWViodhFlZZXAfUpn/TFZXWPf7NLUmhSFT0+PqTplUvl8Hi2rYJkmcTdmpxpQrYZ0fm4hhMAWGVovZqku/khnLkOgyNRzXxBaMxjqIjnj+SQ3yr6lb/1xCyywoGSRhEEpquPmC5RK6+wEO5iahaVpnEuzvJGXOJ9fpG3MMahN0bBnOAymONuawtAcdrUqcb5Kyilu8lnhiEd+iwdOl4drB2SVDLsLZQ7VGkJotL97RjezQG/hGTvKEmu5p1TcaZreDBV7jqao8E57w4a3TsrNr/PA7fHE3eWR02V6tYZraey5VVpWgK5r9J8YvMxIvM88p7Ws0yo+5K/4Uw7UPc71AZGxwa+iSekW6BRL3F89YDrX4/PiiK9K+yTfOBz/JKHbJl5Gw9E1LNXGUVWEJsivKBTtNCXDp2YGaLpORpFwPZeUVyzzpdfh29WI770aPzghtVmT7oJKQ67xuxZT0hwO1C5Vcx1b2LyabxFmA2ShkNVVTMNAqBprnkfK9Irc8wd8bTcw0vMomTRpVSK9LOFLq5S1Mpaco61tk5NNFEmho+5Qll2WpPRklmWZdDqNZVmk6o0G5vYe/nabMAwJogqV8J/f3Yw2KYdlgiigNPGQMIrYCDcIwuDfH79VEATEcczffXFOQ39XwAQAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;1c560fdf&apos; title=&apos;&apos; src=&apos;/static/b0779a001d5012f919647c1262166104/ca1dc/1c560fdf.png&apos; srcset=&apos;/static/b0779a001d5012f919647c1262166104/e7570/1c560fdf.png 170w,
+/static/b0779a001d5012f919647c1262166104/f46e7/1c560fdf.png 340w,
+/static/b0779a001d5012f919647c1262166104/ca1dc/1c560fdf.png 680w,
+/static/b0779a001d5012f919647c1262166104/02d09/1c560fdf.png 1020w,
+/static/b0779a001d5012f919647c1262166104/cf75f/1c560fdf.png 1078w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;어떻게 하면 ~ 문제를 해결할 수 있을까? 라는 질문들을 작성하고 이야기한다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 해결해야할 문제들을 인지할 수 있다.&lt;/p&gt;
+&lt;p&gt;이 때 기술적인 질문이 나오지 않도록 경계해야한다.
+해당 과정을 수행하는 이유는 서비스의 목적을 구체화하기 위함이다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;어떻게 하면 제 시간에 식물에 물을 줄 수 있을까? (O)&lt;/li&gt;
+&lt;li&gt;어떻게 하면 무중단 배포를 할 수 있을까? (X)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 5 ~ 8분&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;워드 클라우드&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/70641b5a84fd2f9bb79e54fec36d3260/0c082/07da0c75.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 72.35294117647058%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpUlEQVR42nWUC2/CMAyE+/9/4ISEWhUofQIF2vJoKTd9nswytkWyQh377uw4RM/nU//aPGvur2rLjeosUVPX6rNG0zRqfEx6PB6apkn3+13zPFtO5Mk4xnG0Q2wYBu2aWm1aK/5YKk5ipatUVZLrsKzUHc966jvXQQ0QptvtZmx/Lc73+72qqtJut9MUD9IdOBmgxwAa+Q8/QFlRFJYIwOVyMSJ8WZapKEvlVaG8yJWmqfnrurZcKowcrOs6S8a2260Oh4Op4psFOABN02joep3PZ51OJ9vxkY8YA2S1bavj8fgq83q9WgAVrFYrUwkxOwCQQuhkxOCPCKB/rm6xWBgbRiCLcxqOIlpBicRSooI+WskAkkxgeNOopRyfAlae54rjWJvNxpSSkySJ+cuy/LoUv+6QCd96vTbzG0QVJbF7a/q+N9W+QxKhiIRwHkMC9wFCzwAl2QfZRQBmcwgYoOELcVUopB2heoC5AM68XM7o8+ulhE+HvjAy+AB1tZB670Jyn+MfTy90eoNhfC+bXnkiwJC8V/frLXuCP/zQPAbz7/c/lE9hBz450+DAyQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;07da0c75&apos; title=&apos;&apos; src=&apos;/static/70641b5a84fd2f9bb79e54fec36d3260/ca1dc/07da0c75.png&apos; srcset=&apos;/static/70641b5a84fd2f9bb79e54fec36d3260/e7570/07da0c75.png 170w,
+/static/70641b5a84fd2f9bb79e54fec36d3260/f46e7/07da0c75.png 340w,
+/static/70641b5a84fd2f9bb79e54fec36d3260/ca1dc/07da0c75.png 680w,
+/static/70641b5a84fd2f9bb79e54fec36d3260/0c082/07da0c75.png 804w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위 단계에서 나온 키워드들을 기준으로 단어들을 나열한다.
+중요하게 생각되는 단어들은 크고 굵게 표기한다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 키워드를 간략하게 추릴 수 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : X&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;(선택) 모바일 vs 데스크탑&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/e98ef896a522c59419d537e2183120e8/2cbcd/8f5a28d2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 34.705882352941174%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA6UlEQVR42p1Py46CQBDk/3/Cw1687C9wJCFiWGaG4amQ8FAuRmIEVoUy02RcN9mD6ySd6VR3VVcZ0zRhLgDQ/U8R+gKmy1DD9aoDZx32uytW9vkX4S3BqvzG5/KAj8UB7rojp7fbiHEcaUn9z70ma/x5bswXr8i3J0hxxOXSP1xoJ6++h+Bms4XwGYKAw7IscM4RxzFs20ZZliiKgrCqquB5HvVRFCFNU4RhCMdx4Ps+2radI2dZBtf9gpQBTNOEEIKWFVkJ1nUNKSWapiFczZMkIVF1mDGGPM8xDMPsUOXv+56Av2L8J/Id584XuXzuercAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8f5a28d2&apos; title=&apos;&apos; src=&apos;/static/e98ef896a522c59419d537e2183120e8/ca1dc/8f5a28d2.png&apos; srcset=&apos;/static/e98ef896a522c59419d537e2183120e8/e7570/8f5a28d2.png 170w,
+/static/e98ef896a522c59419d537e2183120e8/f46e7/8f5a28d2.png 340w,
+/static/e98ef896a522c59419d537e2183120e8/ca1dc/8f5a28d2.png 680w,
+/static/e98ef896a522c59419d537e2183120e8/2cbcd/8f5a28d2.png 764w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;생각하는 서비스가 어떤 환경에서 운영될지 생각해본다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 서비스가 어떻게 그려질지 대략적으로 생각해볼 수 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 2분&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;장치/요소/기능 브레인스토밍&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1e645927501f2d913d6591289ce0174f/ed9c8/2d693ea9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 62.35294117647059%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA+UlEQVR42o2S2QqEMAxF+/+/6IuIK4jghrsZTiDilOpMIBbb9OQmjRMROY5DzvOUruskyzIpy1KSJFHnP89zKYpC1zRNdWV/33euy7quF8PxYYPVt23bNMmyLPJm3CUWd2SxTByQCceAVVUlwzDo2f3cYu6GMAfV5PpZm6ZRIIH/mCrkEyoXSF3XCrUK/gaicJqmLzAQoKyhhCHTku2FrGzrDeqiKJI4jq+SrY8h554CUYDKe+8MyHjYC/9SCQOWM7Jv8zxL27YyjqP6G9BGD3ucQ5QxzLzy08PdYdYqZ3L9SzbUfd8HZy4Eu4D2qtYHPARhz84t3o/7ABCIsUYJTOQiAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2d693ea9&apos; title=&apos;&apos; src=&apos;/static/1e645927501f2d913d6591289ce0174f/ca1dc/2d693ea9.png&apos; srcset=&apos;/static/1e645927501f2d913d6591289ce0174f/e7570/2d693ea9.png 170w,
+/static/1e645927501f2d913d6591289ce0174f/f46e7/2d693ea9.png 340w,
+/static/1e645927501f2d913d6591289ce0174f/ca1dc/2d693ea9.png 680w,
+/static/1e645927501f2d913d6591289ce0174f/02d09/2d693ea9.png 1020w,
+/static/1e645927501f2d913d6591289ce0174f/ed9c8/2d693ea9.png 1245w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;앞서 설정한 문제, 키워드 등을 참고하여 개발하고자 하는 서비스에 있을 것 같은 기능들을 브레인 스토밍 식으로 작성한다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 서비스에 존재할 수 있는 기능들을 파악할 수 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 5 ~ 8분&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;지도 만들기&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/058bac759478396584248cefebdce165/d621b/2bb017bc.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 37.05882352941176%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABD0lEQVR42l1RWW6FMAzk/jfoMXqJHqDqPyDBB9tjSQjZ53VcUrXP0siOscf2UOGP5ZzFxxjhnEMIAV3Xoe97eO8FxR6PAdYavFqVUkJM6V+SROd5whgDpZT4Ep+nlppx7GGMxutCldYa47TIQykNDiAh/XVdgnQPPI4DwzDIBQR76K21sj3j6uOzw9v7lzS4O0mQhFtxIAfQ9n1H27ayfRlCIua1UlJXzbPCulvEEGGdRaBOOUsDi1lUCHly0zS/hCLXrTfBd+WdRc4J1jrUdY1126SRoLbbvkvTtm3wIWBdV/nGYfM0Sc5Zh2WZfwiLoKKFMQjOIfPkGIGUJKZP3Dx45BiQvRMwl3l6wfdffgIL+iJk8i9cDQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2bb017bc&apos; title=&apos;&apos; src=&apos;/static/058bac759478396584248cefebdce165/ca1dc/2bb017bc.png&apos; srcset=&apos;/static/058bac759478396584248cefebdce165/e7570/2bb017bc.png 170w,
+/static/058bac759478396584248cefebdce165/f46e7/2bb017bc.png 340w,
+/static/058bac759478396584248cefebdce165/ca1dc/2bb017bc.png 680w,
+/static/058bac759478396584248cefebdce165/02d09/2bb017bc.png 1020w,
+/static/058bac759478396584248cefebdce165/9d567/2bb017bc.png 1360w,
+/static/058bac759478396584248cefebdce165/d621b/2bb017bc.png 1439w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;앞서 정의한 서비스 대상을 참고하여 구체적인 페르소나를 지정한다.
+페르소나를 참고하여 어떤 페이지들이 존재할지 생각해본다.&lt;/p&gt;
+&lt;p&gt;위(&lt;code class=&quot;language-text&quot;&gt;장치/요소/기능 브레인스토밍&lt;/code&gt;)에서 도출된 기능들을 기반으로 각 페이지에 기능들을 작성한다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 대략적인 서비스 흐름과 구성을 생각해 볼 수 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : X&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;페이지 그려보기&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/535c843fc7491a9b1193802999045ddc/d703b/efe27f26.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 98.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC+UlEQVR42nWU62ojRxSE9f6PFPIjLEtISCBsMIlZWDaKtbI0mpmevl9HXzgtS8ixt+HQYkRX16mqPhuA8/nMZe8bJTqOjx/J355Y9yN//Pojn37+gY8ffiLHwOszr/cNL2ttK61Xo9SC1yM1JWpp/P3n72y/POJ9oLaKNo2S1xvQfW1SSuRSiDESUyAkT62VUCrHceLr9hshJkII6BiZPj/w/MsHXuBuzK5rs65r/5hz7kCyYmjEVDDWY11gnme01oRcUcNnpt1v77LrDAVEQEspl1ojWkeW6DDOovTCojXee9Sk8TFjQ+ns7rW7Mbz+uLScyM1TW+HoZrR1GON6u9KB9xHjNIuZbgBvAK8MRexlTtS1UmthNzzjvMeHgLWWECPzcWTSJw7++P2W5WZxVvacMmVNlJL5sv3KaRpZ9IJzDjFvPu5x1vY0/J/hm9hIVHLJnFlZ18agJ6xz7Pea8aSx1lAb1FJ6B++x6wy7Pil3sFQyeQ3UtbC6hRQM1s2EkEjSgXnEmRP7w/GNdiKb1OaKLMFeW7v9Keys8dRisWKONrAeiEHhxCjviCEQgofzijcB7zwb0U8AkrDMucemtcp4GjnsNctimKYZ6y16OBN0xjmLsQbrHZO6OB6971r3liV/gu6Dw5aJVCODmlmMZvu0ZxhOaKv451PDzxdDRKZWL2bK8tYyK/U6h6eDJ9fcNRyswseEk+wZ06NzefMNtaju+r3T+SVeGwEShvK0RKeUIyH6PhScVUz7HTmLs41xF0g5Mc0TpdRXcckp9Us2V3fERQFe19pzKEE+HCbMKC7HXsOTJebIoA89FfeAN5flpYgx3l+eWKyWVC3KGJ6HpQdbKdUvHI87vLM8uwOp5feDfQXseZQsNo/SlhQjVg4/HzHL0jVW00gMnmVe+pl35+GVqkyTkAImT0yL4eQVgxp5ePirs7TGdBdFCiNPUcZdu8yBe+AebPlo9NS188mSsscYi1oWtv/uuBonLsqea+1DeZrn3tn9tPkPBtUTUKGBkGUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;efe27f26&apos; title=&apos;&apos; src=&apos;/static/535c843fc7491a9b1193802999045ddc/ca1dc/efe27f26.png&apos; srcset=&apos;/static/535c843fc7491a9b1193802999045ddc/e7570/efe27f26.png 170w,
+/static/535c843fc7491a9b1193802999045ddc/f46e7/efe27f26.png 340w,
+/static/535c843fc7491a9b1193802999045ddc/ca1dc/efe27f26.png 680w,
+/static/535c843fc7491a9b1193802999045ddc/d703b/efe27f26.png 786w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위 &lt;code class=&quot;language-text&quot;&gt;지도 만들기&lt;/code&gt; 활동에서 도출된 페이지들을 직접 그려보는 시간을 가진다.
+팀원들 각자가 페이지가 어떻게 구성될지 대략적으로 그려본다.&lt;/p&gt;
+&lt;p&gt;잘 그릴 필요는 없다. 연필로 어떤 버튼이 어디에 위치할지, 어떤 기능이 존재하는지 정도만 알아볼 수 있을정도로 가볍게 스케치해도 좋다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 각자가 생각하는 View를 공유하면서 서비스의 구현 방향성에 대한 싱크를 맞춰갈 수 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 각 페이지별 5분&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;결정권자 정하기 &amp;#x26; 페이지 정하기&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6f4640ebaab36872787ea3c684cd1730/5fbd7/9f853c4e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 18.823529411764707%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAxklEQVR42oWPTUoDQRSE55Qew0O48Aq6FUQwBHdCBDcRsnApCMFJNBMZ/JlECUGd7n4/n9gJmODCt6miqCrqFfxzHhPWxh+GOqQkqCrVwz314/SPv9gKm2Wsb6646x0QFg3xdsTioo8D14NLBid7vNYVZ90O593j36w77lC4bTSaZ3h7GtMM+8SvJXy0yPw966dHh+zv7jCdjGmaGWVZbhSuF4aQMpEkhDZkrmpE0ZVuSogrT0zCZ34fzAyTlFE08lwteamFb1nSMTTJ3jd9AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;9f853c4e&apos; title=&apos;&apos; src=&apos;/static/6f4640ebaab36872787ea3c684cd1730/ca1dc/9f853c4e.png&apos; srcset=&apos;/static/6f4640ebaab36872787ea3c684cd1730/e7570/9f853c4e.png 170w,
+/static/6f4640ebaab36872787ea3c684cd1730/f46e7/9f853c4e.png 340w,
+/static/6f4640ebaab36872787ea3c684cd1730/ca1dc/9f853c4e.png 680w,
+/static/6f4640ebaab36872787ea3c684cd1730/02d09/9f853c4e.png 1020w,
+/static/6f4640ebaab36872787ea3c684cd1730/5fbd7/9f853c4e.png 1276w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위 과정에서 작성한 페이지 중 하나의 페이지를 결정하기 위해 결정권자를 정한다.&lt;/p&gt;
+&lt;p&gt;결정권자는 팀원들의 투표로 정하고 페이지를 결정할 때 만큼은 결정권자의 권한이 가장 높은 수직적인 구조로 진행된다.
+즉, 다시말해 페이지는 결정권자의 선택으로 정해진다.&lt;/p&gt;
+&lt;p&gt;결정권자를 뽑았다면 각 페이지를 정하는 시간을 가진다.&lt;/p&gt;
+&lt;p&gt;이 때 결정권자가 아닌 다른 팀원들은 자신의 페이지 혹은 자신이 마음에 드는 페이지에 대해 결정권자를 설득한다.&lt;/p&gt;
+&lt;p&gt;페이지를 결정 할 때 여러 페이지의 기능을 합칠 수도 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : 각 페이지별 5분
+결정된 페이지들은 명예의전당👑 에 복사하여 올려둔다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 249px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/69b90d64e0e9f639c72d30b6addbfd44/14a1f/e4e8a0fb.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 311.7647058823529%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAA+CAYAAAArvjtdAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE/0lEQVR42q1Yy47jRBTNh/AhfASfAGLLgu9gwwJpFjAs2cyCGYQEEgLBCBg2I6Y1NOoW3UO3SPqRxK/4Va7yox4H3XKcdtx24jRUVKrYVb6+VffUuac80VpjX1VKAzD440jgs88Znn0lEHgKQN3XHjsBDTUGTen7r3Xd/vx0gY/e/QuffHCO2C/XY7bHTuhPtzYDtir9FCAFUKTGGrL3OuN6DTaVptB+gR+FcNMYXhJC5KL3xZO2V32l3e+enGLx/U9wX75CkbJ+g82DZVnC931bXdfFarWyrVKqfhDA7NnXmL//IW4fPQbz/Pr+ehb3DEopEUUR4jjeVDLeGKQynT3B1fV7mE4/RpY5aw/17il3p9/uv/rnDM7NayxvzsE5272G3Si3jTf3q0pBVgZlJdfY3B5jYTMUhL5AGdT3lKmgjewN4qQ7rV3GyVCpBaSu+rHaN+X5fI7r62sw1l6jus2qCKwMUCg+3iBFmyqBerM2po5mUnrWaO2h2W9w15Q3i28N6WEPh9ZwX+SHxo0nh9b+JrAP9U92QaU7uCgKZFlmW6307r3cdOrW3uyWqqps9CsloQcIZYtg6YHj42OcnZ1hNpvdEUPLwzzP7bjuDhkkWIIMGep6StfkHRccucjtuAcHpbkm72gNOef3vH8wbPZhdTRsqHCRI4k5koRDDnk4ZqdYYlAKYZQiyl2EbIUkyfbnFHqIUgHVdiQtoyuFJM3gBrcIwgApG5GkiPYb2FxeXtogNIUINUoYyhJgrLTG9wJ7FzcqZRBFPjR7joIdI05F794eDRulDfwgAE/eIFpNESd8P2x2RtkYCFGCcQWWlcPAHmVwfd3soD4NdPBOEYzh4uLCpghDMsSYcSmgyzhmncwl5/D9AK7jwpnN4C6XFl73PNzHh01bSYkkS+GtAiuayNionEKa5vz83NJX4yGVjHPM5nPcOEs4njcYvEnXG1qj09NTXF1dbQJAhWUZ3KWLOIgs47T7dib6Zuu1U6k2GqXIceLN8Mr5GyLjdmuOgs2gcjDANPPwJl3ASDU85UPoa0hEPcwgwanlbXtMG2aTXTm4XZtcTO09qdLyfNQa2igzhjRNrcolaFEGbGjNCWL4EbvPh5R8HMfBcrm0+rp5iEqSJAiCAGEYWqnc9PG8wOOnv+DJD0dQzcFngzXGLKCbKoTY9BH50kuokpf52iCp2V9fX+DlydSu8WRIBHXv0csaUW/VQwuHewl2iDDISFsI9MmX0bDpHijNIfQ1BkqjBOc+KSKVhKwksjJHXIn/pm1o7QgqvuPhfHmFF7enUJXcHNuaNDHaIAWESNb1PXAhUAiSdRLQOVA6MCqzRrfOegTo29tbLBYLTKdTC+R2vyhzRGmMOEtRlMIakMtvkf/2NrD4Yttg+0hBsCCP2gdHuh8mKW4WLuaujzhN663n/4ji93dgll9u43CXXKNSFCUylmAVuOBZgrIQd1hcfyo4OCjE5ForKCmt7jFaPywvbyjMKJsO/heC7YrzraOZluuD+AFiiVUhpumfEDKxJ9JS59vp4FAcCplixk7sEZf+F6rWhzpfQDrfwYjLGjbdB4lACYvdKSotIVUFnjOwIoRU9dbT3jdQL96CuX60jcM7Yak2Uq1dCimwDOe4Wczghx54UeNQ8wvo609hkqP+TwRDBCu1BK9Su371dbmdoA5VsNqozTeaRk006dVotfnc8i/XrAV97I9F2wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;e4e8a0fb&apos; title=&apos;&apos; src=&apos;/static/69b90d64e0e9f639c72d30b6addbfd44/14a1f/e4e8a0fb.png&apos; srcset=&apos;/static/69b90d64e0e9f639c72d30b6addbfd44/e7570/e4e8a0fb.png 170w,
+/static/69b90d64e0e9f639c72d30b6addbfd44/14a1f/e4e8a0fb.png 249w&apos; sizes=&apos;(max-width: 249px) 100vw, 249px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;BDD&lt;/h2&gt;
+&lt;p&gt;BDD(Behavior Driven Development, 행위 주도 개발) 방법론을 차용한 방식으로 given - when - then 절로 해당 페이지에서 일어날 수 있는 모든 이벤트에 대해 정의한다.&lt;/p&gt;
+&lt;p&gt;이 과정을 통해 구체적인 기능 명세를 할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c4a430c5a8881a8d1b8a65f39cbe0504/eb638/faa7372e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 40%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABaElEQVR42pWSy0rDQBSG8xI+ozsXbtU3cOdaV+4ExReQ4o2KFYqtoGJM2yS1JDHNZXKZzEx+OadNEVw5cJg5Z5j/fOdPLKxXu96VUnAcB0EQrOpt+6+wRJ4jTRKkSYo8y1AVAqPRGDPX2wg2TQMpJedaa9R1DWMM3/0+s2AiBKK6RFx8Q9QSuYyhVAKoGmaN7XkefN/nc5ZlsG2bm5D4ZDJBWZab5lY0fIZ/dIzXMxvx6AXDc43znQLOTcNGtKZFnueI45hpKCgna0iU6lEUYblcMqk1H9zD3j/Aw2Ef/tMtLnc19raA/knLglq1CMOIKYuiYMIwDJmqqiquk99CiBXhfHGFz9k2+hd3cN0epo8ag1MgeOsENZIk4aDV+dV9QCKjO6Imn63FlwvnfYhxb4q559KT1ahYmUwCRENB43aUHWGapixIwpRbspEohcLHtUFVSBagMY35+0vQHVHQeLR3zagJidHIP/APYZtvU+8uAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;faa7372e&apos; title=&apos;&apos; src=&apos;/static/c4a430c5a8881a8d1b8a65f39cbe0504/ca1dc/faa7372e.png&apos; srcset=&apos;/static/c4a430c5a8881a8d1b8a65f39cbe0504/e7570/faa7372e.png 170w,
+/static/c4a430c5a8881a8d1b8a65f39cbe0504/f46e7/faa7372e.png 340w,
+/static/c4a430c5a8881a8d1b8a65f39cbe0504/ca1dc/faa7372e.png 680w,
+/static/c4a430c5a8881a8d1b8a65f39cbe0504/02d09/faa7372e.png 1020w,
+/static/c4a430c5a8881a8d1b8a65f39cbe0504/9d567/faa7372e.png 1360w,
+/static/c4a430c5a8881a8d1b8a65f39cbe0504/eb638/faa7372e.png 1422w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;해당 방식은 UI 기반의 기능 명세에 치중할 수 있기 때문에 API 설계가 요구된다면 API 명세를 하는것을 추천한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⏰ 제한시간 : X&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1&gt;결론&lt;/h1&gt;
+&lt;p&gt;구글 스프린트를 기반으로 피움 팀이 아이디어를 구체화하는 과정을 정리해봤다.&lt;/p&gt;
+&lt;p&gt;아이디어 도출 과정에 정답은 없지만 스프린트를 처음 해본 입장에서는 참고하면 좋은 방법이라고 생각되어 기록으로 남겨봤다.&lt;/p&gt;
+&lt;h1&gt;Reference&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://brunch.co.kr/@brunchjwshim/90&quot;&gt;구글스프린트&lt;/a&gt;
+&lt;a href=&quot;https://velog.io/@teo/google-sprint-14&quot;&gt;테오의 스프린트&lt;/a&gt;
+&lt;a href=&quot;https://www.atlassian.com/ko/agile/scrum/sprints&quot;&gt;Atlassian Sprint&lt;/a&gt;
+&lt;a href=&quot;https://www.thesprintbook.com/the-design-sprint&quot;&gt;https://www.thesprintbook.com/the-design-sprint&lt;/a&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
