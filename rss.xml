@@ -1,4 +1,320 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 08 Jul 2023 12:28:17 GMT</lastBuildDate><item><title><![CDATA[구글 스프린트 기반 아이디어 도출]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/sprint-idea/</link><guid isPermaLink="false">https://pium-official.github.io/sprint-idea/</guid><pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 09 Jul 2023 05:27:47 GMT</lastBuildDate><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움팀의 기술블로그를 만들기까지의 험난한 과정을 정리해보려고 한다.&lt;/p&gt;
+&lt;h2&gt;플랫폼 선정&lt;/h2&gt;
+&lt;p&gt;팀 블로그를 작성하기 위해 다양한 플랫폼들을 고려해봤다.&lt;/p&gt;
+&lt;h3&gt;티스토리&lt;/h3&gt;
+&lt;p&gt;티스토리는 팀 블로그 기능을 통해 다양한 작성자 및 관리자를 지정할 수 있다.&lt;/p&gt;
+&lt;p&gt;하지만 UI를 직접 수정할 수 없을 뿐더러 제공되어있는 스킨들이 대부분 마음에 들지 않았다.&lt;/p&gt;
+&lt;p&gt;UI 선정과정에 너무많은 힘을 들일 것 같아서 티스토리는 사용하지 않았다.&lt;/p&gt;
+&lt;h3&gt;Notion&lt;/h3&gt;
+&lt;p&gt;현재 팀 문서 정리를 Notion으로 관리하고있다.&lt;/p&gt;
+&lt;p&gt;자유롭게 템플릿을 관리할 수 있어서 가장 매력적으로 다가온 툴이였지만 SEO를 적용하지 못하고, 도메인을 별도로 지정해야한다는 단점이 있어 선택하지 않았다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;중간에 vercel에서 제공하는 notion 배포기능을 사용하는 방식이 있었지만 Organizaiton으로 레포지토리를 관리하고 있는 현재 상황에서 해당 서비스를 이용하려면 유료였기 때문에 해당 부분도 사용하지 못했다.
+&lt;a href=&quot;https://vercel.com/templates/next.js/notion-blog&quot;&gt;Notion-backed Next.js Blog&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;Velog&lt;/h3&gt;
+&lt;p&gt;팀 계정을 생성해서 Velog에 글을 게시하는 방법을 생각해봤다.&lt;/p&gt;
+&lt;p&gt;팀 계정을 생성한다는 부분에서 팀 프로젝트가 계속 진행되면서 계정을 관리하는 리소스가 추가되는것이 우려되었기 때문에 선택하지 않았다.&lt;/p&gt;
+&lt;h3&gt;GitBook&lt;/h3&gt;
+&lt;p&gt;GitBook을 이용해서 팀 블로그를 운영할 수도 있겠지만 UI 구성적인 측면에서 기술블로그와는 거리가 멀었기 때문에 선택하지 않았다.&lt;/p&gt;
+&lt;h3&gt;GitHub Pages&lt;/h3&gt;
+&lt;p&gt;정적인 페이지를 무료로 호스팅할 수 있고, 마음만 먹으면 자유롭게 커스터마이징 할 수 있는 환경이라는 부분이 매력있게 다가와 GitHub Pages를 선택했다.&lt;/p&gt;
+&lt;h2&gt;GitHub Pages로 팀 블로그 만들기&lt;/h2&gt;
+&lt;p&gt;이제 본격적으로 GitHub Pages를 이용하여 팀 블로그를 만드는 과정을 차근차근 따라가보자.&lt;/p&gt;
+&lt;p&gt;gatsby를 이용하여 블로그 배포를 진행했다. 사용한 템플릿은 gatsby-starter-hoodie이며 블로그에 친절하게 사용법이 게시되어있다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/devHudi/gatsby-starter-hoodie&quot;&gt;🐙 gatsby-starter-hoodie&lt;/a&gt;
+&lt;a href=&quot;https://hoodie.gatsbyjs.io/about-hoodie-kr/&quot;&gt;🚀 gatsby-starter-hoodie 사용 방법 보러가기&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;필자는 gatsby에 대해 아무것도 모르는 상태로 해당 작업을 진행했습니다. 😵‍💫
+최대한 알기 쉽게 정리하려고 노력했습니다만... 잘못된 부분이 있다면 댓글로 남겨주시면 감사하겠습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;gatsby란?&lt;/h3&gt;
+&lt;p&gt;우선 사용하고자하는 gatsby가 무엇인지부터 알고 진행해보자.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Gatsby_(JavaScript_framework)&quot;&gt;위키백과&lt;/a&gt;에 따르면&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;개츠비는 React와 GraphQL을 사용하여 Node.js 위에 구축된 오픈소스 정적 사이트 생성기입니다.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;라고 설명되어있다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Node.js 위에 구축된&lt;/code&gt; 해당 문구로부터 로컬 환경에 Node.js가 필요하다는 것을 알 수 있다.&lt;/p&gt;
+&lt;h3&gt;node 설치하기&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;brew &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;node&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/73b786eee2c0d2daf34599aaaea6a06b/4c40c/dd266184.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.88235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAI0lEQVR42mOQVpD9r6qq8p+bm/s/AwMDWZibnx+MuXh5/wMAUT0VSh1aL/AAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;dd266184&apos; title=&apos;&apos; src=&apos;/static/73b786eee2c0d2daf34599aaaea6a06b/ca1dc/dd266184.png&apos; srcset=&apos;/static/73b786eee2c0d2daf34599aaaea6a06b/e7570/dd266184.png 170w,
+/static/73b786eee2c0d2daf34599aaaea6a06b/f46e7/dd266184.png 340w,
+/static/73b786eee2c0d2daf34599aaaea6a06b/ca1dc/dd266184.png 680w,
+/static/73b786eee2c0d2daf34599aaaea6a06b/02d09/dd266184.png 1020w,
+/static/73b786eee2c0d2daf34599aaaea6a06b/9d567/dd266184.png 1360w,
+/static/73b786eee2c0d2daf34599aaaea6a06b/4c40c/dd266184.png 1918w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;node -v&lt;/code&gt; 명령어를 통해 잘 설치되었는지 확인해본다.&lt;/p&gt;
+&lt;h3&gt;npx 설치하기&lt;/h3&gt;
+&lt;p&gt;리액트를 공부하자는 글이 아니기 때문에 간단히만 알고 넘어가자&lt;/p&gt;
+&lt;p&gt;npx는 npm 사용시에 발생하는 발생할 수 있는 여러 문제점을 해결하기 위해 설계되었다고한다.
+진행하는 과정에서 npx를 사용할 것이기 때문에 npx도 설치하고 넘어가자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; npx &lt;span class=&quot;token parameter variable&quot;&gt;-g&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8db07d2cda121d084fdfc6db4439bb71/b06e5/ff1c3736.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 6.470588235294117%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAKklEQVR42mMQl5b8Ly4h9p+Nle0/AwMDyZiRiek/Fx/ffy4env/sXFz/ATymFPbdvEBAAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;ff1c3736&apos; title=&apos;&apos; src=&apos;/static/8db07d2cda121d084fdfc6db4439bb71/ca1dc/ff1c3736.png&apos; srcset=&apos;/static/8db07d2cda121d084fdfc6db4439bb71/e7570/ff1c3736.png 170w,
+/static/8db07d2cda121d084fdfc6db4439bb71/f46e7/ff1c3736.png 340w,
+/static/8db07d2cda121d084fdfc6db4439bb71/ca1dc/ff1c3736.png 680w,
+/static/8db07d2cda121d084fdfc6db4439bb71/02d09/ff1c3736.png 1020w,
+/static/8db07d2cda121d084fdfc6db4439bb71/9d567/ff1c3736.png 1360w,
+/static/8db07d2cda121d084fdfc6db4439bb71/b06e5/ff1c3736.png 1928w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;npx -v&lt;/code&gt; 명령어를 통해 잘 설치되었는지 확인해본다.&lt;/p&gt;
+&lt;h3&gt;gatsby-cli 설치하기&lt;/h3&gt;
+&lt;p&gt;gatsby 명령어를 사용하기 위해 gatsby-cli를 설치한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-g&lt;/span&gt; gatsby-cli&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/84ae3d9eb6ca065dde7c9f606b236fe3/a75c2/6494ac93.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 8.235294117647058%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARUlEQVR42pXMwQkAIQwAwQSUECEnoqBC+m9zrwYf8x2599J7x8yoteLulFIQkScxBt+cyFqLzGTvTURwzqG19hyKKqrKD1iIKmY8cF6nAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;6494ac93&apos; title=&apos;&apos; src=&apos;/static/84ae3d9eb6ca065dde7c9f606b236fe3/ca1dc/6494ac93.png&apos; srcset=&apos;/static/84ae3d9eb6ca065dde7c9f606b236fe3/e7570/6494ac93.png 170w,
+/static/84ae3d9eb6ca065dde7c9f606b236fe3/f46e7/6494ac93.png 340w,
+/static/84ae3d9eb6ca065dde7c9f606b236fe3/ca1dc/6494ac93.png 680w,
+/static/84ae3d9eb6ca065dde7c9f606b236fe3/02d09/6494ac93.png 1020w,
+/static/84ae3d9eb6ca065dde7c9f606b236fe3/9d567/6494ac93.png 1360w,
+/static/84ae3d9eb6ca065dde7c9f606b236fe3/a75c2/6494ac93.png 1938w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;gatsby -v&lt;/code&gt; 명령어를 통해 잘 설치되었는지 확인해본다.&lt;/p&gt;
+&lt;h3&gt;Gatsby 사이트 생성&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;여기서부터는 &lt;a href=&quot;https://hoodie.gatsbyjs.io/quick-start-kr/&quot;&gt;Hudi의 Gatsby 환경 구성하기&lt;/a&gt;를 따라가는 내용입니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;환경은 Pium의 프로젝트 환경에 맞게 진행됩니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;gatsby를 이용하여 새로운 사이트를 생성한다.
+이때 &lt;code class=&quot;language-text&quot;&gt;gatsby-starter-hoodie&lt;/code&gt;를 참고하여 구성한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;node&quot;&gt;&lt;pre class=&quot;language-node&quot;&gt;&lt;code class=&quot;language-node&quot;&gt;npx gatsby new pium-official.github.io https://github.com/devHudi/gatsby-starter-hoodie&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;프로젝트 시작해보기&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; pium-official.github.io
+
+&lt;span class=&quot;token function&quot;&gt;npm&lt;/span&gt; run start&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f8aaf9178a3da884c1aeadbbdb37c2d8/8c935/19f5a8e2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 6.470588235294117%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAT0lEQVR42h3FQQqAIBRAwR+1MQQXEZmJYlgpQbjq/jd7QbMZMVvC7Ddjbuj6okPC1YY7H/wVcGmi1MKRM9ZalFKICNJ1//0wMHvPEiNrjHwQoRmHESzbLAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;19f5a8e2&apos; title=&apos;&apos; src=&apos;/static/f8aaf9178a3da884c1aeadbbdb37c2d8/ca1dc/19f5a8e2.png&apos; srcset=&apos;/static/f8aaf9178a3da884c1aeadbbdb37c2d8/e7570/19f5a8e2.png 170w,
+/static/f8aaf9178a3da884c1aeadbbdb37c2d8/f46e7/19f5a8e2.png 340w,
+/static/f8aaf9178a3da884c1aeadbbdb37c2d8/ca1dc/19f5a8e2.png 680w,
+/static/f8aaf9178a3da884c1aeadbbdb37c2d8/02d09/19f5a8e2.png 1020w,
+/static/f8aaf9178a3da884c1aeadbbdb37c2d8/9d567/19f5a8e2.png 1360w,
+/static/f8aaf9178a3da884c1aeadbbdb37c2d8/8c935/19f5a8e2.png 1940w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;localhost:8000&lt;/code&gt;으로 프로젝트가 열리는 모습을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/ee57e/7810b698.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 57.05882352941176%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR42nVS23KCMBTkCzq2Qi4kQBKSAKKdqRWZ1val//9P20kQq2gfdgbOZc+ezUm6roPWGpxz5HkeIaWAEAKU0vgfvufcEqGvqioopSISQkhsDIkZq9Uz0jSDtTY2EZKBMXaD6/rreDJPmRVmWQbl1hBlinH8wP79gO1uB+cc6rqOQ4KiJemMZBkIhauXJ6RkDa1rbPotuk1/t+YFC8V3hELkKKSEFDI2U0JBCfnzmJ9xJg7+SikfE1LK4TTH99jhbX/AMAxomibaEHy+xuQZhVIapq4vKpPlukUh0fcbNG0L3zQRNvhnLbz30Ut7Rtgi+BlqZ5XJ0o+QcN6jbbuJqLaw1sXHcM5H4hBXWoNxHk9lu3tFUZTTK996yJDnAsbYSMAYR5qmd+v+rcwgiwJlVT32MEyUgsEogbKcjtUYE1U/POo8v7vLG0JCObyh+Dm1OI6fOB4HnE5fkXR5/P/hF05yJPIbN8XkAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;7810b698&apos; title=&apos;&apos; src=&apos;/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/ca1dc/7810b698.png&apos; srcset=&apos;/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/e7570/7810b698.png 170w,
+/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/f46e7/7810b698.png 340w,
+/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/ca1dc/7810b698.png 680w,
+/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/02d09/7810b698.png 1020w,
+/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/9d567/7810b698.png 1360w,
+/static/3a3e39f1ad96077a4fb4941bbdb6c9bf/ee57e/7810b698.png 2576w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;블로그 커스텀하기&lt;/h3&gt;
+&lt;p&gt;해당 부분은 원작자의 &lt;a href=&quot;https://hoodie.gatsbyjs.io/quick-start-kr/&quot;&gt;🚀 2.빠르게 시작하기&lt;/a&gt;를 참고하여 진행하면 된다.&lt;/p&gt;
+&lt;h3&gt;GitHub Pages로 배포하기&lt;/h3&gt;
+&lt;p&gt;이제 배포할 페이지를 다 만들었다!
+GitHub Pages를 이용해 배포를 진행해보자.&lt;/p&gt;
+&lt;p&gt;우선 GitHub Repository를 생성한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;pium-official Organization에서 &lt;code class=&quot;language-text&quot;&gt;pium-official.github.io&lt;/code&gt; 레포지토리를 생성했다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1c0299f5df6017963eedb169a138c357/100fa/b084df05.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 24.705882352941178%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA90lEQVR42lWPy26DMBBFIQmJAIOxjR8ECElp1WZVReqqP9H//5pT2TSLLo7mjmfu1TgzfsaPN1od2B8Fu6JO9amf7AtBKTTHqiPbl+SHinxXkecVh0JwOLUs1zcyaQak8pzPC8NwoTMBqT3KjsRZozz9sKDdjBtvNCpQtz2nWiFGT7eO1N5yqhRFKclE55NJ2Zn+vKL8DdlP6eL4HmuY1sT88rHpeUUoz/R95/3ni/B4pZGe1gxk0SQ6h5tW7PJJvzzopzsmXOjsiHZbeC1tIu5Goq8WlqrsEc3WR7KnkMYjtaNVlla5FNLqIX170/9J15uw8dfHwF/NIXnzK8kpNAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;b084df05&apos; title=&apos;&apos; src=&apos;/static/1c0299f5df6017963eedb169a138c357/ca1dc/b084df05.png&apos; srcset=&apos;/static/1c0299f5df6017963eedb169a138c357/e7570/b084df05.png 170w,
+/static/1c0299f5df6017963eedb169a138c357/f46e7/b084df05.png 340w,
+/static/1c0299f5df6017963eedb169a138c357/ca1dc/b084df05.png 680w,
+/static/1c0299f5df6017963eedb169a138c357/02d09/b084df05.png 1020w,
+/static/1c0299f5df6017963eedb169a138c357/9d567/b084df05.png 1360w,
+/static/1c0299f5df6017963eedb169a138c357/100fa/b084df05.png 2836w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; remote &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; origin https://github.com/pium-official/pium-official.github.io&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;node&quot;&gt;&lt;pre class=&quot;language-node&quot;&gt;&lt;code class=&quot;language-node&quot;&gt;npm run deploy-gh&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 명령어를 수행하면 팀 레포지토리에 gh-pages 브랜치가 생성되고 build된 결과물이 올라온다. 해당 파일을 기준으로 GitHub Pages에서 배포를 진행한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4ff57d82ac33909a4f4b745b50920314/893ad/3db58ec3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABuklEQVR42lWS2XLbMAxFlWZ1LGuhSHGRSEqilthKxnlqH/r/33U7QOu2ecCAA5AHFyCyvJBQJuDpUOKQC5TCsH94PuHxpcD984nPlH851mxPryXuHl6R3R/Yf3s8stc2INPOox8W9MOKmM5o3YCyMaikQ606lI1lK4SB7ka4MMN1M2QbIFoPaSNq1fO7Y6mQ1W2PkM7oxw3WJ75EKvNKIa9aNoK1LsL2CTbOsD9WuM8V2o0Q2nPhRnu2jIL79TvG9QMxXTAsO/x0gXITlB1ABRsTEZd3xHlHXHdMP69wHxtcWBhIVskOhdDIGuO5VdNPLJsgxs9wcYX1E2S/sDJSQXB6bGxCIwNMn1jVqdbcBfmMLg7zzjBqj+agbISLC49A+jP6sKIUGnmtcRIaNiQ0JnCegPSOYAyk4YfpzBe4Uq353HYjg4VNMN2MqjE4CcNKKE5qpYms+Ab7C/Tjxi3dZEsToP+MQNgZ1o0MLP4DUlHajFq5rwoJNL9dGXILEqgbNl4RFS4IcUPVaFZIG2CoVRMh3YzGpq8KCTiu7wy8KVRugO4Sx2ozorW/d5Py5PkzTIQNC+r236eQ/QL6Dv7JZRl6awAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3db58ec3&apos; title=&apos;&apos; src=&apos;/static/4ff57d82ac33909a4f4b745b50920314/ca1dc/3db58ec3.png&apos; srcset=&apos;/static/4ff57d82ac33909a4f4b745b50920314/e7570/3db58ec3.png 170w,
+/static/4ff57d82ac33909a4f4b745b50920314/f46e7/3db58ec3.png 340w,
+/static/4ff57d82ac33909a4f4b745b50920314/ca1dc/3db58ec3.png 680w,
+/static/4ff57d82ac33909a4f4b745b50920314/02d09/3db58ec3.png 1020w,
+/static/4ff57d82ac33909a4f4b745b50920314/9d567/3db58ec3.png 1360w,
+/static/4ff57d82ac33909a4f4b745b50920314/893ad/3db58ec3.png 2826w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;GitHub Pages에서 배포 기준으로 잡는 브랜치를 확인 &amp;#x26; 변경하고 싶다면 Settings - Pages 에서 다음 항목을 확인하면 된다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/18b74e74f5e47aade85df87810ea9317/17112/b9a5c99c.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABoUlEQVR42nWSW2/jIBCF89BtdxtfAJsBYxMM2HWuapv//99OBU6jVOo+fMLCM2cuh822alELjdeyQckUtrVEwQis6cAag9dKoqjpfl9zBUkDnl4qPP1d+XPj+V+FDacBqvcouUIlNEpG0ENA3L/DhT1qQbkgazTq1kAkpAFrzT2+FOqGxobLHsbNMLsJjbIoaglGDn18h18+YOJH/jbhkgupIeQzxbvpmHOyMFeZDW8N/NsZu3hA3XR57HRKE9GYCbWaINSIUvR55NRRcevK7OZc4IegUBbWL/eLghOo9xj8AhsWtNpiy+T6PyV+w9d9J75zs2Bq2Yb9fYdFSxjDHqfzFXE6ZgOqqkHNJFgyK8EJ1YPIT0HtsD9fV2OEzoHTOOFyuWKeDnibj4hhwegm2MHDGA9FI6RI0/wm2Hl0bganHml8QQbj4HE4fcKGC+LyiWk+gZQF5wpcaDRCoeX0u6CgAS4esmtkxrxwST2scdgNHn03oqG1M2c9tA5olQdTEdSH1chHQS5XwWRMekLp2bSdg5tP0Dai4PoBdaf8zw6/ADRg/U2YF1R6AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;b9a5c99c&apos; title=&apos;&apos; src=&apos;/static/18b74e74f5e47aade85df87810ea9317/ca1dc/b9a5c99c.png&apos; srcset=&apos;/static/18b74e74f5e47aade85df87810ea9317/e7570/b9a5c99c.png 170w,
+/static/18b74e74f5e47aade85df87810ea9317/f46e7/b9a5c99c.png 340w,
+/static/18b74e74f5e47aade85df87810ea9317/ca1dc/b9a5c99c.png 680w,
+/static/18b74e74f5e47aade85df87810ea9317/02d09/b9a5c99c.png 1020w,
+/static/18b74e74f5e47aade85df87810ea9317/9d567/b9a5c99c.png 1360w,
+/static/18b74e74f5e47aade85df87810ea9317/17112/b9a5c99c.png 2854w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/69fbabab3e1202e22cc8388012035d74/100fa/1877666d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 24.705882352941178%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA+UlEQVR42m2PyXKDMBBEsY0XDBixSkIIg8FrUolzyv9/2UtJlaRyyOHVlKY13TOBKDXSjMRZTVYoKmmJkoLlKmK1jll+E24S34+SkvXuwCLcswidlhBuU482A4EzSURDfKgpVY+oWpTqUe1IXhtSIUlzyaFQv7gltnvBzgcUvm7jnE2UETyen/TT1Q8P5xeUPdHaicvjA9mdEJUh/WP2Q1Zqiqaj1kdK2ZNVLaI2BLqfUd1I0Vj/yW3TdCPz/Uk/3XF6Y05U+kilB0/taEdkN3nNVWVn3wvseKUbrn7AmbkTc20YL6/Mt3em2xvaTj49zdU/SB/gtnXvLxOZfQAKMDH4AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;1877666d&apos; title=&apos;&apos; src=&apos;/static/69fbabab3e1202e22cc8388012035d74/ca1dc/1877666d.png&apos; srcset=&apos;/static/69fbabab3e1202e22cc8388012035d74/e7570/1877666d.png 170w,
+/static/69fbabab3e1202e22cc8388012035d74/f46e7/1877666d.png 340w,
+/static/69fbabab3e1202e22cc8388012035d74/ca1dc/1877666d.png 680w,
+/static/69fbabab3e1202e22cc8388012035d74/02d09/1877666d.png 1020w,
+/static/69fbabab3e1202e22cc8388012035d74/9d567/1877666d.png 1360w,
+/static/69fbabab3e1202e22cc8388012035d74/100fa/1877666d.png 2836w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;GitHub Actions 탭에서 &lt;code class=&quot;language-text&quot;&gt;pages build and deployment&lt;/code&gt; 작업이 완료된것을 확인하고 &lt;a href=&quot;https://pium-official.github.io/&quot;&gt;https://pium-official.github.io/&lt;/a&gt; 로 접속해보면 페이지가 성공적으로 배포된것을 확인할 수 있다!!&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;https:://{팀 레포명}.github.io&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/0787e9418eadd11cad330b5f5be63289/f8159/f35d015e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 55.294117647058826%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABVUlEQVR42o1TS07DMBD1Eaiatknt/OP8qETIj1RVl8BRgIOw5AAco9yMBTukh8bFVTAlYvE00th+b+bNmFVVhc1mg/V6DcdxFCzLgm3bCpTX0OdjUF5KiVhKhGEItlwuQdAXVqsVmq5FEAYQXJxyRH6OUJ/rO0yrc85xMZvh/vYO758feH59Qdd0SLMMUqZIpIQQYpKYwMalU6t1XeNweMPD0yNcz4cQ7jfE2bZNAWb6sVgsYM3nKlKOGx6annL+U4iZXiRJjGHYYrfboe97dH2PYRiw3+9RlqUS0gMjJDKF67qnSplZfhAEuKoqFEWhvMvzHFmeoywvVYzjBGmaIopi2LZzJPS8CcIwRNv1aNr2hLppVY5idV3jZtgq0WPL/O+WidDzPORFgUxNV6qKlWejh1N7+YuQpkmt+r6n9lPv1xj/WhtzOBSpWg36BVEUqQFMEX4Brj0uEWlhrA8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f35d015e&apos; title=&apos;&apos; src=&apos;/static/0787e9418eadd11cad330b5f5be63289/ca1dc/f35d015e.png&apos; srcset=&apos;/static/0787e9418eadd11cad330b5f5be63289/e7570/f35d015e.png 170w,
+/static/0787e9418eadd11cad330b5f5be63289/f46e7/f35d015e.png 340w,
+/static/0787e9418eadd11cad330b5f5be63289/ca1dc/f35d015e.png 680w,
+/static/0787e9418eadd11cad330b5f5be63289/02d09/f35d015e.png 1020w,
+/static/0787e9418eadd11cad330b5f5be63289/9d567/f35d015e.png 1360w,
+/static/0787e9418eadd11cad330b5f5be63289/f8159/f35d015e.png 2634w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;글 작성하기&lt;/h3&gt;
+&lt;p&gt;해당 템플릿에 글을 작성하는 방식은 원작자의 &lt;a href=&quot;https://hoodie.gatsbyjs.io/writing-guide-kr/&quot;&gt;🤔 3. 작성 가이드&lt;/a&gt;를 참고하면 된다.&lt;/p&gt;
+&lt;h3&gt;GitHub Actions workflow&lt;/h3&gt;
+&lt;p&gt;현재까지 진행한 작업으로는 다음과 같은 흐름으로 배포를 진행할 수 있다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;로컬에서 글을 작성한다.&lt;/li&gt;
+&lt;li&gt;글을 작성한 뒤 &lt;code class=&quot;language-text&quot;&gt;npm run deploy-gh&lt;/code&gt; 명령어를 수행해서 배포를 진행한다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;위 방식은 혼자서 작업할 때는 문제가 없으나 여러명이 함께 글을 작성하기에는 많이 번거롭다.&lt;/p&gt;
+&lt;p&gt;우리는 다음과 같은 방식으로 배포를 하는 방향을 기대하고 있다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;로컬에서 글을 작성한다.&lt;/li&gt;
+&lt;li&gt;글을 작성한 뒤 main 브랜치로 push한다.&lt;/li&gt;
+&lt;li&gt;main 브랜치에 작업내용이 push 되었을 때 빌드 및 배포가 자동적으로 이뤄진다.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;위에서 3번 작업내용을 수행하기 위해 GitHub Actions의 workflow 기능을 이용할 수 있다.&lt;/p&gt;
+&lt;h3&gt;workflow 작성하기&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;gatsby-starter-hoodie&lt;/code&gt;에서 기본적으로 제공하고 있는 workflow는 다음과 같이 구성되어있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; CI
+
+&lt;span class=&quot;token key atrule&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;pull_request&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;branches&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; main
+
+&lt;span class=&quot;token key atrule&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ubuntu&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;latest
+    &lt;span class=&quot;token key atrule&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/checkout@v2
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/setup&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;node@v2
+        &lt;span class=&quot;token key atrule&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;token key atrule&quot;&gt;node-version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 20.3.1
+
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Install node packages
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; yarn
+        
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Check lint
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; yarn check&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;lint
+        
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Check prettier
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; yarn check&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;prettier
+      
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Build
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; yarn build&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;자세한 구문에 대한 설명 및 내용은 &lt;a href=&quot;https://docs.github.com/ko/actions/using-workflows/workflow-syntax-for-github-actions&quot;&gt;공식문서&lt;/a&gt;를 참고해보면 좋다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;기존에 존재하는 ci.yml 파일은 삭제하고 아래와 같은 deploy.yml을 작성해보자.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;workflow에 대한 yml파일의 경로는 반드시 &lt;code class=&quot;language-text&quot;&gt;.github/workflows&lt;/code&gt; 폴더 내부에 존재해야한다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/cef42a7b411892b239eec92aa35a064b/26530/d9fc2f50.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAhUlEQVR42h3MSQ6CQBQAUW5g/+6FBpqhAYkMgoRJHEj0/ncqI4uX1Ko85ZeIbVG2QbsFCW9I1KOTCRW2yNGh7BX5O2WooEbCjoNfcbQ5dTdR1D3nsiNKL3gSD5jshU5GTLruvcs3dPrA2HKf62TG2Aodj+h4QJKZwFWs7y/L88Nw33BFww9DFDhxnOvvKQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;d9fc2f50&apos; title=&apos;&apos; src=&apos;/static/cef42a7b411892b239eec92aa35a064b/ca1dc/d9fc2f50.png&apos; srcset=&apos;/static/cef42a7b411892b239eec92aa35a064b/e7570/d9fc2f50.png 170w,
+/static/cef42a7b411892b239eec92aa35a064b/f46e7/d9fc2f50.png 340w,
+/static/cef42a7b411892b239eec92aa35a064b/ca1dc/d9fc2f50.png 680w,
+/static/cef42a7b411892b239eec92aa35a064b/26530/d9fc2f50.png 944w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Deploy
+
+&lt;span class=&quot;token key atrule&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 어떤 작업이 수행될 때 deploy.yml 작업이 수행된다. (트리거)&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# push 작업이 수행될 때&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;branches&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 특정 브랜치를 대상으로&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; main
+
+&lt;span class=&quot;token key atrule&quot;&gt;permissions&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# github action이 수행되는 환경에서 특정 권한을 준다&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;contents&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; write
+
+&lt;span class=&quot;token key atrule&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ubuntu&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;latest
+    &lt;span class=&quot;token key atrule&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/checkout@v2
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/setup&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;node@v2
+        &lt;span class=&quot;token key atrule&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;token key atrule&quot;&gt;node-version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 20.3.1
+
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Install node packages
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; yarn
+
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Build
+        &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; yarn build
+
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Deploy 🚀
+        &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; JamesIves/github&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;pages&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;deploy&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;action@v4
+        &lt;span class=&quot;token key atrule&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;token key atrule&quot;&gt;folder&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; public&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;JamesIves/github-pages-deploy-action@v4&lt;/code&gt; 작업에서 수행하는 내용 중 쓰기권한을 요구하는 작업이 있기 때문에 permissions 설정을 해야한다.
+&lt;a href=&quot;https://github.com/JamesIves/github-pages-deploy-action/issues/1110&quot;&gt;관련 이슈 - Failed with exit code 128, Permission Denied&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;위 deploy.yml 파일을 작성했다면 프로젝트 내부에서 변경사항에 대한 commit을 수행하고 git push를 해본다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; branch &lt;span class=&quot;token parameter variable&quot;&gt;-m&lt;/span&gt; main
+
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; push origin main&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f79aa88d3917ca03004874f6ba038c6e/48458/0491f96f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 31.176470588235293%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABMElEQVR42j2QyW7bQBBEaUeWJXEdcvYZipupzUJ88f//2gs4SXx4KDQKqO6uLK8kyp45lR15rWhloKwVu33B26Hi175I7N5LDkXLIRfsjzUvuxOv/9i8132BDyPZFlZ3jqLRuH5Bmp4QJ+b1E+mG5NWt/aFqLUJ6jkVLXinKxnCqZFr2dqzJLs9vho87jfLEcUWHkc4O9MsDFSYaFSk7RyV9ov6vKtCZHmmHpK2OiSyOV4bljgkTVWvIG40PA8/Hb9blxhBnznEiuoFgzz9ss/ZTwsQFE+cUnm3pG9trfwMNznnW25P19sXl/oXvF5rtdWESlbBooamFpmwtyo0IFVIdmTt/cJ5vqcNSGAph8c5zv35yWR8s8xWjPFp6ZKuRnUOqHttqmtSpS10LHdNRfwBXkpc4X/FvTQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;0491f96f&apos; title=&apos;&apos; src=&apos;/static/f79aa88d3917ca03004874f6ba038c6e/ca1dc/0491f96f.png&apos; srcset=&apos;/static/f79aa88d3917ca03004874f6ba038c6e/e7570/0491f96f.png 170w,
+/static/f79aa88d3917ca03004874f6ba038c6e/f46e7/0491f96f.png 340w,
+/static/f79aa88d3917ca03004874f6ba038c6e/ca1dc/0491f96f.png 680w,
+/static/f79aa88d3917ca03004874f6ba038c6e/02d09/0491f96f.png 1020w,
+/static/f79aa88d3917ca03004874f6ba038c6e/9d567/0491f96f.png 1360w,
+/static/f79aa88d3917ca03004874f6ba038c6e/48458/0491f96f.png 2842w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위 내용을 대략적으로 설명해보자면 다음과 같다.&lt;/p&gt;
+&lt;p&gt;main 브랜치에 대한 코드를 build해보고 성공한다면 결과물을 gh-pages 브랜치로 배포한다.&lt;/p&gt;
+&lt;p&gt;이제 글을 작성하고 main 브랜치로 push하기만 하면 배포까지 자동으로 수행된다.
+로컬에서 &lt;code class=&quot;language-text&quot;&gt;npm run deploy-gh&lt;/code&gt;는 더이상 사용할 필요가 없다.&lt;/p&gt;
+&lt;h2&gt;결론&lt;/h2&gt;
+&lt;p&gt;블로그를 생성하고 배포하고 자동화하는 과정까지 차근차근 진행해봤다.&lt;/p&gt;
+&lt;p&gt;여러버 삽질을 거친 끝에 완성했기 때문에 더 애정이 많이 가는 것 같다. 👍&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://hoodie.gatsbyjs.io/&quot;&gt;https://hoodie.gatsbyjs.io/&lt;/a&gt;
+&lt;a href=&quot;https://docs.github.com/ko/actions/using-workflows/workflow-syntax-for-github-actions&quot;&gt;https://docs.github.com/ko/actions/using-workflows/workflow-syntax-for-github-actions&lt;/a&gt;
+&lt;a href=&quot;https://studium-anywhere.tistory.com/21&quot;&gt;https://studium-anywhere.tistory.com/21&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[구글 스프린트 기반 아이디어 도출]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/sprint-idea/</link><guid isPermaLink="false">https://pium-official.github.io/sprint-idea/</guid><pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
