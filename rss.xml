@@ -1,4 +1,327 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 23 Jul 2023 11:07:36 GMT</lastBuildDate><item><title><![CDATA[프론트엔드: Tanstack Query 사용에 대하여]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '참새'가 작성했습니다. 서론  피움의 프론트엔드에서는 서버 상태 관리를 위해 Tanstack Query를 사용하기로 하였다. 이 글에서는 많고 많은 상태 관리 라이브러리 중 Tanstack Query…]]></description><link>https://pium-official.github.io/fe-tanstack-query/</link><guid isPermaLink="false">https://pium-official.github.io/fe-tanstack-query/</guid><pubDate>Sun, 23 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 24 Jul 2023 07:51:55 GMT</lastBuildDate><item><title><![CDATA[Jenkins와 Github Webhook을 이용해 CI/CD 구축하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 이번 피움 서비스에서 CI/CD를 적용하기 위해 Jekins와 Github Webhook을 이용했습니다. 본 글에서는 Jenkins와 Github Webhook을 이용한 SpringBoot…]]></description><link>https://pium-official.github.io/ci-cd-setting/</link><guid isPermaLink="false">https://pium-official.github.io/ci-cd-setting/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;이번 피움 서비스에서 CI/CD를 적용하기 위해 Jekins와 Github Webhook을 이용했습니다.&lt;/p&gt;
+&lt;p&gt;본 글에서는 Jenkins와 Github Webhook을 이용한 SpringBoot 서버 자동 빌드, 자동 배포 과정을 다루겠습니다.&lt;/p&gt;
+&lt;p&gt;Jenkins 설치 과정은 &lt;a href=&quot;https://pium-official.github.io/jenkins-setting/&quot;&gt;피움 팀 젠킨스 설치하기&lt;/a&gt; 를 참고하시면 됩니다 !&lt;/p&gt;
+&lt;p&gt;작업 환경&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;인스턴스: AWS EC2 t4g.small&lt;/li&gt;
+&lt;li&gt;OS: Ubuntu 22.04.2 LTS&lt;/li&gt;
+&lt;li&gt;RAM: 2GB&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Jenkins 접속&lt;/h2&gt;
+&lt;p&gt;젠킨스를 접속하는 방법은 간단합니다. 젠킨스를 설치한 인스턴스 public IP와 port를 주소창에 입력하면 쉽게 접근할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;정상적으로 접속하면 다음과 같은 화면을 만나게 됩니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/714cdc2e70d78f318a24f0bfa41486a1/bbbf7/img.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 49.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABMUlEQVR42q1RW27CMBD0zYB+0R/6i9Qf1CPQA8FpEPQqCIhD/Fzb091NW6kPVUJipVU22cl4Zmyel0usVi+Yzx8xnc4wmz3825PJFJvNFvv9AbvdDofDG9brV/1/sXiCsf0VznnU2n51KfXPOWfSTilrE41zjAlmGAYeIj6rcWeqSnBL5TySm9PpjPP5wiePBPJ0PsINHrZ3DCwIIaHreoTISliZtT27irrzjJVd5B1RgRG7l0sHKqSEVBmUPIhPtAODWGlhYCckgdDYghsc+iFATKSUIC4LR5HYuiqUE9Vua6owkuRSEXJVoJT3gdWVj7wSuwgczfgu2Ym6LITWXtWSyB9lE+c3ym/te0ayCyF+kcbIKkvRO5DvgjHH40lzEEUp0c2X8bNMCEGt3qsM7lzvFp3wHPm6DicAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img&apos; title=&apos;&apos; src=&apos;/static/714cdc2e70d78f318a24f0bfa41486a1/ca1dc/img.png&apos; srcset=&apos;/static/714cdc2e70d78f318a24f0bfa41486a1/e7570/img.png 170w,
+/static/714cdc2e70d78f318a24f0bfa41486a1/f46e7/img.png 340w,
+/static/714cdc2e70d78f318a24f0bfa41486a1/ca1dc/img.png 680w,
+/static/714cdc2e70d78f318a24f0bfa41486a1/02d09/img.png 1020w,
+/static/714cdc2e70d78f318a24f0bfa41486a1/bbbf7/img.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Github Webhook 설정&lt;/h2&gt;
+&lt;p&gt;먼저 Webhook을 설정하기 위해 현재 프로젝트의 깃허브 레포지토리로 이동합니다.&lt;/p&gt;
+&lt;p&gt;레포지토리의 Settings를 눌러서 접속할 수 있습니다. 이후 왼쪽 메뉴바에 Webhooks를 누르면 아래와 같은 화면을 볼 수 있습니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/88c4995821b586b038ddb80cefdee513/bbbf7/img_1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 54.70588235294118%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABEElEQVR42qVS23KFIAw8//+ZPV7QIngBPRBgmzBqX/pkd2YHAmSTkLw2v2PZHOy8wtgFy+owMw3bozaY+W7d/E07GWx8RikjUEKICf4IOELEJxJeOHEcB1JKl4nID3qlsDmHnDOInVMiZCZRRGRnYQgBk7F1L6iCpRTMy1LpvL8D9L1C23Vo2w5d1/PKVBqNmjAYrmr12PededSgt6BAcynDOHKkWG15IHshEd1roIKYCieBP3ELWjtXBwFlArvgCapgygVqGM/UC9xn509PzwWJS3g3fS1bBDN3sJR/ZCjOnpsh/3Z97lOcgsC31tB6guMxeZrdb1PYf1nXOjJXYx6XLCXKQH+9m8rwCbjOnvAHGGJhDhIh4l4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 1&apos; title=&apos;&apos; src=&apos;/static/88c4995821b586b038ddb80cefdee513/ca1dc/img_1.png&apos; srcset=&apos;/static/88c4995821b586b038ddb80cefdee513/e7570/img_1.png 170w,
+/static/88c4995821b586b038ddb80cefdee513/f46e7/img_1.png 340w,
+/static/88c4995821b586b038ddb80cefdee513/ca1dc/img_1.png 680w,
+/static/88c4995821b586b038ddb80cefdee513/02d09/img_1.png 1020w,
+/static/88c4995821b586b038ddb80cefdee513/bbbf7/img_1.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;오른쪽 상단의 Add Webhook 버튼을 눌러 webhook을 추가하는 화면으로 이동합니다.&lt;/p&gt;
+&lt;p&gt;그러면 아래와 같은 Payload URL, Content Type, Secret을 입력하는 폼이 나타납니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/bbbf7/img_2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 87.64705882352942%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB40lEQVR42p2UaW7bMBCFdfaiPUHQnqYw0D8BcoKibeLIkhftmyWR4qLXGcpWlPzwEgIfuInPnDdjeuu4R5B0CHcH+MEWZX2EGDR6qT4wfEAteoWOxnYc4dWtxLEb0BxbVHWDrhcQ/KGQM4IOnNe4l8M0dwgBKaczIws+v/h4Xm/gb0IEQYDNJkAYhsQWu91+mm+32NDey3qN11d/Xmf8fYZ/YY6sPIKbV7YGSa3RCQ1rLbQ2MMa4MffGvK0xWms3n7GAIjhcd8M4jpAkCQYpYRYi4+mDN3CxjTgJRkmGfZQiL2oUVUNXr9G0PaTSlBz1DntBlXcmwSh2fnVdj4EOyYGNli60e9oseCDBmEIuq5qyTFQVsjynbPefE0yzHJqTQBNjR+ejpV6Tj4pMZ3isT75eFeTD80HuzYQTPAmxn8xNHqZpgizLHJztJE0RRRHiOHbwmrVmyuN4HS/JaxJLkaYZyrJyIQ9KQS24y8O8KMGZ3lL1H+hmhsIerxXdJUEpespwRXVYoChL5HnhyubTgnHaQrZTiXDtqTOUhIFqkv85t3g3e7j684TV70f8+vuEsqkhen5hhLtl23U3F/h8w6+r7/i2+oEvPx9QiWbaXHg43ojF9EB4736FFs6vhl1wT8j/ASXRfKJMUiADAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 2&apos; title=&apos;&apos; src=&apos;/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/ca1dc/img_2.png&apos; srcset=&apos;/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/e7570/img_2.png 170w,
+/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/f46e7/img_2.png 340w,
+/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/ca1dc/img_2.png 680w,
+/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/02d09/img_2.png 1020w,
+/static/c9f86ed3f14eb7f8d26b35ebd50a1b81/bbbf7/img_2.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Payload URL&lt;/strong&gt;은 젠킨스가 설치되어 있는 서버의 &lt;code class=&quot;language-text&quot;&gt;도메인 주소:포트/github-webhook/&lt;/code&gt; 을 입력합니다.&lt;/p&gt;
+&lt;p&gt;젠킨스의 기본 포트는 8080으로 설정되어 있습니다.&lt;/p&gt;
+&lt;p&gt;주소 마지막에 / 는 꼭 넣어주셔야 합니다.&lt;/p&gt;
+&lt;p&gt;/를 넣지 않으면 redirect URL로 인식해 정상적으로 동작하지 않습니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Content-type&lt;/strong&gt;은 &lt;code class=&quot;language-text&quot;&gt;application/json&lt;/code&gt;을 선택합니다.&lt;/p&gt;
+&lt;p&gt;Secret은 비워두면 됩니다.&lt;/p&gt;
+&lt;p&gt;마지막으로 어떤 동작에서 webhook을 발생시킬지 선택하면 됩니다.&lt;/p&gt;
+&lt;p&gt;저희 팀의 경우에는 &lt;strong&gt;Let me select individual events&lt;/strong&gt;를 눌러 &lt;strong&gt;push&lt;/strong&gt;와 &lt;strong&gt;pull request&lt;/strong&gt;가 발생했을 때 webhook이 동작하도록 선택했습니다.&lt;/p&gt;
+&lt;p&gt;모든 선택을 마친 후 &lt;strong&gt;Add webhook 버튼을 누르면 토큰이 발행&lt;/strong&gt;됩니다.&lt;/p&gt;
+&lt;p&gt;토큰을 생성할 때 토큰 권한도 함께 설정할 수 있는데, 이 때 repo와 admin:repo_hook을 선택해주시면 됩니다.&lt;/p&gt;
+&lt;p&gt;만약 CI를 통해 PR에 comment를 남기는 등의 write가 필요없는 경우에는 wirte 권한을 빼줄 수 있을 것 같습니다.&lt;/p&gt;
+&lt;p&gt;해당 토큰은 생성 후 재발행되지 않기 때문에 따로 보관을 하는 것이 좋습니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;Credentials 생성&lt;/h2&gt;
+&lt;p&gt;다시 젠킨스 화면으로 이동해서 Credentials를 등록하여 Github webhook을 연동 시켜야 합니다.&lt;/p&gt;
+&lt;p&gt;젠킨스 메인 화면에서 Jenkins 관리 페이지로 접속하면 Security 탭에 Credentials를 눌러 접속합니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/eeb60e900905f7bc182e9621a1488b8a/baa93/img_3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB0ElEQVR42pVTgW6rMAzk/39y0tRRKBQIJJCEEL87A33q1E5bJIsqte8uPrvw3ss0TSKS5Tzrusrl8iVledXf308+UmNcxZhZxnER71cJYZXCGCPOuaeCbdtAYhEOiUH+cgoW3u+dWGsfl2SuqgYKK9w7qEwgyQdZlq5jDYX4R1jrZVmiFG3bo/CGhEFlMwhA+fwyqJKqeVLakDuBcJC+dzIMTr8kmSa/A16vjQKEkDRiTOiLRaIBa5B5XhQ0hKjA1i5yu7XSNC3UzSqCNRnNLajMuQVKNlXD5/K7LB7sI4pnBaU5OW9aRJWsYZDsJFLAum7hlFWGXeWqCePoVIUxk5LwjipZ9LD5u+00pW3vR492ZgbZQghH/+LDlNOYJ6wzjr+K/SnPibzr++F5Bs8cjFm6lBLrm2xNI3BD4BDt3wFfzdLZ+K4b0COv/fSIxP8AMn18So+hH6+VJI5bWXLW3gOmlHSo65qzWKuTfHaCygwTFih03CK4vIIgQSVr2JK3gDMURbDSkN2U3f0NoA6uG7jvOa/oedC5jZLwff1kAHJDOIfcIj49sgDFcrqc8+vVe7eTdL6q7ohWOFpcAK7bK6d/Bchnc1v+PzmqQTn/DPgPV6WWi+Dj700AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 3&apos; title=&apos;&apos; src=&apos;/static/eeb60e900905f7bc182e9621a1488b8a/ca1dc/img_3.png&apos; srcset=&apos;/static/eeb60e900905f7bc182e9621a1488b8a/e7570/img_3.png 170w,
+/static/eeb60e900905f7bc182e9621a1488b8a/f46e7/img_3.png 340w,
+/static/eeb60e900905f7bc182e9621a1488b8a/ca1dc/img_3.png 680w,
+/static/eeb60e900905f7bc182e9621a1488b8a/02d09/img_3.png 1020w,
+/static/eeb60e900905f7bc182e9621a1488b8a/baa93/img_3.png 1236w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Add Credentials를 누릅니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/7a5b569bed511798c15faed3c85bba2b/e4ddf/img_4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 28.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAkUlEQVR42q2P6w6CMAyFef/HNMi4iGNssHW34wnRxH9i9CQnbZP2a9t0nYJSA92jba9YFoNf1BjjMPQjQSus3bFtAfqu4dyOGAtCSKddayWQoGnx2HxGzgUpFVwGi/G2wvsAkURw/miRjFIIFBFEgjKLQ9xieN00z9Baszl997JI5FXcEN4Ga32G+krPA/FnPQABGNhYehKerAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 4&apos; title=&apos;&apos; src=&apos;/static/7a5b569bed511798c15faed3c85bba2b/ca1dc/img_4.png&apos; srcset=&apos;/static/7a5b569bed511798c15faed3c85bba2b/e7570/img_4.png 170w,
+/static/7a5b569bed511798c15faed3c85bba2b/f46e7/img_4.png 340w,
+/static/7a5b569bed511798c15faed3c85bba2b/ca1dc/img_4.png 680w,
+/static/7a5b569bed511798c15faed3c85bba2b/02d09/img_4.png 1020w,
+/static/7a5b569bed511798c15faed3c85bba2b/e4ddf/img_4.png 1082w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;그러면 아래와 같은 화면을 볼 수 있습니다.&lt;/p&gt;
+&lt;p&gt;깃허브 webhook에서 발급받은 토큰을 이용해 크리덴셜 값을 생성합니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/da40bf6b3f114efc1945300dbdb20c63/b034b/img_5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 83.52941176470588%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR42qWTa2rDMBCEdfVep397ikJPUGhTTEjikjiWZMmyHp7urpNQAm3iWPCBsezV7OxI1fU31usNVqsKVbVGzhlLlmpbDds5OO/hfY9xHB8uxv8qR0Ws7WAI3wfkMhIFKTN5FjElqJQymuaIEIK0K5uJSXLiHAoJkYLaWBhCGyPPWlu02mCI6aT0NpHq8PdS8EAKnXNXfmC2QvFwKtiSj246ZYjiBT/P9ZBRPAAuwIOx1qKjiZfy+KQVF2ukZS/TLeQHm8vcG6HxzLnlKYe9xOY3gdpno2/BiTijMina7xtst7VMemp9wpym/x+HQ4OvWuNj06LRnhSSkSEMlzY5i3OIpNCFjC5kGaTiF5w5uXpyU8pMroI9RIrNUVOYOcgRhTcWoEohqcFJ23zavTfjL9T7bsDrZ4+QSDbG5Qqf3wyeXvYwfblcuSXrBwWrOPvVlzDPAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 5&apos; title=&apos;&apos; src=&apos;/static/da40bf6b3f114efc1945300dbdb20c63/ca1dc/img_5.png&apos; srcset=&apos;/static/da40bf6b3f114efc1945300dbdb20c63/e7570/img_5.png 170w,
+/static/da40bf6b3f114efc1945300dbdb20c63/f46e7/img_5.png 340w,
+/static/da40bf6b3f114efc1945300dbdb20c63/ca1dc/img_5.png 680w,
+/static/da40bf6b3f114efc1945300dbdb20c63/02d09/img_5.png 1020w,
+/static/da40bf6b3f114efc1945300dbdb20c63/b034b/img_5.png 1072w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;kind&lt;/strong&gt;는 &lt;code class=&quot;language-text&quot;&gt;Username with password&lt;/code&gt;를 선택합니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;username&lt;/strong&gt;에는 깃허브 토큰을 발급받은 &lt;code class=&quot;language-text&quot;&gt;깃허브 아이디&lt;/code&gt;를 작성합니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;password&lt;/strong&gt;에는 &lt;code class=&quot;language-text&quot;&gt;해당 토큰 값&lt;/code&gt;을 넣으면 됩니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ID&lt;/strong&gt;는 젠킨스에서 이 &lt;strong&gt;크리덴셜을 식별하기 위한 이름이므로 크게 의미가 없는 값&lt;/strong&gt; 입니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3&gt;Gradle 설정&lt;/h3&gt;
+&lt;p&gt;현재 우리 팀은 스프링 부트 서버를 빌드하기 때문에 gradle이 반드시 필요합니다.&lt;/p&gt;
+&lt;p&gt;젠킨스 메인 화면에서 대시보드 -&gt; 젠킨스 관리 -&gt; Tools를 누르면 아래와 같은 Gradle 설정 화면을 볼 수 있습니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/dc8e606c0d893391862fc9aeb13e7aee/23e59/img_6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 81.17647058823529%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAABJElEQVR42qWTC26EMAxEOXGP1Vv0GL0Cu2KBEAhJyG9qO/1QqVIbGmlAAfEyY+wuhAClFpRSRP9dXYwJt9uEvh+htQXvWZeBfNHrhmEYsSwaKVXgVbcC3K3HNGtY6wQWQkTO+TrQOo/N7EgEYWNVpU2citIJ0BiDeZ7lhJKLuGtVipQqvgPVZvCYFDl1cN6L05TaFBlccgUOasVAwIXa5zFO2OiALPH/Hpnd8Tcdb/hHeKrjSn/bWksl2OXUllU4cjoBDYGmaRZQ5mfcPg3yNCDpw2EguqXaKb1RC7lal9yur8ipbrwPzVHPi5N99iG7qyNX5MUVsbmObrUGR7g8Hd8m5TgOHN5Vy+dG/anffulPqWGvIp6e73h5XZG8JaexfexOegOyqO+9u/tqSwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 6&apos; title=&apos;&apos; src=&apos;/static/dc8e606c0d893391862fc9aeb13e7aee/ca1dc/img_6.png&apos; srcset=&apos;/static/dc8e606c0d893391862fc9aeb13e7aee/e7570/img_6.png 170w,
+/static/dc8e606c0d893391862fc9aeb13e7aee/f46e7/img_6.png 340w,
+/static/dc8e606c0d893391862fc9aeb13e7aee/ca1dc/img_6.png 680w,
+/static/dc8e606c0d893391862fc9aeb13e7aee/02d09/img_6.png 1020w,
+/static/dc8e606c0d893391862fc9aeb13e7aee/23e59/img_6.png 1098w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Gradle 8.2.1 버전을 추가했습니다.&lt;/p&gt;
+&lt;p&gt;추가를 완료하고 바로 페이지를 나가면 안됩니다.&lt;/p&gt;
+&lt;p&gt;가장 아래에 있는 파란색 save 버튼을 눌러야 해당 설정이 저장됩니다 !!&lt;/p&gt;
+&lt;p&gt;Gradle 설정까지 마치면 빌드할 준비를 모두 마쳤습니다.&lt;/p&gt;
+&lt;p&gt;이제 CI를 자동으로 실행하기 위해서는 CI 스크립트를 작성해야 합니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;CI 스크립트 작성&lt;/h2&gt;
+&lt;p&gt;드디어 CI를 담당하는 젠킨스 아이템을 생성할 시간입니다 !&lt;/p&gt;
+&lt;p&gt;대시보드에서 New Item을 누르면 아래와 같은 화면을 볼 수 있습니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6df00fb04c89f3d1d4140127c5a51b6d/84a58/img_7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 102.35294117647058%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAACb0lEQVR42p1USXLbMBDkJ/OfPCP/yBtyzCWHRLEsS6QocQUXgCBIWnFnGiIV2lV22Tl0zQKgORsnqCqNKEoQxynC8Aza1o7ouuFDMGZA70YEnXUoigqlqjGMj4IJbhifoXd84N5LOKBQLeq6lccT+l6iE5+dsdbfAkk9YVXl2G1/SMpnPOwPyLJMSHu5YAXdDcaYG2hrkXrWjbmej8OAwGqFIt5IHU/Ybu9xOISiH5EkqUTdCGqpawWlpCylghK9Ep9SSuzS36mq2uvOOQR15xAVjTQkun5llJr1TtIfME2TtxesbSd1HaXeg9R4EvvP0xOmywUBm2Dl8HQ6I81ySfmKJMme6Yw4z4tZljBMdUZnLR6FjAg6Icskld3ugF+bO9zd3WMjMi9KtFqjaRq0bevTZGrNrFOuox8ko2FkU1qD3THFMYr9Az5m3bSQEbT1TEys9TUZ60c9iPIa337GCKUZ53MiKSU+/QX0xfHpGeiPT1fJ2tPH5rDGAYeWkR0Oke/ww8Ped5ANWiJsmn+gvWA5591bhK02iE7J7cuRpE5CpsRxqf2IVHOarR8dEi0dXyTT9oS1XNrtI4Qyeww/Co9om/YWoR9mTd34AWYkhG/CC3hCXuJXMxkFdjaT0chXelEoD/oK8Vnb+zl9CfpJGjTaIj7zYYM0FZJMeaSpkgaVXubSOOr0v7YkbsvhWGh836Yoc9atmy+4lbzCE5l3bBvuvrbtZVAN6kb7rcMDN2PRueZI+hq07mF7LgdfAxpWtkf/6oN3L9iwrPHpyx6fvx6FVP5NPfrDj0Jr2Ys9Ux4H/E47RMrOv9Ljf2OaLvgL59X3vdpjMPoAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 7&apos; title=&apos;&apos; src=&apos;/static/6df00fb04c89f3d1d4140127c5a51b6d/ca1dc/img_7.png&apos; srcset=&apos;/static/6df00fb04c89f3d1d4140127c5a51b6d/e7570/img_7.png 170w,
+/static/6df00fb04c89f3d1d4140127c5a51b6d/f46e7/img_7.png 340w,
+/static/6df00fb04c89f3d1d4140127c5a51b6d/ca1dc/img_7.png 680w,
+/static/6df00fb04c89f3d1d4140127c5a51b6d/84a58/img_7.png 972w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;상단에 아이템 이름을 설정하고 Pipeline을 구축할 것이기 때문에 Pipeline을 선택하고 OK를 누릅니다.&lt;/p&gt;
+&lt;p&gt;이후 아래와 같이 아이템을 설정할 수 있는 화면이 나옵니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6dda25c41475b6bea44e52dcc55c70f3/649dd/img_8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 104.11764705882354%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAVCAYAAABG1c6oAAAACXBIWXMAAAsTAAALEwEAmpwYAAABnklEQVR42qWU606DQBCFeW1fyjfxh/+MUUOpbbrlfltgd+E4Zy01sdISO8mUksLXM2dmNkjTDFG0xTAMmGMYDMJwg6ZpcCsmfowOTy8feN0qBHGcY7+PobVF31t0nfFA65x/eJymmzkxCZdrkOcVlErAa1k2MMbBudH/iNNDE26Hh48CZKlt28rND8SJuqpuUPfjGTaDl1Q6eZ+MYOkf6V8i/tLjoqxgrPU+G2OvKg0uDJaodI+3zSfUQaGsKl+B1h3aRovH3XrgHFY8zEUVYVaUzaVO3qfRl/c77a2SddejFh8JxOzV6aVrHQ+WZoswJstlevCKWASyEUodZZwK5EUhI1Wdp+BfwOMxwXa7E5W1L3NtLAAnvy2d+Miuci7vAhKgVIyiKH2ZvF+rctnDokKSpB6qtb6vKQzCwjBCluWrYVcG2yETZYRxdLj0azq8uHpl2+F9s0OWprIttd9rzuK/x4bBQ+Egu/x9IJjVnf67KaKEI9O22ie/3wXkEcWmUCWvBNJHHrzX8uJwmC1KaoeHxwTPkcZoRN2pKWvyC/Vbd+UXG3z9AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 8&apos; title=&apos;&apos; src=&apos;/static/6dda25c41475b6bea44e52dcc55c70f3/ca1dc/img_8.png&apos; srcset=&apos;/static/6dda25c41475b6bea44e52dcc55c70f3/e7570/img_8.png 170w,
+/static/6dda25c41475b6bea44e52dcc55c70f3/f46e7/img_8.png 340w,
+/static/6dda25c41475b6bea44e52dcc55c70f3/ca1dc/img_8.png 680w,
+/static/6dda25c41475b6bea44e52dcc55c70f3/02d09/img_8.png 1020w,
+/static/6dda25c41475b6bea44e52dcc55c70f3/649dd/img_8.png 1234w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;저희는 깃허브 프로젝트를 사용하고 있기 때문에 Github Project를 체크한 후 레포지토리의 url을 입력합니다.&lt;/p&gt;
+&lt;p&gt;다음으로 Build Trigger를 선택해야하는데, Github webhook을 사용할 계획이므로 Github hook triger for GITScm polling을 선택합니다. 해당 버튼을 클릭하면 아래에 스크립트를 작성하는 칸이 나옵니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/bd8c7b72f56aa54df93f026f56661fe7/8dc7d/img_9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.29411764705883%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA/UlEQVR42rVTu27DMAzUX/cD+j3ZunfpVnTr0KFAmymwHSe2bJl6X0gl6VzVroCTSAg8HXGUmqYZTdMi54wtlppn80MonGtQCJeF0LRHaD3Bh4AQYx3C9bTWlVPFlEBEDIvE8VXp73Ff91wl3rquwzAM8N5XwVqLvj9x/bHUR1GYbgolqVUnNdKZtQTnXOmwtCwvyeUmLv8bocjdhDCljODZch4ZiQXySPX43DxQISbsDx1Ow4iRZ/E8aEzGgHiualFMcT7i/fuA/sxE/A211sWxP7dc7GeMNmNy6/+zev0iPOxaPH8Y5OCxkFtH+LYnPD71ePkkBEcwxq4ivAB8BJ6XaIkQOwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 9&apos; title=&apos;&apos; src=&apos;/static/bd8c7b72f56aa54df93f026f56661fe7/ca1dc/img_9.png&apos; srcset=&apos;/static/bd8c7b72f56aa54df93f026f56661fe7/e7570/img_9.png 170w,
+/static/bd8c7b72f56aa54df93f026f56661fe7/f46e7/img_9.png 340w,
+/static/bd8c7b72f56aa54df93f026f56661fe7/ca1dc/img_9.png 680w,
+/static/bd8c7b72f56aa54df93f026f56661fe7/8dc7d/img_9.png 888w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Script칸에 팀에서 필요로 하는 CI Script를 입력하면 됩니다.&lt;/p&gt;
+&lt;p&gt;여기서 저장 버튼 위에 보이는 Pipeline Syntax를 누르면 깃허브를 이용해 접근할 수 있는 스크립트를 생성하는 화면이 나옵니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/15781dae004666ce624f5a21f7b899ca/74b07/img_10.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 87.64705882352942%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAABvklEQVR42p1UyU7DMBTM//8F4iuKxJXlgoALEoeWlpKmaZImjrPHHd44pARIW8DSyPv4LfPsxLFCVdVoGoO2NTBmhyRJkKYau91O5sb2Q3CN54hu/rnnLBYulss1wlBBqQJ13WK99jGbzfH25sLz1litPCwWS8znr3LWtftc8zzfgnP2eV7ACYIQ2+1WCNnH9pUkUfD9jSAA9znmhb7fbAI7juMEOsugtbYeVVXVE8Z20ratJeQm3fpPs4RBEFlSxoItirZI5VUj5K0Q/wbNhzEOzSfyPN+/khcFqrr+QWiOoGmajpBxIOhu3+h+VVb2wJ9dHlsshdCVLNJylaYCjUSlKPnICUvHCeWikhjSjVpcJxgCxulYHA8TioWM4xcx/zJBBwnDMBJLy7115oSrR10mCUWts9wiE/SldggsW2KUMFIafhRbIpL/O8u9TFZhAk/EXhdioU7/VDXfCLv+8u4JZ5MrnF9cY+pu7Jo5oslh8kZdvn9+weTmAZPbR0yXKxE6k9PYj0CJHlnrBDXKEqWcehU4Y68Nren+yO5P7ALf7hPQg8eJ0aTY30ZniOSzyIsSpN5nc6DJL+NBtt8BiNKBWl2aAGEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 10&apos; title=&apos;&apos; src=&apos;/static/15781dae004666ce624f5a21f7b899ca/ca1dc/img_10.png&apos; srcset=&apos;/static/15781dae004666ce624f5a21f7b899ca/e7570/img_10.png 170w,
+/static/15781dae004666ce624f5a21f7b899ca/f46e7/img_10.png 340w,
+/static/15781dae004666ce624f5a21f7b899ca/ca1dc/img_10.png 680w,
+/static/15781dae004666ce624f5a21f7b899ca/02d09/img_10.png 1020w,
+/static/15781dae004666ce624f5a21f7b899ca/74b07/img_10.png 1238w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Sample Step을 Git으로 설정한 후 아래에 값을 입력하면 됩니다.&lt;/p&gt;
+&lt;p&gt;Credentials에는 좀 전에 생성했던 크리덴셜을 선택하면 됩니다. 해당 정보에 토큰 값이 있기 때문에 정확한 크리덴셜을 선택해야 합니다.&lt;/p&gt;
+&lt;p&gt;크리덴셜은 생성할 때 입력한 ID와 동일하게 보여집니다.&lt;/p&gt;
+&lt;p&gt;모두 입력했다면 Generate Pipeline Script를 눌러 완성된 스크립트를 확인합니다.&lt;/p&gt;
+&lt;p&gt;해당 스크립트를 만드는 이유는 빌드 과정에서 Github 저장소에서 저장소를 복제해야하기 때문입니다.&lt;/p&gt;
+&lt;p&gt;그러므로 저장소에 대한 접근 권한이 반드시 필요합니다.&lt;/p&gt;
+&lt;p&gt;전체 빌드 스크립트는 아래와 같습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;pipeline &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    agent any
+    tools &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        gradle &lt;span class=&quot;token string&quot;&gt;&apos;gradle&apos;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    triggers &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        githubPush&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;저장소 복제&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                // 여기서 방금 생성된 깃허브 스크립트 넣기
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        
+        stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;빌드&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt;&apos;
+                &lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; backend/pium
+                ./gradlew clean build
+                &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt;&apos;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            post &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                failure &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+                        channel: &lt;span class=&quot;token string&quot;&gt;&apos;#알림-젠킨스&apos;&lt;/span&gt;,
+                        color: &lt;span class=&quot;token string&quot;&gt;&apos;#FF0000&apos;&lt;/span&gt;,
+                        message: &lt;span class=&quot;token string&quot;&gt;&quot;백엔드 Build 실패...😢&quot;&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;stages에서 깃허브 저장소에 있는 프로젝트를 가져온 후, 본인의 프로젝트 디렉토리로 이동해 build를 진행하도록 하면 됩니다.&lt;/p&gt;
+&lt;p&gt;디렉토리를 옮기는 부분에서 몇 번 에러가 있었는데, Jenkins 대시보드의 Console Output을 이용해 디버깅하면서 수정해나가면 쉽게 설정할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;지금까지 올바르게 적용되었다면 CI 설정은 모두 정상적으로 마쳤습니다.&lt;/p&gt;
+&lt;p&gt;다음으로 CD(자동 배포) 설정 방법을 알아보겠습니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;SSH Agent 설치&lt;/h2&gt;
+&lt;p&gt;현재 빌드 서버와 운영 서버가 서로 다른 인스턴스로 분리되어 있기 때문에, 젠킨스 빌드 서버에서 빌드한 파일을 운영서버로 전달해야&lt;/p&gt;
+&lt;p&gt;합니다. 이때 다른 인스턴스로의 접속이 필요하므로 SSH 연결 설정을 해야 합니다.&lt;/p&gt;
+&lt;p&gt;기존의 블로그나 여러 레퍼런스를 찾아보면 Publish Over SSH를 많이 사용하는데, 현재 접속 불가 이슈가 있습니다.&lt;/p&gt;
+&lt;p&gt;그러므로 SSH Agent를 사용해야 합니다.&lt;/p&gt;
+&lt;p&gt;Jenkins 관리의 Plugin 탭을 들어가서 설치할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;Jenkins도 하나의 서버에서 동작하고 있기 때문에 운영서버로 접속하기 위한 pem 키가 필요합니다.&lt;/p&gt;
+&lt;p&gt;대시보드 -&gt; 젠킨스 관리 -&gt; Credentials 로 이동합니다.&lt;/p&gt;
+&lt;p&gt;깃허브 크리덴셜을 생성하는 것과 동일한 방법으로 pem 키를 크리덴셜로 설정합니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3d725457a15753e0fdcec93acfa61a2f/bbbf7/img_11.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 53.529411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAs0lEQVR42q2SSxKCMBBEc/+beAf33sIFlgu0FAIh/6SdGQr3Jk7V20DRdPeMGscHhuGGWS/gqbUSaKRCOefhfEAIEaVUoiDnVjLUsqzQ5I6FzWbhSbxLMMaElJgs8IvdaRsS2Vor6r1wXWqjmNwfT4+zr0NWjjEKx196UJqWMk0zLcPLg9bJ9K2czfOtpcN/jUoU0xgjokf0XwghyFWfzhdc7yN1SFb5bHr646iveYWn5X4A9rZj6EFx0O0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 11&apos; title=&apos;&apos; src=&apos;/static/3d725457a15753e0fdcec93acfa61a2f/ca1dc/img_11.png&apos; srcset=&apos;/static/3d725457a15753e0fdcec93acfa61a2f/e7570/img_11.png 170w,
+/static/3d725457a15753e0fdcec93acfa61a2f/f46e7/img_11.png 340w,
+/static/3d725457a15753e0fdcec93acfa61a2f/ca1dc/img_11.png 680w,
+/static/3d725457a15753e0fdcec93acfa61a2f/02d09/img_11.png 1020w,
+/static/3d725457a15753e0fdcec93acfa61a2f/bbbf7/img_11.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;kind&lt;/strong&gt;는 &lt;code class=&quot;language-text&quot;&gt;SSH Username with private key&lt;/code&gt;를 선택합니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;id&lt;/strong&gt;는 깃허브 크리덴셜과 마찬가지로 식별자이기 때문에 &lt;code class=&quot;language-text&quot;&gt;원하는 값을&lt;/code&gt; 입력하면 됩니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;username&lt;/strong&gt;은 인스턴스의 HostName ex) ubuntu@123-345-678-23의 &lt;code class=&quot;language-text&quot;&gt;ubuntu&lt;/code&gt; 를 입력하면 됩니다.&lt;/p&gt;
+&lt;p&gt;마지막으로 &lt;strong&gt;인스턴스를 생성하면서 받았던 pem 키를 Add 버튼을 눌러 추가&lt;/strong&gt;합니다.&lt;/p&gt;
+&lt;p&gt;pem 키에 있는 모든 내용(Begin, End 포함)을 다 복사해서 넣어야합니다.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2&gt;CD 스크립트 작성&lt;/h2&gt;
+&lt;p&gt;이제 젠킨스가 설치된 서버에서 빌드된 결과물을 운영 서버로 전달하는 스크립트를 작성해야 합니다.&lt;/p&gt;
+&lt;p&gt;이때 scp 라는 프로토콜을 사용하여 파일을 전달합니다.&lt;/p&gt;
+&lt;p&gt;저희 팀이 사용한 스크립트는 아래와 같습니다.&lt;/p&gt;
+&lt;p&gt;빌드 성공 유뮤, 배포 성공 유무를 슬랙과 연동해 사용하고 있습니다 !&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;pipeline &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    agent any
+    tools &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        gradle &lt;span class=&quot;token string&quot;&gt;&apos;gradle&apos;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    triggers &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        githubPush&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    stages &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;저장소 복제&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                // 깃허브 크리덴셜
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        
+        stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;빌드&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt;&apos;
+                &lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; //프로젝트 위치
+                ./gradlew clean build
+                &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt;&apos;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            post &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                failure &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+                        channel: &lt;span class=&quot;token string&quot;&gt;&apos;#알림-젠킨스&apos;&lt;/span&gt;,
+                        color: &lt;span class=&quot;token string&quot;&gt;&apos;#FF0000&apos;&lt;/span&gt;,
+                        message: &lt;span class=&quot;token string&quot;&gt;&quot;백엔드 Build 실패...😢&quot;&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        stage&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;배포&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            steps &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                sshagent&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;credentials: &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;pem 키로 생성한 크리덴셜 ID&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token function&quot;&gt;sh&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt;&apos;
+                        &lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; //프로젝트 위치
+                        
+                        &lt;span class=&quot;token function&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;StrictHostKeyChecking&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;no &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;HostName&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;@&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Private IP&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;uptime&lt;/span&gt;
+                        &lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; build/libs
+                        
+                        &lt;span class=&quot;token function&quot;&gt;scp&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;빌드된 Jar 파일명&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;HostName&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;@&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Private IP&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;:/home/ubuntu
+                        &lt;span class=&quot;token function&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-t&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;HostName&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;@&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Private IP&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;운영서버 배포 스크립트 파일&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                    &lt;span class=&quot;token string&quot;&gt;&apos;&apos;&lt;/span&gt;&apos;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            post &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                success &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+                        channel: &lt;span class=&quot;token string&quot;&gt;&apos;#알림-젠킨스&apos;&lt;/span&gt;,
+                        color: &lt;span class=&quot;token string&quot;&gt;&apos;#00FF00&apos;&lt;/span&gt;,
+                        message: &lt;span class=&quot;token string&quot;&gt;&quot;백엔드 배포 성공! 🚀&quot;&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                failure &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    slackSend &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+                        channel: &lt;span class=&quot;token string&quot;&gt;&apos;#알림-젠킨스&apos;&lt;/span&gt;,
+                        color: &lt;span class=&quot;token string&quot;&gt;&apos;#FF0000&apos;&lt;/span&gt;,
+                        message: &lt;span class=&quot;token string&quot;&gt;&quot;백엔드 배포 실패 🥲&quot;&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;CI/CD 설정을 모두 마친 후 깃허브 프로젝트에 push, pull request와 같은 trigger가 발생하면 아래와 같이 빌드 결과를 볼 수 있습니다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/b07a6d79f709673b8ffa107d58d45df6/bbbf7/img_12.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 84.11764705882354%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAACdklEQVR42q1S227bMAzN//9PURTbc/qQoSiKpUmT2HFly5Zkyfdb7MRnlLIO6zCgQFEDhCWSIs855CKOEzw+PsHzfOx2B/h+AMYifPZbtG2LNNUoyxJZlqOqajRN8/mC+OLv6wvmeQGro1IphmF4F5zn2dnf9/+d3xUsipKGEEIIibbtPnz81uTfZh9S7roOm+0L9gcP4zi6u21+Pp/d2TKzjGxRe79cLs4Wb51sok04nUZM0+SS7CpZs347eaMNxU+oaROkZUQ+m1uWlWt6Pk9XhH0/UMccSSLAeew0NcYgCOxOMkipYDIDrTVSshc/wtP2iIBx51NKIZEpOqqzkHkDJjJsN89Yr9fXjkRNVRJh/YqoZhANR3qSUIOA6gVYEcA3HnjFfvsTF+vHDgvLu2larFYrZ1flgeykwQeGeAihTgmyOYW+SOizQtyHCJsAycBhLop8EmaWGKbeImzB0xKpkjRpca13mWEGDUaPooYoEwJzvj7UowSrAnhm59DbBnqSLtZPDuHs1uV+eY/lcvkHYT4aRF0A3hOtUSCftUOZXVKwOsBebxG1jHzaIbexK8KsRigMYh4hDCMq3qCpW8Q5h5ft4GcHsDJA3IXOItL1SL4DIQxy0pEY8DYkY2hPLRY1octpCN+/f8PNzQ2qukKR07LrAGvxhGfxk4ru8Vr5OJYHBIWHrVzj4bjCLt0gKH34xd7FmqHBwpQtVF5Dpymth3RTnsYJshauiNWLNyEkDcZa0nGH+LU8ur/oY+cXQ4zOTjk1BaJE4e7uDre3t+iHnhaWKBccG7XGC6Gwj61edrKW8l7v8OD/cHLYoVlNwzZAVhr8Ap6uFHRoqasBAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 12&apos; title=&apos;&apos; src=&apos;/static/b07a6d79f709673b8ffa107d58d45df6/ca1dc/img_12.png&apos; srcset=&apos;/static/b07a6d79f709673b8ffa107d58d45df6/e7570/img_12.png 170w,
+/static/b07a6d79f709673b8ffa107d58d45df6/f46e7/img_12.png 340w,
+/static/b07a6d79f709673b8ffa107d58d45df6/ca1dc/img_12.png 680w,
+/static/b07a6d79f709673b8ffa107d58d45df6/02d09/img_12.png 1020w,
+/static/b07a6d79f709673b8ffa107d58d45df6/bbbf7/img_12.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;Reference&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer-nyong.tistory.com/47#article-7-1--ssh-%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8-%EC%84%A4%EC%B9%98&quot;&gt;베베의 CI/CD 글&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[프론트엔드: Tanstack Query 사용에 대하여]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '참새'가 작성했습니다. 서론  피움의 프론트엔드에서는 서버 상태 관리를 위해 Tanstack Query를 사용하기로 하였다. 이 글에서는 많고 많은 상태 관리 라이브러리 중 Tanstack Query…]]></description><link>https://pium-official.github.io/fe-tanstack-query/</link><guid isPermaLink="false">https://pium-official.github.io/fe-tanstack-query/</guid><pubDate>Sun, 23 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우아한테크코스 5기, 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/WaiNaat&quot;&gt;참새&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
