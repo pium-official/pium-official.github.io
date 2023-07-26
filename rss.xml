@@ -1,4 +1,345 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 24 Jul 2023 08:04:55 GMT</lastBuildDate><item><title><![CDATA[Jenkins와 Github Webhook을 이용해 CI/CD 구축하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 이번 피움 서비스에서 CI/CD를 적용하기 위해 Jekins와 Github Webhook을 이용했습니다. 본 글에서는 Jenkins와 Github Webhook을 이용한 SpringBoot…]]></description><link>https://pium-official.github.io/ci-cd-setting/</link><guid isPermaLink="false">https://pium-official.github.io/ci-cd-setting/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 26 Jul 2023 05:34:25 GMT</lastBuildDate><item><title><![CDATA[PR 라벨로 젠킨스 빌드유발을 구분하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움팀의 젠킨스에서 빌드 트리거로 을 사용하고있다.  해당 설정은 Github에서 유발되는 모든 WebHook…]]></description><link>https://pium-official.github.io/jenkins-hook-by-label/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-hook-by-label/</guid><pubDate>Tue, 25 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;현재 피움팀의 젠킨스에서 빌드 트리거로 &lt;code class=&quot;language-text&quot;&gt;GitHub hook trigger for GITScm polling&lt;/code&gt;을 사용하고있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 465px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/5384f5e87f3f776b925134b62352d902/ad78b/bc288fb6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 88.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAABxklEQVR42p1UWXKCQBDl/p85Qv5zgVT+cwVLMCKrbKMwLAMunX6NWKbKWChVLTMDtG/pbqsoFG02HnleQOv1htc+VZUmXOfzmZ69LKUUrVZrStOUbPuHFosllWX1ekL8nE4nGoaBDoejJBmGA/V9L2fj+d/9oz+yDL9Q6ZqCIGTaPoVhxBFTFMVC3+MI+MxlWfBMqR0dj8f/Ex74YWcM5XlB0BORprl8qLUWRBP9ORJYPdNp2o6SJKXtNmEUW0GXJBnVdS0yPKUh9Go6I0lACXe47fuhrB1nJeirap5RFhAY09N+X0qU5RgT3bZtBSWMm4WwZ4TthTIQBkF8oZy+VjZwzHBJQL843so9CCJJjj3Qdl03P6FuOlKlJsXuZlkuLuOOgNN13XBCI2hBGzGt7yZ8//ymt48v0nslRqAGgcx1R2Nu12hR23bYpJw1ru8nrBhhwa0GF7Mso91uLy+jM9AhEyoE5EGMKB9pyC7DBJgBynD2FUOuddiyRmg90MXUQVFPA+LphFKHTA9UMXmKohDKMAN1ODIw1yExUX44HDR/7DMyx/mRgQCk6BDX9USC5dKRMsIzOA+JHo6vey11u58GwxxdfwFrmHeDWmXxlQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;bc288fb6&apos; title=&apos;&apos; src=&apos;/static/5384f5e87f3f776b925134b62352d902/ad78b/bc288fb6.png&apos; srcset=&apos;/static/5384f5e87f3f776b925134b62352d902/e7570/bc288fb6.png 170w,
+/static/5384f5e87f3f776b925134b62352d902/f46e7/bc288fb6.png 340w,
+/static/5384f5e87f3f776b925134b62352d902/ad78b/bc288fb6.png 465w&apos; sizes=&apos;(max-width: 465px) 100vw, 465px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;해당 설정은 Github에서 유발되는 모든 WebHook에 대해 빌드 트리거가 동작하는 설정이다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 232px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/80b1fe95e87e8ccda0aebc5e34491a41/88a1c/c0a90061.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 57.64705882352942%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAABL0lEQVR42q2S62qEMBCF9/0frND9Kay7sKj1VjVeEu+rUU+dlAiFvdTSgZCQZD7OzJlDEIRwXQ9RFCNJEjDGUNc1xnEExbLsWwfGEoRhiCxLV2gE3/fBOUfTNBt0Txz0IQgCnE6mAgoh4Hkertcrpkk+SF3uA5fl+4HKdRxbqe26TkH1258UUt+oVM4L5HmuVlEU6Pseo+zQ3wS6G4doQrXL6fYYOM8zpJQb+HK5rEZ9wLatVTnDIBs4n2/w4iPc+B2ZsNcc+Vxhnmf4j9iANC5UIpXKWKr2vu/Qtu0dM5bXQIIJwXE+n9dlqhGiuzRNt5bQGNH5pUJyU3+sqgqWZSm3CW4Yhhof0zTXntrKNJ3zFEhqKKZpwjAM0Gbpnf6QQnr/VQ/LsvxRDiVq5/fEF7L0qHnsuEROAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c0a90061&apos; title=&apos;&apos; src=&apos;/static/80b1fe95e87e8ccda0aebc5e34491a41/88a1c/c0a90061.png&apos; srcset=&apos;/static/80b1fe95e87e8ccda0aebc5e34491a41/e7570/c0a90061.png 170w,
+/static/80b1fe95e87e8ccda0aebc5e34491a41/88a1c/c0a90061.png 232w&apos; sizes=&apos;(max-width: 232px) 100vw, 232px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;빌드 스크립트에서 위처럼 triggers 설정을 별도로 지정할 수 있지만 현재 프로젝트 구조상 더 세분화된 설정이 필요한 상태다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/0f0966e1d8082e4cd2137f8dcfd81520/ca1dc/b47bf110.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 40.588235294117645%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABc0lEQVR42nWRW06EQBBF+TQ6A8MATfPqhm6a15h5aYwuwR24/41cqxpM/NCPClBUndxbN0ikwnC6wVHJxiFMSzwehK+nOP+zHsIUcd7ATBcU7YiyHmD1GVL2COJcoeqo2Q44iBp7Au6T0oP/A4raIm96CGVRNgPCRSP6HLC7awQMm85v0O7ZQws9oDYTKjMjFA3CDb5W4Z+KZrvxgqZf0Lsb0lfa+7oh+rAI3HzB6fpO8m+wy90PutMLNH1LQzaUIzUOUo8QeiJ1PZLKUJ8gavR9ay9QxQKRGgQs3c5XUjYiymrEUpN1haRoSfFIahcU3eIXU7VQv/tVLY40n9UGFalNaw+03iaDo6yiGwnsjpLuWCAjJTndK9MzdrnBYywprGwLbA2N33mP78oZBGyJb1Z3o//BMC6+FQ+lZUdQA0G2M7Kbli2S0mBfOj/HUHbGp+DkA4ZwMIokcwA/QFbIyyuUIFVPIWnst3+7bXYFVt4NK/wG44jR81Z7YaIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;b47bf110&apos; title=&apos;&apos; src=&apos;/static/0f0966e1d8082e4cd2137f8dcfd81520/ca1dc/b47bf110.png&apos; srcset=&apos;/static/0f0966e1d8082e4cd2137f8dcfd81520/e7570/b47bf110.png 170w,
+/static/0f0966e1d8082e4cd2137f8dcfd81520/f46e7/b47bf110.png 340w,
+/static/0f0966e1d8082e4cd2137f8dcfd81520/ca1dc/b47bf110.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;현재 레포지토리 하나에 프론트, 백엔드 코드가 같이 관리되고있다.
+PR이 Merge 되었을 때 각 트랙별로 코드가 빌드 및 배포될 수 있도록 구성해야한다.&lt;/p&gt;
+&lt;h2&gt;어떻게 할까?&lt;/h2&gt;
+&lt;p&gt;현재 하나의 레포지토리에서 두개의 코드가 관리되고 있기 떄문에 단순히 develop 브랜치의 변경감지로는 어느 트랙의 작업내용인지 구분하기가 어렵다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 570px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c8caf5f8c1848911727ad888b8a5164f/27f8f/88fd7187.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 21.764705882352942%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA50lEQVR42j2PyW6DQBBEOflgOxL7MCxmzGAMODYBzGbsIHGIlEMO+f+PqUzGy+F1lbqkUrdiWByn+oqyu+F0vqAZZ4zzN9rrjPyjw6Fqkdwm8GOJ9yFC9hOBpgxr3cVKI0IdqU+U/6HTEKa7hUGZ5O5DudedEJrA9vgrIz6HZgdYqgTLR+kTxSI75EWHtGhwPI+ohgnD9IWqn8TVn5LdoYTqbbDvewTNBauyxaKtkbIaffELy0lEsXkvfNMpXJbCi1L4UQafZ1KDOJc+4DlIEMPexKDbBITtQURusgSq4UG3Q1FEXy//AQeib0tj/1KBAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;88fd7187&apos; title=&apos;&apos; src=&apos;/static/c8caf5f8c1848911727ad888b8a5164f/27f8f/88fd7187.png&apos; srcset=&apos;/static/c8caf5f8c1848911727ad888b8a5164f/e7570/88fd7187.png 170w,
+/static/c8caf5f8c1848911727ad888b8a5164f/f46e7/88fd7187.png 340w,
+/static/c8caf5f8c1848911727ad888b8a5164f/27f8f/88fd7187.png 570w&apos; sizes=&apos;(max-width: 570px) 100vw, 570px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;현재 피움은 라벨을 이용하여 트랙별 작업구분을 하고 있다.&lt;/p&gt;
+&lt;p&gt;이를 이용하여 라벨별로 빌드, 배포를 진행할 수 있도록 구성해보자.&lt;/p&gt;
+&lt;h2&gt;Generic Webhook Trigger 설치&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/31654fadbf6bf2c33749e65632570adb/ca1dc/82e40c68.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 34.11764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABJklEQVR42nWQS07DMBCGfaUilUUpy4ayKAcoZyp3KIcpq7IpEg+pLFCiPKAhDxM/Eudn7CgtgjLSpxknnt//DJvPrzGbXWE4PMVodIbx+Nxh65/Yb4PBCRaLG6zX91it7rDZPGC5vMVk4mE6vYTnXYAVBUdVCUip0DQtZQ0hJGy07V/quoFS2t2zPVrX1Gf2sCT5oB+dgI00/UQUxe6ibT4m2nMsmO9HiOOUXNYk3DihPOcknKMsviCc4+MY05KrxjmzdUuvsDhOsNul7mCjEgoFl6ikodqOV9MjXT6g93WWleC8glTd6Ky32k9QcIGnrY/HbYDnVx9BENAKIoRhSM0ZyrJ05EUOJQVe3iK8ZxykBkMrYr93YK0rbaDrDuvcmC7/z6H/Gx4T/tNAO4uwAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82e40c68&apos; title=&apos;&apos; src=&apos;/static/31654fadbf6bf2c33749e65632570adb/ca1dc/82e40c68.png&apos; srcset=&apos;/static/31654fadbf6bf2c33749e65632570adb/e7570/82e40c68.png 170w,
+/static/31654fadbf6bf2c33749e65632570adb/f46e7/82e40c68.png 340w,
+/static/31654fadbf6bf2c33749e65632570adb/ca1dc/82e40c68.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Generic Webhook Trigger는 젠킨스에서 제공하는 플러그인으로 HTTP 요청을 수신하여 JSON, XML 형태의 데이터를 추출하여 트리거를 지정할 수 있는 플러그인이다.&lt;/p&gt;
+&lt;p&gt;Generic Webhook Trigger를 사용하여 빌드 유발 상황을 구분해보자.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 367px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/e13645543c6e4d179c1f35a63db1f711/881e3/4ff8e063.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 107.6470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC00lEQVR42q1Ui27aQBDk2/pL/Y/+SH+ilaJUaWmBYMA2T2PeMcEYgs+PMN1Z4ygJSZpINVrdnn3szc7ObiUMQ3S7fUwmU3jeGL4/FX+G5XKF4/GIjz6VIAhweXmFTsfBaDTGxcUPfP9+oZfc39+/+sfXLqvgPz+VJE1xMAk2m1BTDYI1Foul7pk2KeG7m5tA/c1mo/56fYvdbo/9/u48oBHjgV6vr8HI5Wp1g+HQw3Q6Eyq8kz/HeDzBYDBSvwi4fxowze9hshyHOEYY7RAL2jhJEMnhndzO9yZJkWbZ+1I2koaRNFaeB+tXFX2rhd51E06trua7LqLlAnspHkyM492+sF0EHA7nAbPGH5jhAMa1cSit6yBqWzg4ttq21UTUshDzm9OBke/wPeD3zxeKIsiY8nK2QMdqo2t35ewYzXpT9h0MewP4Ix/Vqyo84W57u0F0GxbScSTwM2lVsnYLRj5kXRexLbe7jqw2Utkn8j7v9wTNGFIpsREwGhbG93L+nENWWQhfiEQaTeGvP4TtdtXatqPVVDTv1WEm6bKyeZ4jkTVLMyRS5Viqyz19I34mlxpjnrfLeUDK4Si/ueiv0WiKFgfoC8p224ElHLIlbdt9EPo/Ec7XIS6tnvatEUSpUEA0qSJNFSGN7xWtoOQ3nmEWzIx7rhrw67cqPn3+gkDaqV6/VoQcDI7jakdUqzXZ97R7uLZaHe0aZlGrNcQfSVcFiKQpiqIIiiDcnW5KT2iyB6Q0TpbnlkuHFWv+ZPJUmFYu6c5mc7ndVu6IgGNtu43eHFUvcsgb2Lu8kWi450pO6b81E1/uZaYoAai3puiQ/LmiQXK0WKx0dH0EpSI0J75YNVbxcIiVS6IuUZbclT6lXu6fBNRxJQE594iQ2qPuHKdASW3Sn8/nitySaeT7E602By25fpxBhQVJs1JXRrVY6o+V1o7hPHzQYaECni05f/z8BYRDlsyHVZxcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4ff8e063&apos; title=&apos;&apos; src=&apos;/static/e13645543c6e4d179c1f35a63db1f711/881e3/4ff8e063.png&apos; srcset=&apos;/static/e13645543c6e4d179c1f35a63db1f711/e7570/4ff8e063.png 170w,
+/static/e13645543c6e4d179c1f35a63db1f711/f46e7/4ff8e063.png 340w,
+/static/e13645543c6e4d179c1f35a63db1f711/881e3/4ff8e063.png 367w&apos; sizes=&apos;(max-width: 367px) 100vw, 367px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;플러그인을 설치했다면 파이프라인의 Build Triggers 설정에서 다음과 같은 탭을 확인 할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d955285dcdcfa3a9f4bd8f2c7d4712e0/ca1dc/7b51b24a.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 37.05882352941176%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABKElEQVR42nVSa2+DMAzk//+4fe8QsBICeT8ohKql3Jy02jRpjWSdYyeXOyvVx+cZA58gJgEpFcZxwjxfkFLCeiFcVyzLgnVNhM8897dtw3+r2vcdWmsopWGtgyTMez4p1Eyj4QajtIgxwjkP5z00nYlxfk/ofYAidUoZSCHAiWDwG7hd0MoFbk5FaVadVdr0wLtV3V+E2a7RREikzCYY40ixhTPmWad+Vt6JgJhu2PcHjuOX6HhtCmEgO1pbClMsS+0od+D+Cks2M2G2W0ZiPGKIkGFDuh1/yH4I+56hbb9KdN2ZsAXnI1g/PJHxgsMwYiTsz6zU8j3GBqrz8lgeSXW731HXDU6nupA1TVcOZotCqKI6x0S/wJiMkn5Czi315WsUpjwYQsA3l9UT3dy1Z28AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;7b51b24a&apos; title=&apos;&apos; src=&apos;/static/d955285dcdcfa3a9f4bd8f2c7d4712e0/ca1dc/7b51b24a.png&apos; srcset=&apos;/static/d955285dcdcfa3a9f4bd8f2c7d4712e0/e7570/7b51b24a.png 170w,
+/static/d955285dcdcfa3a9f4bd8f2c7d4712e0/f46e7/7b51b24a.png 340w,
+/static/d955285dcdcfa3a9f4bd8f2c7d4712e0/ca1dc/7b51b24a.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;해당 설정을 클릭해보면 다음과 같은 설명을 확인할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;http://JENKINS_URL/generic-webhook-trigger/invoke&lt;/code&gt; 로 오는 요청에 대해 트리거가 수행된다는 말이 적혀져있다.&lt;/p&gt;
+&lt;p&gt;위 설명에 맞춰 GitHub에서 WebHook 설정을 변경해주자.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;위에서 설명한 탭에 대해서는 아직 저장하지않고 깃허브로 넘어와서 진행합니다.&lt;/p&gt;
+&lt;p&gt;젠킨스 설정은 아래에서 설명하는 &lt;code class=&quot;language-text&quot;&gt;Github WebHook 설정&lt;/code&gt;이후 이어서 진행합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Github WebHook 설정&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1e6a2510546df10d70af521538217ebd/ca1dc/eebe67d7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 65.29411764705883%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAABqklEQVR42q1TaW/aUBB0W4LxjW184QtfAkLAckJUiST//2dN5y1KokaVKpV+GO16377ZY54110+RlR1WaQU3SBEmJXRziW8zEz90B9/ntkC3fJjuSuxs4QruDA93tHPGDDtA3QzQrGWMgCRR3sD2Y3irNfyoQLzeSNzmucNCXrSGyjW9CF6YwvETOGGGLN8gL1rMSK6KaGG2QVx0kqwSDF7Imy124zOSsscyLuCT2E8qhNkVXlITlZy12xPW9QCLBewggxZw1GZ7RD0c2FElhHV/wNPzK6anCx7PF/ovGOkPpxdsjhfEwxlJe0Ba9VhxEi/KhVBBU5Wr/l5GtpYJDAbTIMa0sHDSDcGomzjSPs5NOB5zOI3hhuywRLefSDxII0KoiIp2x6RrQAi5y9GwcFx84oE4GzZ81QlXY1HMIK3R30/S6QdhQvaq28uH2qFLUcSnEF9hE++jKZiqUxIp+zFy3h0w/XyjMA0XfxVAXTTVhT/A+gsoSgklzOJLpX8Fn00tO0z4uJV/KylFabF9OPPt7X6T/ybCbj9Kd7eSCaHqSv0Z6oH+jx3+AiwLQx6VyIydAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;eebe67d7&apos; title=&apos;&apos; src=&apos;/static/1e6a2510546df10d70af521538217ebd/ca1dc/eebe67d7.png&apos; srcset=&apos;/static/1e6a2510546df10d70af521538217ebd/e7570/eebe67d7.png 170w,
+/static/1e6a2510546df10d70af521538217ebd/f46e7/eebe67d7.png 340w,
+/static/1e6a2510546df10d70af521538217ebd/ca1dc/eebe67d7.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;프로젝트 레포지토리&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;Settings&lt;/code&gt; -&gt; &lt;code class=&quot;language-text&quot;&gt;Webhooks 탭&lt;/code&gt;에 들어와서 웹훅을 새로 만들어보자.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4b56bfd528274decc6dde53fdff95602/ca1dc/19691acb.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 88.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAACE0lEQVR42p1U23baMBD0aZuEGGN8wRd8ExbGxuYOAVLaPvSx35PT75/uikJpmyakD3N2tRKjZWZlzRksYMktknKNerFDOd2iF0m4/fw3XNY4P8Htn+rHqHnZGJ6cI5IN5HiOvJrBT4fwkyGCtECYjVQ8rU+5F8tzrZ8d4ScSGpMstwdMVns0iy2m60eFmnIG19Xecof5wwGr/RcVy9kas81BIZvskU4/IcgbaGZUopuvYdFfd0JBbQvYQXpG14upninw+jI/nW25CSGD7kTQokGJ0WSFiFq+73rQLR9tO1DxMm//XD8Hw2Z4MJwAWo9uq2cbyHIKMayRygqiaJDJsaqxNrdtGx/uu7gzHHXBv2A4IbS+GKFolkiIgAtq06JNO1TrP7t5lZBdmm0+KiO8OIfOG24fnV4Ek/ASwbOEST5GQPa3Ou4Lh48atq/pkA8pjVpdvL/rKLxj3BrHnGPLxI1uXadhSBqyfux2SqbEeaXWYjShWKlBZ2Ne0++XKanEiEwZ1gtU5DYTBvRSYiLlyeeLetHgesJwvCOXV5DUST3fwqUf35AELbOn5vIUrzall5UQNG8FdThePNCQr5EVE1h+clVXfxH6grQrathhqsaEiRjnmXwrYSgajKoV/DCHEwilF79Rjgz+onRoLq8m1L8OED89Qnz/DPNbCb1DejnBm7s7ExoihtkIQgZjEJ+f3P/iB3Bqy1BFXuZFAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;19691acb&apos; title=&apos;&apos; src=&apos;/static/4b56bfd528274decc6dde53fdff95602/ca1dc/19691acb.png&apos; srcset=&apos;/static/4b56bfd528274decc6dde53fdff95602/e7570/19691acb.png 170w,
+/static/4b56bfd528274decc6dde53fdff95602/f46e7/19691acb.png 340w,
+/static/4b56bfd528274decc6dde53fdff95602/ca1dc/19691acb.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Payload URL을 위에서 확인한 &lt;code class=&quot;language-text&quot;&gt;Generic Webhook Trigger&lt;/code&gt;의 설정에 맞게 작성한다.&lt;/p&gt;
+&lt;p&gt;그리고 트리거가 동작하는 이벤트에 대해서 &lt;code class=&quot;language-text&quot;&gt;Send me everything&lt;/code&gt; 옵션을 체크한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 402px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/33228aeb1868f6cb5e605cff978a9312/752e8/5e2c402b.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 29.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABSElEQVR42m2Q607CQBCFGxUspfcbsgVsBdpiKpSgKIaLCohBIhhRNEHf/y2OUyDGGH98ezKzc85OlhPyAQT3AkIxhlCIkKVaJM2YxygFTfinMUonIQpegCJpvlSB60cI6udgSa9cA3N9ZBQLon4ETnDb4BtL8PEKmegJqbMF9qnmvC6q7Vs8vn+iN33GdPWFh9c16pc9zN/WmL18oDeaYjJfokm9tKhvA0WVkhVjg6CaYIqJUNbgk5ZFDV52S5kMVcKQTKQIXjLAy6SyRdvZm7BNYFbLQTIYVNNBymSYSzrGeg5di6FvOQTDje3gmphpNu7p4T0yyruAxP8bTlBtOF6ISq0JFjYwoc08+pPWYIxGZ4D6VR+t7hAx1ZHnoy9pODDyP4F/4ZJD2g0c0oZDCpyJKoZkHBMjMUHFHemCtEP3aZpTyCP9wzeOOqQYGwBiTgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5e2c402b&apos; title=&apos;&apos; src=&apos;/static/33228aeb1868f6cb5e605cff978a9312/752e8/5e2c402b.png&apos; srcset=&apos;/static/33228aeb1868f6cb5e605cff978a9312/e7570/5e2c402b.png 170w,
+/static/33228aeb1868f6cb5e605cff978a9312/f46e7/5e2c402b.png 340w,
+/static/33228aeb1868f6cb5e605cff978a9312/752e8/5e2c402b.png 402w&apos; sizes=&apos;(max-width: 402px) 100vw, 402px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Add webhook을 한 뒤 다시 등록한 웹 훅을 클릭하여 &lt;code class=&quot;language-text&quot;&gt;Recent Deliveries&lt;/code&gt; 탭을 확인해본다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6ea312ef64c843921722f44307b11a80/ca1dc/bb813e21.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 124.11764705882354%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAZCAYAAAAxFw7TAAAACXBIWXMAAAsTAAALEwEAmpwYAAADTklEQVR42p2VW3PaSBCFqYrjBMJd1xG6AgIkIS4Cx9iwySau2sTOVm12qzYP+f//4+yZEZDEdlxkH76iNTCHPjPdrUrVX6IWXeLcKyCGM+TFBqPpCtPiChlj2x+i2jLwqmOdRKVhBmjZfYUIxwiGKWxvgK7tQxM+mrqDWts8XbBt9KDZATTLgxNNFB3LZ1Ymhfijro265hCBOuPDRhnfRwlapg8jzBWal6JN9HAKM5opNC9BLShQdWdqQ4PCEhlLF7oIYPQiugkoSkEnHCGIp6VFb4h/BxkmpodzufmRLOKswCBdosPfSCHdKenSpcpwmC4gglidU40LGje1ZQaPiEkaXVGiPUQJ5qstfrv5hHy9henItE1UmxqaTP9Ao2Pu+RZrdsjM+kc0EZaCy8s3eH/7GcXmd6SLDblCPF3D8mJa6pMB45F6Nt3hEbn+PZqISkFZb7d/fcH1u4+42N4gTudw/D6ePX+Bs/OXeFGro9420GL53Bd5VHBGq3/+8xXvPn6GzLZrOJCl5ARj6PKgWzqaPB9p6STB8WyNm7u/sXt/h83bPxRXbz9gd3NH+5fo+QNVBaYbnyYo26zHDnnFW26ygFt6T3VHi1m2WexdZiYLvanWn8IpBW3WoUXsIIEdkmACEaXHf5VW5eeh3n7GsQ6NgJZ2BYK8UIsav+wNcpje0xZ/alkKeOsZnOGEGbKX+xkMd6Bq6/8J2hHcdQ53PoMbL9Sg+BWhh4IM3JxiWQ4n5NmxaH81ux8E5WY3mUKME55badXci+qHyxCH+FurPWnZTiYIdysEmwJ9dk6UvYblj9SZinBS3j4ReyxWguFQSArvOfay/LfeOIWYJPDGC4QUC1KKJyuE6QXc0RzeaEHmx1iW1cHJAfksJ1RF2nGLHP71EtHyAtn2FvmbT5ju2CnXH+DF8zI7isgKcPipyooOmprNRhAKGb+sd0pBZ54hfL1WFquNNrtGZw9rqHd0whdUW1M0ONrq/E5+yqFRqVQeom55JTNcwJ7GTN1XN21yesssZIFbgeymMZ9jtS76fFVwiJydneM5J9KBZ3xWlyLSBMG2QLS65oVc8NXJzWoGlkhRJfzd2v35+MMZilGC3jKDO1ny4Jf7wXoKD8vmP/cClve1Q/cuAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;bb813e21&apos; title=&apos;&apos; src=&apos;/static/6ea312ef64c843921722f44307b11a80/ca1dc/bb813e21.png&apos; srcset=&apos;/static/6ea312ef64c843921722f44307b11a80/e7570/bb813e21.png 170w,
+/static/6ea312ef64c843921722f44307b11a80/f46e7/bb813e21.png 340w,
+/static/6ea312ef64c843921722f44307b11a80/ca1dc/bb813e21.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;내용을 보면 요청을 보낼 때 Payload에 다양한 정보들이 담겨있는 것을 확인할 수 있다.&lt;/p&gt;
+&lt;h3&gt;(이해하기) JSONPath 살펴보기&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;해당 과정은 원리를 이해하기 위한 과정으로 수행하지 않아도 무관합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 481px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/0cb3f7d9540a22398bd67e7cf0cbf527/213b2/4ff6a8c1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 6.470588235294117%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAQklEQVR42mNQEZf7L6Vm/l9M2fS/tIYlGEupW/yXBIqBMIwPo2U0rf6LKxn9l1Ax/S+uavZfRsMKqNcELCcqr/sfAHwzHQTNyFxbAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4ff6a8c1&apos; title=&apos;&apos; src=&apos;/static/0cb3f7d9540a22398bd67e7cf0cbf527/213b2/4ff6a8c1.png&apos; srcset=&apos;/static/0cb3f7d9540a22398bd67e7cf0cbf527/e7570/4ff6a8c1.png 170w,
+/static/0cb3f7d9540a22398bd67e7cf0cbf527/f46e7/4ff6a8c1.png 340w,
+/static/0cb3f7d9540a22398bd67e7cf0cbf527/213b2/4ff6a8c1.png 481w&apos; sizes=&apos;(max-width: 481px) 100vw, 481px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/a43fdcc058f1a92e77913286de225ac5/ca1dc/f6916224.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 53.529411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAByklEQVR42oVTaW/aQBT0t1aJnBAO3961sfEJtjnsQggtJWdVpVKqROr//yPTtwu0UCrlw+jNW1vjtzPPil3msMMcfj4HT6fQnBBdw0PX9N+HJdBHzw7+QPE2UwSrJaLFV3jxGGY/h7XDnpt+BtNLj/rD8yNBpxpB7w/Qtjg0NoAbV3DCAs6gAKOJvbwGz2Zg8YRqDW/YyJuIc5ZMwQnHgrMCRhrh/LKND2cqztSWxMdzFR2TQ2eRtEFnMQyaRvQCxm6yK809FmQ3Y7iLEkHZoPjyA8X6GdXtC/FnzJ5+Ef+J/OYbJvdvhFf5rNy8YLj6jmzxQN7X0Eho76XCP9NVSJSNxkiaO8T1Bun8AcmnW2TXj8iWT8TvZBUC6fx+y6+J7/qwWsIOhlJUcZoCblUgHK9h8ARtnaFjcKp8y01PvihS7ezTt/ZJb/seWSJskRO6JMhIMJiswch8kR5LJtJwUQ0en6zGKf4+V9x5CX82gZ81NOWK0iRPo4rSFnUsA+i9K3gQil2OYBUpLto9qB0Nra6JiysNakvDZdeiK/+zyAf9/z6kGEkKpy6gD0LyzIXuxXIfdR7RHzSUeyemFTspdlTYIM4E7HB0IvgbJEo2Xg7yiD4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f6916224&apos; title=&apos;&apos; src=&apos;/static/a43fdcc058f1a92e77913286de225ac5/ca1dc/f6916224.png&apos; srcset=&apos;/static/a43fdcc058f1a92e77913286de225ac5/e7570/f6916224.png 170w,
+/static/a43fdcc058f1a92e77913286de225ac5/f46e7/f6916224.png 340w,
+/static/a43fdcc058f1a92e77913286de225ac5/ca1dc/f6916224.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;PR과 연관된 요청이 발생했을 때는 Payload에 pull_request에 대한 정보가 추가된다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/fe74081a72d47d01a4e45bfae7c645d1/ca1dc/c301431e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 59.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB2UlEQVR42q2RUWvTUBTHz03iJyj4Irih6yQsqU2btV0t6pOT6URho6tzQ4TB1GcffPUD6YPgQxFlog8iHe2Kiptzb4IuzZKmbrp2+3tuoqMFnX3wwo9zcsj98T9cctwtfNl04Lgevja4dxrwmgFcz4e75WO33cH+PrDXJ/S5EcDxW3Cb22jt7IYETHObCfs2Wt87+PZjDwHXw/B3OiCPRQ4n81ngdQCvDQRcu49MKPnXCRM+ef4CS68rqL97j0p1Bcu1ekh1JWK5WsOH1TW8fFPBo3IZj58t4WH5KV7xv/X1DVRXP6K2th7Wt582QMfGp0AjeQhFBQnRg6LyjAhWKoXCzTugU0mIxBjIyILMHEj2jDidZ0cGsbMXQccnijwsQNOOQFUEoxygaVooTKfSyM/fBg2nofFlNZFjxg7QfgmPSuHA5RkWnoNQo8vdKCwNE1oWcvOLoLgFRSaTCbsQcqbbiBUusPASC0fORCsfJpzrUzgoE+oZFir/SThZ4o9stLKgvz5K38IB+conrT+u/Dt1MskJi7f4BXUowxaLkz0IOTthIjZ6HjR+9x70KyWYdhZG2oZhj3KNMO0M4kYC07M3MHv/AYYmpmBeuw7jaqkHk9EniyjMLeAnzkIKxwUOxU4AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c301431e&apos; title=&apos;&apos; src=&apos;/static/fe74081a72d47d01a4e45bfae7c645d1/ca1dc/c301431e.png&apos; srcset=&apos;/static/fe74081a72d47d01a4e45bfae7c645d1/e7570/c301431e.png 170w,
+/static/fe74081a72d47d01a4e45bfae7c645d1/f46e7/c301431e.png 340w,
+/static/fe74081a72d47d01a4e45bfae7c645d1/ca1dc/c301431e.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://jsonpath.com&quot;&gt;https://jsonpath.com&lt;/a&gt; 에 접속하여 해당 Payload를 붙여넣어 확인해본다.&lt;/p&gt;
+&lt;p&gt;JSONPath로 표현했을 때 &lt;code class=&quot;language-text&quot;&gt;$.pull_request.merged&lt;/code&gt;를 확인하면 해당 요청이 PR이 merge된 요청인지 확인할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8d3a28af10e5768cc1ffe4ea964aad7b/ca1dc/0d6d400d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 19.411764705882355%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAzklEQVR42nXNvWoCQRSG4aM34D2kixqFKItYKFjmMnIfKW0jxF7x30VrY1zRylZyJcbFZjfO7Juz2ijGwzx8MPPNjOx2P/i+TxgGEFldBmsM5oK1uo8eR5E6p7npGIIgRA77PeZ45FeLgQr1ouV64gfiT6z2TqnujXz0XKaLNaP5isFsyVC58yWTL6Xpzjw222+a/TGNzoD3VpdGu8/402PqrZksVldEnqokn2skciUkXUQyxXM+FkhmHeQhy+tbnVTlBcmXScRyZe04//oDW534EYBEoAIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;0d6d400d&apos; title=&apos;&apos; src=&apos;/static/8d3a28af10e5768cc1ffe4ea964aad7b/ca1dc/0d6d400d.png&apos; srcset=&apos;/static/8d3a28af10e5768cc1ffe4ea964aad7b/e7570/0d6d400d.png 170w,
+/static/8d3a28af10e5768cc1ffe4ea964aad7b/f46e7/0d6d400d.png 340w,
+/static/8d3a28af10e5768cc1ffe4ea964aad7b/ca1dc/0d6d400d.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;$.pull_request.base.ref&lt;/code&gt;는 해당 PR의 base 브랜치를 의미한다.&lt;/p&gt;
+&lt;p&gt;예를들어 feature -&gt; develop 형태라면 develop이 나온다&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4411c0888680fd1af84065f158384c2a/ca1dc/47afaad7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 18.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAx0lEQVR42m3IvU7CYBjF8UeuRxIiUQEJii4u3AOTsysXRZikCQPiagi0TkIpEyRA+EgsvKRf79/CBvQkv5yTI9P5htnKZbF2UV7EPgDlw+6MSrBLILPFCtdVLBXMtzoGfx4n0Rr8ICII9ZEfhISRJinSbH9hDh36wzHdwYhuvHu2g+WMsUbxb9vYkynf5g/1D4PmZ4eG0cJod7B+BxdE0kUk+8pV9gm5f0TyZaTwjBRfSB365oFM9Y3Kew25viN1W0LSueNO8g/H+P8hjo3mwAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;47afaad7&apos; title=&apos;&apos; src=&apos;/static/4411c0888680fd1af84065f158384c2a/ca1dc/47afaad7.png&apos; srcset=&apos;/static/4411c0888680fd1af84065f158384c2a/e7570/47afaad7.png 170w,
+/static/4411c0888680fd1af84065f158384c2a/f46e7/47afaad7.png 340w,
+/static/4411c0888680fd1af84065f158384c2a/ca1dc/47afaad7.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;$.pull_request.labels..name&lt;/code&gt;는 해당 PR의 라벨들의 이름을 의미한다.&lt;/p&gt;
+&lt;h2&gt;Generic Webhook Trigger 설정&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/0578dc8c75ad072f2010764e63ccd0e9/ca1dc/5b94c679.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 51.764705882352935%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABmElEQVR42o1SyU4bURCcT8XOBQiBg4kilA8jH5AjuUQsB+BGLHtmNJ63z1uL7uchi0QQLZXU7ulXXV3t5svqHBcXX7FafcZiscRy+eFVHBwscHh4hKurH7i+vsXNzS0eHh5xefkNJyefcHz8EaenZ2hCTAgh4r0RY67gNyEkpFRqvZQ9GucclFJcosIeORc4z4PCTFNmvB5MxDzc34yjwG430tT0V0OBtYHgMbkJwUd4gqOc1XFu7VTf8DdjXK2zkMYYg74fZpX7SClDagNnHbqdhjIeUlls2oFIAxFM6LuBejzlHm3bQ2mHyZNCISS225Ymuj8+ZSKMlqQSESmRNCzEiF/tDjklZNqgH0ZYUsfrKikpJ5Ulo+F1eW3+wJIZkRS66Ikw4e5J4Pu9wM9NRjca6tuvNpLiTIM52AoeyINIoa4e8MX87JX3vhrMl2Ql600HST28BdettbBkVYyx5sZYaK3ru2a93pJCWQ1msmkKVcFLCKkxDENd9eVw9Z9Qyj9HLPPvRildj/C/ENqS6R2EEL9XfCueAc1a8zPM0DyuAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5b94c679&apos; title=&apos;&apos; src=&apos;/static/0578dc8c75ad072f2010764e63ccd0e9/ca1dc/5b94c679.png&apos; srcset=&apos;/static/0578dc8c75ad072f2010764e63ccd0e9/e7570/5b94c679.png 170w,
+/static/0578dc8c75ad072f2010764e63ccd0e9/f46e7/5b94c679.png 340w,
+/static/0578dc8c75ad072f2010764e63ccd0e9/ca1dc/5b94c679.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+파이프라인 설정 구성에 들어와서 작업을 이어나갑니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 380px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/298dd4453e706355eef37beeb7982f0a/2edd7/f9141614.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 8.823529411764705%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAeElEQVR42h2ObQuDMAyE/f8/UCa1b0pnrWlGxzrUfbg1PXg4uFxChvo98akV82wwTQreL9DadpxbMI4PGGMRwhPWeiile76uoc+kV8ob2xYhGs77h+u6kYmREiFnxnEQiHKD2xEH5ldbKt0ll474vifEmFDbQ4LoD7gvlSbV8ka1AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f9141614&apos; title=&apos;&apos; src=&apos;/static/298dd4453e706355eef37beeb7982f0a/2edd7/f9141614.png&apos; srcset=&apos;/static/298dd4453e706355eef37beeb7982f0a/e7570/f9141614.png 170w,
+/static/298dd4453e706355eef37beeb7982f0a/f46e7/f9141614.png 340w,
+/static/298dd4453e706355eef37beeb7982f0a/2edd7/f9141614.png 380w&apos; sizes=&apos;(max-width: 380px) 100vw, 380px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;기존에 설정해둔 &lt;code class=&quot;language-text&quot;&gt;GitHub hook trigger for GITScm polling&lt;/code&gt; 설정을 해제한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/5c42ec62023b3e8afc441a8a36a767e7/ca1dc/40676eae.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 81.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB1klEQVR42qVT23KrMAzs/39cn5M2QEiTAvEFCGDAELaSgDRnJrycemZHtmwvu5Z4e/84Ik0zwfWqkGUKdV3DuQauruCaBnVVU66RfFXNGMcRr8abH4aF6AqtjRBmWYborLA7KRzOmvIWRV7AWAtjjJzzftgiHGFtLkRKaaRJiq/rDd+5Q0zxS7M6JwpZrak6tCJu2lZojBVCozUSXeLbNshJDSsprBH1SilcUk0fasF3hvGXcJomwUxI0nOys9pOkkwsp6ZEYmvYxSK7UGRdoqHzZSfv2Hv/IBPCtu3w+Rlgt9tL3O8/EIYRgiBCSDgeY1lHUYw4PsmZYMkHQYjDIcTlkoggJhZC3mScTmeJXAR+M66mc06qO6PB7VYtFef9SvJleZP8w7K1XMEcRVEIwV+GFEXpHHlxA6utKyfREdq2l/Z4BueappXIcK4jpY3cebTNQGD/9/tdHprjv5iW/RVzfq4u35nPPCwXZUl2S3mPvw5RmCkjLcFWvKdW6D2pHmTOcVhczPNB1G0SDmSx67xgfSP+M7quf4JfMK+ZdJOQG5Ob1dKfwVV+btL/sswKDbVNUVZida0mz/t+tsvrV3GTkFuEy88kqy1ecytwjp9h3Xtevxo/tJHZ70Bn9BIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;40676eae&apos; title=&apos;&apos; src=&apos;/static/5c42ec62023b3e8afc441a8a36a767e7/ca1dc/40676eae.png&apos; srcset=&apos;/static/5c42ec62023b3e8afc441a8a36a767e7/e7570/40676eae.png 170w,
+/static/5c42ec62023b3e8afc441a8a36a767e7/f46e7/40676eae.png 340w,
+/static/5c42ec62023b3e8afc441a8a36a767e7/ca1dc/40676eae.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;그리고 Generic WebHook Trigger 를 활성화한다.&lt;/p&gt;
+&lt;h3&gt;Post content parameters 설정&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;Post content parameters&lt;/code&gt;의 추가 버튼을 눌러 파라미터를 추가한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/089b80864d0f427310cb6d2ce3abd474/ca1dc/f66fbb52.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 55.294117647058826%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA3klEQVR42qWSsW7EIBBE/f9/lzJNpIuU4mxjnx0wsMsy2eWsKM0VwSONWJrHDDB4H7CuDzi3YJpmpJRhqrX+z3hq4MKYnQMz94FOWNUgEjMGIoal9D4iZ0K3FCwiCuSC+zjjse3gUi5bgYx9/+6/uz9+JiTCeB/hlrVVD8eBoif1uCWcN4+39w/cbp9afWpQO6kb6LWqU6joxkBXJFp7sO7HETWZx1U1YNFU9l3Mv9FZzgqCkCuS7q1B4nOW8hpovWNM+sqkSVObo35QW0MkfG0Fi2dQSliCzQTK+SXwB5OHY38SNw2hAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f66fbb52&apos; title=&apos;&apos; src=&apos;/static/089b80864d0f427310cb6d2ce3abd474/ca1dc/f66fbb52.png&apos; srcset=&apos;/static/089b80864d0f427310cb6d2ce3abd474/e7570/f66fbb52.png 170w,
+/static/089b80864d0f427310cb6d2ce3abd474/f46e7/f66fbb52.png 340w,
+/static/089b80864d0f427310cb6d2ce3abd474/ca1dc/f66fbb52.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;$.pull_request.merged&lt;/code&gt;를 등록하여 Merge 되었는지 여부를 가져온다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/28afb9569d26799aca1ec26d78932b18/ca1dc/2f09a4a8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAyklEQVR42qVSy44DIQzj/79xD1tpH91Cp7PDEEh4uMn03AtjyRIIyTh2HLNg2yJ67xhjzBHAkIpOGS4lwu0WQCmj1oZpqGpvDa4ww4cFcSew/sJ1nqJ0lAtCuMOEDX30Y/wZNqVjc+g91nVTlzuyftDG63GG7m/5x8flCz/fv1iWByhrlprFDEU7cFcVvIZVS0mH7TPo2riz2m1sEXmVNU4K2ty2OpbdWRyCrM6Iigoydl0dOye7KyMxPh8V9yhgzdbHCr8JpJS3gk8jdhR7qC6KZQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2f09a4a8&apos; title=&apos;&apos; src=&apos;/static/28afb9569d26799aca1ec26d78932b18/ca1dc/2f09a4a8.png&apos; srcset=&apos;/static/28afb9569d26799aca1ec26d78932b18/e7570/2f09a4a8.png 170w,
+/static/28afb9569d26799aca1ec26d78932b18/f46e7/2f09a4a8.png 340w,
+/static/28afb9569d26799aca1ec26d78932b18/ca1dc/2f09a4a8.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;$.pull_request.base.ref&lt;/code&gt;를 등록하여 base 브랜치를 가져온다.&lt;/p&gt;
+&lt;p&gt;원하는 값은 develop 브랜치가 될 것이다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/97e2bfcbc08fce0c205ccd0b17f3ae12/ca1dc/d7a4b4fc.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA1UlEQVR42qVSSW7EMAzz/5/YUwsUyDJTZ+zEm2yHpYLOsYckBAgLgkxQixEReL+i9459B7mfJ/ivNvSYYWLKGIcZzq0oRaC4JEpDvVaY2hqsXaDCjXFlUnNXKKRRV855uit445JDUsdmdIbTNMEuC7YQ4NcNmeKdBY0FZ6guzfzy+Pj8xjCMeDwtHBd0tP9XcJbG+g3jzwuB7jRxB9qV0ZXnnJHo6j2/W4Lami5GpOAuDkHhmYSQ6LAcb+RxBjLGhC0WfC0VDy8oKeG5VsyMJRfs/wj+ApylFLm2DnCIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;d7a4b4fc&apos; title=&apos;&apos; src=&apos;/static/97e2bfcbc08fce0c205ccd0b17f3ae12/ca1dc/d7a4b4fc.png&apos; srcset=&apos;/static/97e2bfcbc08fce0c205ccd0b17f3ae12/e7570/d7a4b4fc.png 170w,
+/static/97e2bfcbc08fce0c205ccd0b17f3ae12/f46e7/d7a4b4fc.png 340w,
+/static/97e2bfcbc08fce0c205ccd0b17f3ae12/ca1dc/d7a4b4fc.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;$.pull_request.labels..name&lt;/code&gt;를 등록하여 라벨들의 이름을 가져온다.&lt;/p&gt;
+&lt;p&gt;원하는 값은 등록된 라벨들 중에 &lt;code class=&quot;language-text&quot;&gt;백엔드&lt;/code&gt;를 포함하는 값이 존재하는 상황이 될 것이다.&lt;/p&gt;
+&lt;h3&gt;Optional filter 설정&lt;/h3&gt;
+&lt;p&gt;아래로 내리다보면 Optional filter 탭을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/86d218e1de75634dec2bd69278131ec7/c7d76/3f3d0f71.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 44.11764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA70lEQVR42p1S0W6DMAzk/79y2qRA2qBVoyR2ErjZJrRs1faApVOsw9i+S7paK5izQfN1XU9DoyNiDP6CvveIMRnZvp2KLueMEAJSon8L/5rxuqFIfXMj3vsRH32A91fZ+IrpPssQNsRISKLEkPaTMEU5cxWrFuSyYFlWdCzEOBV8zgW3OVvh1ohAivazerwPUI6soXgvjXDckFmKYjzt2YtknezkQpwbTKobLvDhBs4FOsw2owy1ZsPG2ZaCXCrKUXIRwmS0oi+RHe4VUZvQU3Jq8vUl7Jx6e3xqtqESRE9/uDV6eEX8K6cfuV7IMb4B6NXCoXSmlG8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3f3d0f71&apos; title=&apos;&apos; src=&apos;/static/86d218e1de75634dec2bd69278131ec7/ca1dc/3f3d0f71.png&apos; srcset=&apos;/static/86d218e1de75634dec2bd69278131ec7/e7570/3f3d0f71.png 170w,
+/static/86d218e1de75634dec2bd69278131ec7/f46e7/3f3d0f71.png 340w,
+/static/86d218e1de75634dec2bd69278131ec7/ca1dc/3f3d0f71.png 680w,
+/static/86d218e1de75634dec2bd69278131ec7/c7d76/3f3d0f71.png 891w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Expression에 다음과 같은 정규표현식을 작성했다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;(?=.*true)(?=.*develop)(?=.*백엔드).*&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;또한 Text 부분에는 위에서 파라미터로 선언한 값들을 사용했다.&lt;/p&gt;
+&lt;p&gt;위 표현식으로 다음과 같은 효과를 기대할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;merge가 true 이고&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;브랜치가 develop 이고&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;라벨에 백엔드가 존재&lt;/code&gt;하는 작업에 대해 트리거를 수행하는것을 기대할 수 있다.&lt;/p&gt;
+&lt;h3&gt;Token 설정&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/0f7d36684cd0d851d21ccd02fcabb224/ca1dc/b55101b4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 28.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAw0lEQVR42oWQ6w6DIAyFef/nXLyAqNwn4M4KiuHX1uQLLTltDzBrHfr4ND43fd3lj5aKHjZOHGKR4GKpGFqQ84mU80W6iCndZ8YRUyXG665pI8GGUWAkBF8xzRJS7tg2jbVDrqrelVNpC60dLfYwxsGHN/J5PjBNAqUsDIm2lQZQk5QKy7JjpgWluTg5jogQDnKU8CuY9+/aLMQGTi6HQeD14pimMszWIeUL2vP+BStCS/atDXAu1Lw8pbo2/qbV7u/AL0aY077bX6d7AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;b55101b4&apos; title=&apos;&apos; src=&apos;/static/0f7d36684cd0d851d21ccd02fcabb224/ca1dc/b55101b4.png&apos; srcset=&apos;/static/0f7d36684cd0d851d21ccd02fcabb224/e7570/b55101b4.png 170w,
+/static/0f7d36684cd0d851d21ccd02fcabb224/f46e7/b55101b4.png 340w,
+/static/0f7d36684cd0d851d21ccd02fcabb224/ca1dc/b55101b4.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Token 탭에 토큰 이름을 작성한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f70ad188965b50d1b47da8d38d37378c/ca1dc/8e4baf8e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 68.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAACHElEQVR42n1T2W7bMBDUUxPZ1n2Qug/KcmQ5tuykSAu0fWpR9Pj/35nu0kfQosrDYKmDw53ZoRFlDTxRwHQiLD1BiLEM6LmYYGY75GqH9Tih2eyhhgOsIMHKl7MwRKEQJBXcOIcdpli4MVZBClFv4cgGUa4Q5y2cKNP/8Pe3YOTtgIf9M3VxvG3gLmTeQGQ1WEGYNnRorQ/mdZS1dIhCxOvLM8MTJXfYIa37W3cs26IOq/EjuuMXqO2E9uERbT+iIShaq80O/XhCN0yEA+qHA2I1IcjWMLJmoyUxEXtwrglE1cMnb+8tH8uowlJ2WIruXGMF0xXa97PUiJ65ChiFGhDICguHvPOkhh3mWp7tuDAtD+n4CdnTLySnH8iff0MevmEVl+cBeq8D4bUxHl9wfPlM3lREUiKg6oQZyTyg3z3Biws6RMCmDRYTUDcr95qIfyH/lnyVbZHkmEw27RB3q4Dg484K8O5S7+n9LGGY1nqqPBTuTA+FCDkm/M6lyl4y2Ab+xyTSWcJqPYJll92ou9I5JEKWPOzf6zixAll2hLWOz+K/ZBfCpFrr2PCm65S5w7TdoBn2aAnc7YImylIXs/5dCEu1pWv1qOW9+kiEWY+UIiKSFgn5bF8suB46S8g3oaDbouV652AvA4n86wnZTwrr1KHMFCqS61O83iLkyBns2TWgt4++gPeBuvu+Q3jsUMkaJV0xy5e3rM7hD+ijZVRvBEYpAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8e4baf8e&apos; title=&apos;&apos; src=&apos;/static/f70ad188965b50d1b47da8d38d37378c/ca1dc/8e4baf8e.png&apos; srcset=&apos;/static/f70ad188965b50d1b47da8d38d37378c/e7570/8e4baf8e.png 170w,
+/static/f70ad188965b50d1b47da8d38d37378c/f46e7/8e4baf8e.png 340w,
+/static/f70ad188965b50d1b47da8d38d37378c/ca1dc/8e4baf8e.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이 때 GitHub WebHook 설정에 들어가서 Payload URL에 token 파라미터를 포함하도록 수정한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a38795c4df610bc6171c31200b69ec4/ca1dc/675ca490.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 23.52941176470588%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAnUlEQVR42p2QXQ6CMBCEe/9reBTjETQxPokSaelPgAIFth0XDIkvKnGSL/M2+2VFHwYY66CURtN4rEkp/YUIwwAlSxQPhUJqqFJD8njbdiCKGCfCtAEiQmA5UVYVMmuRWwNjNOq64ZEJFCMiX1yIb/2FWUBccoPdIWPu2J8krHHousCG/dIr3r+Mf0X4fsT5VuF4dWwZ5u99/M+WPAFweYZBb0pcXQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;675ca490&apos; title=&apos;&apos; src=&apos;/static/1a38795c4df610bc6171c31200b69ec4/ca1dc/675ca490.png&apos; srcset=&apos;/static/1a38795c4df610bc6171c31200b69ec4/e7570/675ca490.png 170w,
+/static/1a38795c4df610bc6171c31200b69ec4/f46e7/675ca490.png 340w,
+/static/1a38795c4df610bc6171c31200b69ec4/ca1dc/675ca490.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;바로 아래 탭에서 TokenCredential에 토큰에 대한 Secret Key를 추가해줘야한다.&lt;/p&gt;
+&lt;p&gt;외부에서 빌드를 유발하기 위해서는 token을 확인하는 방식이 존재하는데 이 때 Jenkins의 Credential에 있는 정보를 기반으로 수행한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;token을 사용하지 않는 경우 계정정보를 입력할 수도 있지만 해당 과정에서는 token을 등록하는 방식을 사용합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/b221c2b685a63c919b0a1b7cd7b9e51f/ca1dc/639919be.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 82.3529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAABxElEQVR42q1U267TMBDs7/PGV/DEOy98AFcJ2lN6KOTa5n7vSeI4sTOsnTaqjiAtAksjy4k1uzO769V2+w3rzYPGfv8Dtu3AIqjdtCzYjosgCO/GqihKVFWFLMvR9wP+da3iKEGeF6jrBmVZom4aSDlCCDFBypsY6N44jhMhYx1axtC2DIz2vu/1z7/FnGFKUhWZpI9zxEFMEPImerrHr6xaNW1LHp4gz2lfQ6oAd0hXwWdCxjmSNEPZtHgi+U8d1zi1HRhFVmKkwjnA73AJqgmVZw0VpDUNtK4DdjyCOTYay0TvHyHjCOLgQmQpxJUtz4sihLxIZrBNC8nDGuF2g/DzJ3gf3yPZfEXw4R24ZUA6FoQiXpA9V7njPYI4RkyZRY6DiPoySFJEeQ4/ScCHs+wFyRoXwrquEWYZ8scd0t0OBZ1TIlI2qKX9GRSWe3EmVFW2bBuO5+NgmvAoy4PnIaVCAaP25hZU+6hhmKrcdfB9HyHJLtZfUB0PqChLNTV5UVCP8bmFljB7mJYnbB/3MAwT338a+mEwKFP1MDiui4baaRrFhQyHiVQTvnj1Bi9fv6Wx4//ncVBjoyqtjRfyjzN67/oF/wPaIG5aCP0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;639919be&apos; title=&apos;&apos; src=&apos;/static/b221c2b685a63c919b0a1b7cd7b9e51f/ca1dc/639919be.png&apos; srcset=&apos;/static/b221c2b685a63c919b0a1b7cd7b9e51f/e7570/639919be.png 170w,
+/static/b221c2b685a63c919b0a1b7cd7b9e51f/f46e7/639919be.png 340w,
+/static/b221c2b685a63c919b0a1b7cd7b9e51f/ca1dc/639919be.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위와 같은 정보로 Secret text를 작성하고 등록하고 적용한다.&lt;/p&gt;
+&lt;h2&gt;응답 확인하기&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/fca53a76b19e9b744c8f4e9d9b359a97/ca1dc/8f20f94d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 55.88235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABxUlEQVR42o1T23LaQAz1YwkQjPHdxru+YhtsTEIoFJo0nU4vb/3/nzmV1pCBzLTThzPyalfSOZKs3XklBukRH+RHDOcNmsc9lps9qvUO3e6ERfOI8czDcOr8F7ThzMfEjXFvC5hhhkAu4MsCU2euoNvhuyD3jNtEI6P3afxhBYkK5ERhWsEjy0F3+tXjM0bvwfc3DE0PerCAJRoY8xq6X8IIajhxCyfpYEZLwgqWbNX3OFpjIJ4oeaASzjyJqRuRFaQoOjMMUxjkyIoOYreG/VxhNHExNn2MqH+MMbWGGU5didX2RGpKlcCmWNOPlUpukeaJAlndYTCxenkmybBJnn7bnwt4QNyeeyrGRdhewIU1N8rxsH9Buz3SdA+QOUml4XiCh9PDprPpJ2+YebFidY03hiJf4fXXb3x6/Ynd6RsOLz+wf/6Oh8MXNFREFi0lrSgopaDsr7DDHIYresnb41fauc+KKVtOlJQdVRQkL6KHUrH6N3hTiGGYlIjSGhMrVBXU7l3toOn3U2Qf37Ovv+tx2VeD3nAfNSfK6G94QrxolbwoWyKtNpB0DuISxWqr2LI/qzeYJzXicg2RNxBFo95ewBP/AwyEJLtFVI/fAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8f20f94d&apos; title=&apos;&apos; src=&apos;/static/fca53a76b19e9b744c8f4e9d9b359a97/ca1dc/8f20f94d.png&apos; srcset=&apos;/static/fca53a76b19e9b744c8f4e9d9b359a97/e7570/8f20f94d.png 170w,
+/static/fca53a76b19e9b744c8f4e9d9b359a97/f46e7/8f20f94d.png 340w,
+/static/fca53a76b19e9b744c8f4e9d9b359a97/ca1dc/8f20f94d.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;GitHub의 WebHook 탭의 Recent Deliveries 탭으로 가서 확인해보면 Response Body값에 다음과 같은 응답이 담겨있는 것을 확인할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;json&quot;&gt;&lt;pre class=&quot;language-json&quot;&gt;&lt;code class=&quot;language-json&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;jobs&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token property&quot;&gt;&quot;pium-dev&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;token property&quot;&gt;&quot;regexpFilterExpression&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;(?=.*true)(?=.*develop)(?=.*백엔드).*&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token property&quot;&gt;&quot;triggered&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token property&quot;&gt;&quot;resolvedVariables&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token property&quot;&gt;&quot;BRANCH&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;develop&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token property&quot;&gt;&quot;LABELS&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;[\&quot;?️ \\b리팩터링\&quot;,\&quot;? 백엔드\&quot;]&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token property&quot;&gt;&quot;LABELS_0&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;?️ \b리팩터링&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token property&quot;&gt;&quot;LABELS_1&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;? 백엔드&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;token property&quot;&gt;&quot;MERGED&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;true&quot;&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token property&quot;&gt;&quot;regexpFilterText&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;true develop [\&quot;?️ \\b리팩터링\&quot;,\&quot;? 백엔드\&quot;]&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token property&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;248&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;token property&quot;&gt;&quot;url&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;queue/item/248/&quot;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;token property&quot;&gt;&quot;message&quot;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;Triggered jobs.&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;regexpFilterText&lt;/code&gt;에 원하는 값이 잘 들어간 것을 확인할 수 있다.&lt;/p&gt;
+&lt;h2&gt;결론&lt;/h2&gt;
+&lt;p&gt;젠킨스의 &lt;code class=&quot;language-text&quot;&gt;Generic Webhook Trigger&lt;/code&gt; 플러그인을 이용하여 Merge 여부, target branch, label 값을 비교하고 빌드를 유발하는 설정을 했다.&lt;/p&gt;
+&lt;p&gt;경우에 따라 세부적인 검증을 추가할 수 있을 것 같다.&lt;/p&gt;
+&lt;h3&gt;트러블 슈팅&lt;/h3&gt;
+&lt;p&gt;Generic Webhook Trigger 설정 - Token 설정에서 많이 헤맸다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/474079b05b637abf6d764381248e8ad2/ca1dc/1c588600.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 40.588235294117645%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABZUlEQVR42n2RSXOCQBCFqRyNCIKsygwILoC4pSyJidlMUpV4zP//LS/dQ5F48vBVL0O/6XlonjOCPcrhxJXCFQsE8RJuwqwwkCVsUVKkM+obroDpDKHbIbqWD8sXCjuI0fcENNMdQaQFbGqGswqnrMR5mOLGdKH3Pdxe0KGe6UYoNzVG47nKB2FCgpIiC0bQ5KREVqzRMRz06Oa+HcDk4QuhruVBt4IG+5/eIIRBM23UKWrj+Qr74zvW+ycU6xox1UGSQ9CmEZOW8MWUNhjDoc0Zztu6zRnLj6HNljt8nH9wPJ1RP3/i8PqFx7dv7B5O6gIxIU/lnAYyEriOHSTQ4mmFbf1CvtxjQ1tWdwfk6z3i6ZI8EsofNpw/vgZ72fckCy7gRRn5MFSmstGMQT+L6wahMP/qptd+y3CPNTQWS/MtJD0tma2QFlsk5KPIuF4qeFs+4zwrNqpO8ybKSQVJr+SZQE7xC1nc2VtW9UMnAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;1c588600&apos; title=&apos;&apos; src=&apos;/static/474079b05b637abf6d764381248e8ad2/ca1dc/1c588600.png&apos; srcset=&apos;/static/474079b05b637abf6d764381248e8ad2/e7570/1c588600.png 170w,
+/static/474079b05b637abf6d764381248e8ad2/f46e7/1c588600.png 340w,
+/static/474079b05b637abf6d764381248e8ad2/ca1dc/1c588600.png 680w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{&quot;jobs&quot;:null,&quot;message&quot;:&quot;Did not find any jobs with GenericTrigger configured! If you are using a token, you need to pass it like ...trigger/invoke?token=TOKENHERE. If you are not using a token, you need to authenticate like http://user:passsword@example.org/generic-webhook... &quot;}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;404 에러와 함께 위 메시지가 반환되었는데 Jenkins의 Token에 대해 이해를 하지 못해 생긴 문제였다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;왜 다들 Token이 뭔지는 설명을 안해주는거지..?? ㅠㅠ&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;외부에서 빌드를 유발하기 위해서는 token을 확인하는데 이 때 Jenkins의 Credential에 있는 정보를 기반으로 수행한다.&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;이 한마디를 이해하기 위해 하루가 걸렸다... 😇&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;h3&gt;설정 과정에서 참고한 글&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://bepoz-study-diary.tistory.com/385&quot;&gt;https://bepoz-study-diary.tistory.com/385&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://velog.io/@zayson/Jenkins-CICD-4.-WebHook%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9E%90%EB%8F%99-%EB%B0%B0%ED%8F%AC&quot;&gt;https://velog.io/@zayson/Jenkins-CICD-4.-WebHook%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9E%90%EB%8F%99-%EB%B0%B0%ED%8F%AC&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;트러블 슈팅 과정에서 참고한 글&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://georgik.rocks/jenkins-generic-webhook-plugin-failed-with-did-not-find-any-jobs-with-generictrigger-configured/&quot;&gt;https://georgik.rocks/jenkins-generic-webhook-plugin-failed-with-did-not-find-any-jobs-with-generictrigger-configured/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://pikachu987.tistory.com/61&quot;&gt;https://pikachu987.tistory.com/61&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Jenkins와 Github Webhook을 이용해 CI/CD 구축하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 이번 피움 서비스에서 CI/CD를 적용하기 위해 Jekins와 Github Webhook을 이용했습니다. 본 글에서는 Jenkins와 Github Webhook을 이용한 SpringBoot…]]></description><link>https://pium-official.github.io/ci-cd-setting/</link><guid isPermaLink="false">https://pium-official.github.io/ci-cd-setting/</guid><pubDate>Mon, 24 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;이번 피움 서비스에서 CI/CD를 적용하기 위해 Jekins와 Github Webhook을 이용했습니다.&lt;/p&gt;
@@ -785,7 +1126,165 @@ server &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl restart nginx&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Reference&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://jminie.tistory.com/110&quot;&gt;https://jminie.tistory.com/110&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://customer.gabia.com/manual/domain/287/1201&quot;&gt;https://customer.gabia.com/manual/domain/287/1201&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[@NotNull과 nullable = false는 어떤 차이가 있을까?]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 서론 JPA를 이용해 엔티티를 설계하다가  어노테이션과 @Column의 의 차이점이 궁금해져 알아보았습니다. nullable = false ?? JPA는 엔티티를 매핑하고 설계하면 자동으로 DDL…]]></description><link>https://pium-official.github.io/jpa-notnull-nullable/</link><guid isPermaLink="false">https://pium-official.github.io/jpa-notnull-nullable/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://customer.gabia.com/manual/domain/287/1201&quot;&gt;https://customer.gabia.com/manual/domain/287/1201&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[젠킨스 설치하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다. 정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
+이에 Jenkins…]]></description><link>https://pium-official.github.io/jenkins-setting/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-setting/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다.&lt;/p&gt;
+&lt;p&gt;정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
+이에 Jenkins를 설치하고 환경설정을 빌드서버 환경을 구축한 일련의 과정을 기록해두려고한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;작업 환경 : Ubuntu 22.04.2 LTS&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;공식문서 살펴보기&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;젠킨스 공식문서&lt;/a&gt;를 확인하면 설치 방법이 친절하게 나와있다.&lt;/p&gt;
+&lt;p&gt;아무것도 없는 EC2 환경에서 Jenkins를 설치하고 구동하는 과정을 따라가보자.&lt;/p&gt;
+&lt;h2&gt;(Optional) Swap 메모리 설정하기&lt;/h2&gt;
+&lt;p&gt;프리티어환경에서 Jenkins를 사용하면 자칫 메모리가 부족한 상황이 발생할 수도 있다.
+2GB의 메모리는 젠킨스와 빌드를 모두 견디기 어려울 수도 있다.&lt;/p&gt;
+&lt;p&gt;다음 명령어를 통해 서버에 Swap 메모리를 할당하자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; fallocate &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt; 2G /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;600&lt;/span&gt; /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkswap&lt;/span&gt; /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;swapon&lt;/span&gt; /swapfile
+
+&lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확인명령어&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://velog.io/@junho5336/Swap-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot;&gt;Swap 메모리 할당하기&lt;/a&gt;를 참고&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;java 설치하기&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;설치 방법은 &lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;공식문서&lt;/a&gt;를 확인하면서 진행하고있습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;현재 사용할 jenkins의 버전은 java 17을 사용한다.
+java 17버전을 설치하자&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; openjdk-17-jre
+&lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-version&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10.588235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAdElEQVR42mXNwQ6CMBRE0RIIW16j1LRpBfqoYP3/77tqF25cnGQyixnjHo75OXPdLshdkEW4RU/elJQSIQTGcWQYhj9932OM+em6DlOPF/WonOVkTSu6KJoz+74TY8Q510ZVlfzpSyktf8+891hrEZFmmibeU5cx4lWIWHEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;93d56503&apos; title=&apos;&apos; src=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png&apos; srcset=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/e7570/93d56503.png 170w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/f46e7/93d56503.png 340w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png 680w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png 775w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;jenkins 설치하기&lt;/h2&gt;
+&lt;p&gt;다음 명령어를 수행하여 jenkins를 설치한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-fsSL&lt;/span&gt; https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  /usr/share/keyrings/jenkins-keyring.asc &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
+&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;signed-by&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/usr/share/keyrings/jenkins-keyring.asc&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  https://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  /etc/apt/sources.list.d/jenkins.list &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins
+
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins &lt;span class=&quot;token comment&quot;&gt;# 실행상태 확인&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAf0lEQVR42m2OywrFIAxEleIjahdy1YIbBW3//w/n1oC7Lg5DEmYywmeHOipiiyi9oI2OOSfmPTHGQK3vLUbGOYcQAqy1EEJ8Q5bw3M8b1JBqAp0EpRRzHAer1ppDpJRs2vrJMqWc0XvHVS6kX+I2q4kxhtmhRMTs/Z699/xw8Qe0b0Pn0GyF9wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;99b45540&apos; title=&apos;&apos; src=&apos;/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png&apos; srcset=&apos;/static/377aacf35597393970adf4d2f550dffe/e7570/99b45540.png 170w,
+/static/377aacf35597393970adf4d2f550dffe/f46e7/99b45540.png 340w,
+/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png 680w,
+/static/377aacf35597393970adf4d2f550dffe/02d09/99b45540.png 1020w,
+/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png 1206w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;jenkins 접속하기 &amp;#x26; 초기설정&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;jenkins는 기본적으로 8080포트를 사용한다.
+jenkins의 포트를 변경하는 방법에 대해서는 본 글에서 다루지는 않는다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{인스턴스-public-ip}:8080&lt;/code&gt; 으로 접속하면 다음과 같은 화면을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVR42qVT7VLCMBDk6X0Xx1fwAQT8Ib+AoQ7IYBXblCYhTT9S1rtAwA9AGDOzXELJdm9v6QyHI8xmL5hOZ5BSoSgKrNdrFKbY77XWZ6HU9t5isUCHP3jxRYYhorKsfOVz0zT4a202G1+TJDkQTiYRug99DJ4GGI/G6HV7dO5hPufnGzjn0Lath3Nc3Zd9eyCM49gfDEleKY2VLiDUGqkyyKgqailnUFt5npNq49Vzi1wZoYtvhKU20EJCZtojF+SNIG9E7mGlRlVV+/ZOthwIraZBrCRsHqB8NRkRMmhgZVl6cPu8WBnvjxKmWYa35RLvHwm0MWjIl5ou1K7xtSKUpLCqazREYq3dDdF45b8Im8b5t50FD4FgSeXWR+vB0fGi0vRAeMybUxHZDoSGs4sa55An/S9CVhVaZl9/tXwJIf+GL0spPVEYyNGhXELIJJzFoOhsbNiD8LZT4JiwXyHI4fuj/5RrPPy5bO3wnBQYTV/RiaLIeyKEQEZZvAZCZFAyx3gW4+auj9v7R3wC/VKL2SHZQ34AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4492665d&apos; title=&apos;&apos; src=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png&apos; srcset=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/e7570/4492665d.png 170w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/f46e7/4492665d.png 340w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png 680w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png 1019w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;다시 EC2 화면으로 넘어와서 다음 명령어를 수행하여 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt;를 알 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.294117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARElEQVR42h2KOwrAMAzFegN/Y5OlS4OTqfe/3WvxIBBCF92EfBN5flbAlmE+E7sOqgrMDCKCqsLdYWbtItJ9jNFERL8f97MZQConaOsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f55b94c9&apos; title=&apos;&apos; src=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png&apos; srcset=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e7570/f55b94c9.png 170w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/f46e7/f55b94c9.png 340w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png 680w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png 734w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;확인한 암호를 화면에 입력한 뒤 Continue 버튼을 눌러 계속 진행한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpElEQVR42p1T7U7jMBDsq9/LIPEM9x+O4yh/oZxU2gM1JDTxR+wkTtthZ1FaQG2BW2lkx94dz35kNJlMMJ3eYzaboa5rNE2DEAJijLqPMej5MXjv1XexWGCUZRk2m41cBL0IIaJtOwQh9L5G3/f4zBhPK8tyIATuJn9x8es3rsfXuL25xdWfMc7PLjCf/VNnEm/Wa6w/YLVa6bolzPNcP6jIOI/SR5QuYCmoBFZUK5yDMVYzYTmGsnBNqd8RFkWhH42TWiwNzFKCSw8jcKVDlLMgaIxD6tJWzcGU3xLGyqKpGMzVKkksjZJG2XddJ8VvNc2hDHxgL2HxvMQie0KWF6ilMUmCmErqdyAh0csdu8oOM+VOlNOq6g1hK46tOLVtq13m61TyDmyCoBEf1i9yrAScBqqsqmpHOMj+zJji0AyCKp00jA/+FyH9os6o35Iy/deUv0lIH5aEikiksylne5vyFUIqs9Yq6cGxGQZ7aP8xpJRUHdeBiHj3p3y3hvss9Ws8mg7Thxyj+Xyu9WAqfP0YPvpYK4Mfakwfc/w4vcTJzzFeAINXjf7ZXI+HAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;28fea7e9&apos; title=&apos;&apos; src=&apos;/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png&apos; srcset=&apos;/static/34da90f6397f6f2e2761f50b1c127250/e7570/28fea7e9.png 170w,
+/static/34da90f6397f6f2e2761f50b1c127250/f46e7/28fea7e9.png 340w,
+/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png 680w,
+/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png 1013w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;초기 플러그인 세팅 화면이 나오는데 &lt;code class=&quot;language-text&quot;&gt;Install suggested plugins&lt;/code&gt; 를 눌러 초기 플러그인 설정을 진행한다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR42p1UiW6bQBT0/39SPyCRq9RxrMolji9ALAHMfS6Hp++9GIvUaatkpdGwCzs771hmhmFgt9sLwjBEksSI488hiiLal2C73WLmeR66rkdZlsQd2rYT7vte0Lat8L/G+XwWdhwHM9/3MQwDDGOD+fwB9/ffhde/nrFYLHF3Nyd+gtatbORvmafgtatgEAQyqasKNbmsqzdU9JxnGYqiEPd13VxQ01p5WatvHZ5OJ5mouMYhKGCFJfZ+DjdtEBQdorIT0TTNKE8p8ryQFHFqRmcfCq7sGN9WeyytAD9VBJVrRPqM16zDZrPBer2G67pSAMmt5Lu9hn0VDEmQp7tTiWNUwkpqqEzDJnaIraiSCmaX8PM8J7eprDHzGgvfCK6cGD8sHw+mj4Ud0HOAlRvjxctg2zZMy3zj4xGKNopbahk+iIUlbUpNQnYSLFWMJ5Vc8UiHPLsJAuoELh7D8z0Se4WjXBHi4rDojWDV9ig09eMEPNfdIDnrLn3JPZpluYTM4XPIY7XfFWVM7P+G1locVdRmfMBNUUbBgV+w8B+YDg6Pw2ya5u835TMO2R0Ljldxelu+HPJH370TNE2L/hjJtWJfAReG3R8OB/wGHbWCEuKtdfAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c78a9517&apos; title=&apos;&apos; src=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png&apos; srcset=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/e7570/c78a9517.png 170w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/f46e7/c78a9517.png 340w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png 680w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/02d09/c78a9517.png 1020w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png 1021w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVR42pWUWW+bQBSF+f8/qw9J5FRK89ImYrFZhp3BgPGKfTrnIlBsJY2LdDQznjvfXWXL85ZYLldYrXx0XYfNZnOlvu+/Fe12ux2UUrDW6zWGYcD5fMblcpk1fdzz7vb+VvyKohiBF2PcmLWsKjRNC61rUV3X2G638mAg8Asonc3ArmtxND/8eHjGYvFT9Pi4wNMT9YwgCMV4yuIz8W4G9ib/wUTc9Kc5RWYwpXEbybfAV+cVbuogrH2oWiHLMoRhhNY0iCn7fiDF1rqSc5pmxiY3pWnkzJVNORwOY1N+O3/w5r3DizwkZYI4SQXIGpZliSiKkOe5OCpLQtfSUUIIY40pAuM4hmXbDmKVoMgL6ErLg6Io59VxHDNSK+MkFCeVaVxl7DguhOz3e3FwOp2QJAks13WR5hmKskClR2OlYolAa42Xl19wXU+M6YSRMu227QT2OTBNJS0WlaOTm2jbtpVogiAQCMUaUSwDH38BdCR31o2GSkXzo/F8vb8D6MqGUGp69PF8e/dPoG3bYsCi3yuWgWCCqKsuE8bij927TxwnziCjI4wNPB6P0gtrmjNCOVf/I/4PUISzib7v4y8mPXFDELhsegAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82bae04f&apos; title=&apos;&apos; src=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png&apos; srcset=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/e7570/82bae04f.png 170w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/f46e7/82bae04f.png 340w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png 680w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png 1009w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;초기 Admin 유저를 생성할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABV0lEQVR42pWT3W6CMBiGufOd7VJ2suwSlp2pi2Yao6A7QMlQERVULD+l9F1b0TQRRL/kSf/fvv3aGpZlYT53YNszBEGAKIpwPB5VqSP76jgcDiCEwHEcGK7rQkaSpMiyDHmeI00zUadlmYHSXLUppeAcN8HLTs/zpOBCNZbLFTqdLnq9HwyHI/T7Q4zHFlqtDkYjE6Y5Qbv9rTbWRfT6er2GsVicBU8nIiYnKMSgnFAUxQ1MwMvxRkF5VLlACrJyMdOEdFFJzthVqNqhSKoUrXJWR4NDBsYeF2NNDqPopK6+Ln9PO6TiuFTsqufvHo05jOPkeoxHue9QPFq566PQJoeExCqHlwnPOCyKy0/RBOWjJnF8zmUDeVlyLi+GVzvkVZ+0JniJjH1M8buKMNummNgujOl0Ct/3lXoYhnfZCzbbAH+eL9hgs9vha2Dj5a2N1/cuPj57+AeZf421Ajk8yQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8f14e43&apos; title=&apos;&apos; src=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png&apos; srcset=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/e7570/a8f14e43.png 170w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/f46e7/a8f14e43.png 340w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png 680w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/02d09/a8f14e43.png 1020w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png 1023w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABNklEQVR42u2Uy26DMBBF8/Vd9kMqddEv6CpRUJoqUtpUICIBKY+WDYSnbcytx0CiEDZRN13U0tHg8ej6zkh4ZpomXNeD47hI0xRFUSDPcx0Hzvtcf4/JsgxVVSkNB7MgCEGrLEtFBca4goFzpnNUyDnXZxSnVtu2Ovq+j1kYdoKed8BiYWC93mC7fYdl2XhZvarcUu/n8yVse38hMBYMguAsSK7yvDgdUiyVu0y1lB6ppRpSSjRE03RRIQi1v3LYtVVqYaKuaz3TJCESHPs5VSqvYw9dOinIWH0a/iBKCMH1ZYKLbrYDKsf7GnJ+1bIQQrsiBofkYMiNz6iehIiLGUZRNDnoW9a/4O8FpRz+lL/okAmJ3WeKXVjgzVKPA702pEzEcXwT0dc3PvYH3D8auHsw8PS8wg++b41+WLe4nQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;84efb2c8&apos; title=&apos;&apos; src=&apos;/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png&apos; srcset=&apos;/static/4035960bbafbca7af5331b1611fac0f0/e7570/84efb2c8.png 170w,
+/static/4035960bbafbca7af5331b1611fac0f0/f46e7/84efb2c8.png 340w,
+/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png 680w,
+/static/4035960bbafbca7af5331b1611fac0f0/02d09/84efb2c8.png 1020w,
+/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png 1024w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;여기까지 했으면 초기 설정은 완료했다고 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;만약 위 과정에서 admin 유저를 생성하지 않았다면 &lt;code class=&quot;language-text&quot;&gt;admin&lt;/code&gt; 이라는 기본 유저로 로그인 할 수 있다고 설명하고 있다.
+비밀번호는 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt; 과정에서 입력했던 값으로 설정되어있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR42u2Uy07DMBBF+/8s+QW+gBV71kioQNOmzqNpQiFt3onzqJ3L2G2A0iJUNmwY6WTuWJrrkZ1kNJ/PwZgFy7IRxzGyLDubNE1RFAWCIMBovV5DSqkZou979TyoB07FsJ4kCUZhGOpisfAxHk8wmzE47hIu1RPDhGla4LyF2k+InjJB/Z8RcmcYx2S42US6CDwGZt7DtR7hu1MsXQPm5A4ue0DXJNRZohcFevkFkUPS+vuE6txUiMZHU5io8xl4ZoCnBupsqnNTMrSlpekqG21laZTuKIvm+diwTB3kEZmUDupCNTlkRDq3CEabzDVKqzWeMU1DWrQvx4bblqOtS3RthbquUFUF2oar2ffIPaR7caCl3H4YJsnO8OrWxsX1Ey5vDIQp17c8HPZPcXDLw4R+XMF+LbBY05RbiXPipOF379i/4R8Yep6HKIp0of4YvyHPc/reOVarFd4AhmyNTDDm+BMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;60ba97ad&apos; title=&apos;&apos; src=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png&apos; srcset=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/e7570/60ba97ad.png 170w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/f46e7/60ba97ad.png 340w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png 680w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png 1011w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 Jenkins를 설치할 수 있다.&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;https://www.jenkins.io/doc/book/installing/linux/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[@NotNull과 nullable = false는 어떤 차이가 있을까?]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 서론 JPA를 이용해 엔티티를 설계하다가  어노테이션과 @Column의 의 차이점이 궁금해져 알아보았습니다. nullable = false ?? JPA는 엔티티를 매핑하고 설계하면 자동으로 DDL…]]></description><link>https://pium-official.github.io/jpa-notnull-nullable/</link><guid isPermaLink="false">https://pium-official.github.io/jpa-notnull-nullable/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -985,165 +1484,7 @@ DDL을 자동으로 생성하고 애플리케이션의 영속성 컨텍스트에
 &lt;p&gt;하이버네이트에서는 nullable=false보다 @NotNull 사용을 조금 더 권장하고 있다.&lt;/p&gt;
 &lt;h2&gt;레퍼런스&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.baeldung.com/hibernate-notnull-vs-nullable&quot;&gt;https://www.baeldung.com/hibernate-notnull-vs-nullable&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://kafcamus.tistory.com/15&quot;&gt;https://kafcamus.tistory.com/15&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[젠킨스 설치하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다. 정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
-이에 Jenkins…]]></description><link>https://pium-official.github.io/jenkins-setting/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-setting/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;서론&lt;/h2&gt;
-&lt;p&gt;피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다.&lt;/p&gt;
-&lt;p&gt;정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
-이에 Jenkins를 설치하고 환경설정을 빌드서버 환경을 구축한 일련의 과정을 기록해두려고한다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;작업 환경 : Ubuntu 22.04.2 LTS&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;공식문서 살펴보기&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;젠킨스 공식문서&lt;/a&gt;를 확인하면 설치 방법이 친절하게 나와있다.&lt;/p&gt;
-&lt;p&gt;아무것도 없는 EC2 환경에서 Jenkins를 설치하고 구동하는 과정을 따라가보자.&lt;/p&gt;
-&lt;h2&gt;(Optional) Swap 메모리 설정하기&lt;/h2&gt;
-&lt;p&gt;프리티어환경에서 Jenkins를 사용하면 자칫 메모리가 부족한 상황이 발생할 수도 있다.
-2GB의 메모리는 젠킨스와 빌드를 모두 견디기 어려울 수도 있다.&lt;/p&gt;
-&lt;p&gt;다음 명령어를 통해 서버에 Swap 메모리를 할당하자.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; fallocate &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt; 2G /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;600&lt;/span&gt; /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkswap&lt;/span&gt; /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;swapon&lt;/span&gt; /swapfile
-
-&lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확인명령어&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://velog.io/@junho5336/Swap-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot;&gt;Swap 메모리 할당하기&lt;/a&gt;를 참고&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;java 설치하기&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;설치 방법은 &lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;공식문서&lt;/a&gt;를 확인하면서 진행하고있습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;현재 사용할 jenkins의 버전은 java 17을 사용한다.
-java 17버전을 설치하자&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; openjdk-17-jre
-&lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-version&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10.588235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAdElEQVR42mXNwQ6CMBRE0RIIW16j1LRpBfqoYP3/77tqF25cnGQyixnjHo75OXPdLshdkEW4RU/elJQSIQTGcWQYhj9932OM+em6DlOPF/WonOVkTSu6KJoz+74TY8Q510ZVlfzpSyktf8+891hrEZFmmibeU5cx4lWIWHEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;93d56503&apos; title=&apos;&apos; src=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png&apos; srcset=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/e7570/93d56503.png 170w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/f46e7/93d56503.png 340w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png 680w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png 775w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;h2&gt;jenkins 설치하기&lt;/h2&gt;
-&lt;p&gt;다음 명령어를 수행하여 jenkins를 설치한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-fsSL&lt;/span&gt; https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  /usr/share/keyrings/jenkins-keyring.asc &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
-&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;signed-by&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/usr/share/keyrings/jenkins-keyring.asc&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  https://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  /etc/apt/sources.list.d/jenkins.list &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins
-
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins &lt;span class=&quot;token comment&quot;&gt;# 실행상태 확인&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAf0lEQVR42m2OywrFIAxEleIjahdy1YIbBW3//w/n1oC7Lg5DEmYywmeHOipiiyi9oI2OOSfmPTHGQK3vLUbGOYcQAqy1EEJ8Q5bw3M8b1JBqAp0EpRRzHAer1ppDpJRs2vrJMqWc0XvHVS6kX+I2q4kxhtmhRMTs/Z699/xw8Qe0b0Pn0GyF9wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;99b45540&apos; title=&apos;&apos; src=&apos;/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png&apos; srcset=&apos;/static/377aacf35597393970adf4d2f550dffe/e7570/99b45540.png 170w,
-/static/377aacf35597393970adf4d2f550dffe/f46e7/99b45540.png 340w,
-/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png 680w,
-/static/377aacf35597393970adf4d2f550dffe/02d09/99b45540.png 1020w,
-/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png 1206w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;h2&gt;jenkins 접속하기 &amp;#x26; 초기설정&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;jenkins는 기본적으로 8080포트를 사용한다.
-jenkins의 포트를 변경하는 방법에 대해서는 본 글에서 다루지는 않는다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{인스턴스-public-ip}:8080&lt;/code&gt; 으로 접속하면 다음과 같은 화면을 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVR42qVT7VLCMBDk6X0Xx1fwAQT8Ib+AoQ7IYBXblCYhTT9S1rtAwA9AGDOzXELJdm9v6QyHI8xmL5hOZ5BSoSgKrNdrFKbY77XWZ6HU9t5isUCHP3jxRYYhorKsfOVz0zT4a202G1+TJDkQTiYRug99DJ4GGI/G6HV7dO5hPufnGzjn0Lath3Nc3Zd9eyCM49gfDEleKY2VLiDUGqkyyKgqailnUFt5npNq49Vzi1wZoYtvhKU20EJCZtojF+SNIG9E7mGlRlVV+/ZOthwIraZBrCRsHqB8NRkRMmhgZVl6cPu8WBnvjxKmWYa35RLvHwm0MWjIl5ou1K7xtSKUpLCqazREYq3dDdF45b8Im8b5t50FD4FgSeXWR+vB0fGi0vRAeMybUxHZDoSGs4sa55An/S9CVhVaZl9/tXwJIf+GL0spPVEYyNGhXELIJJzFoOhsbNiD8LZT4JiwXyHI4fuj/5RrPPy5bO3wnBQYTV/RiaLIeyKEQEZZvAZCZFAyx3gW4+auj9v7R3wC/VKL2SHZQ34AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4492665d&apos; title=&apos;&apos; src=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png&apos; srcset=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/e7570/4492665d.png 170w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/f46e7/4492665d.png 340w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png 680w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png 1019w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;다시 EC2 화면으로 넘어와서 다음 명령어를 수행하여 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt;를 알 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.294117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARElEQVR42h2KOwrAMAzFegN/Y5OlS4OTqfe/3WvxIBBCF92EfBN5flbAlmE+E7sOqgrMDCKCqsLdYWbtItJ9jNFERL8f97MZQConaOsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f55b94c9&apos; title=&apos;&apos; src=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png&apos; srcset=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e7570/f55b94c9.png 170w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/f46e7/f55b94c9.png 340w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png 680w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png 734w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;확인한 암호를 화면에 입력한 뒤 Continue 버튼을 눌러 계속 진행한다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpElEQVR42p1T7U7jMBDsq9/LIPEM9x+O4yh/oZxU2gM1JDTxR+wkTtthZ1FaQG2BW2lkx94dz35kNJlMMJ3eYzaboa5rNE2DEAJijLqPMej5MXjv1XexWGCUZRk2m41cBL0IIaJtOwQh9L5G3/f4zBhPK8tyIATuJn9x8es3rsfXuL25xdWfMc7PLjCf/VNnEm/Wa6w/YLVa6bolzPNcP6jIOI/SR5QuYCmoBFZUK5yDMVYzYTmGsnBNqd8RFkWhH42TWiwNzFKCSw8jcKVDlLMgaIxD6tJWzcGU3xLGyqKpGMzVKkksjZJG2XddJ8VvNc2hDHxgL2HxvMQie0KWF6ilMUmCmErqdyAh0csdu8oOM+VOlNOq6g1hK46tOLVtq13m61TyDmyCoBEf1i9yrAScBqqsqmpHOMj+zJji0AyCKp00jA/+FyH9os6o35Iy/deUv0lIH5aEikiksylne5vyFUIqs9Yq6cGxGQZ7aP8xpJRUHdeBiHj3p3y3hvss9Ws8mg7Thxyj+Xyu9WAqfP0YPvpYK4Mfakwfc/w4vcTJzzFeAINXjf7ZXI+HAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;28fea7e9&apos; title=&apos;&apos; src=&apos;/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png&apos; srcset=&apos;/static/34da90f6397f6f2e2761f50b1c127250/e7570/28fea7e9.png 170w,
-/static/34da90f6397f6f2e2761f50b1c127250/f46e7/28fea7e9.png 340w,
-/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png 680w,
-/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png 1013w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;초기 플러그인 세팅 화면이 나오는데 &lt;code class=&quot;language-text&quot;&gt;Install suggested plugins&lt;/code&gt; 를 눌러 초기 플러그인 설정을 진행한다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR42p1UiW6bQBT0/39SPyCRq9RxrMolji9ALAHMfS6Hp++9GIvUaatkpdGwCzs771hmhmFgt9sLwjBEksSI488hiiLal2C73WLmeR66rkdZlsQd2rYT7vte0Lat8L/G+XwWdhwHM9/3MQwDDGOD+fwB9/ffhde/nrFYLHF3Nyd+gtatbORvmafgtatgEAQyqasKNbmsqzdU9JxnGYqiEPd13VxQ01p5WatvHZ5OJ5mouMYhKGCFJfZ+DjdtEBQdorIT0TTNKE8p8ryQFHFqRmcfCq7sGN9WeyytAD9VBJVrRPqM16zDZrPBer2G67pSAMmt5Lu9hn0VDEmQp7tTiWNUwkpqqEzDJnaIraiSCmaX8PM8J7eprDHzGgvfCK6cGD8sHw+mj4Ud0HOAlRvjxctg2zZMy3zj4xGKNopbahk+iIUlbUpNQnYSLFWMJ5Vc8UiHPLsJAuoELh7D8z0Se4WjXBHi4rDojWDV9ig09eMEPNfdIDnrLn3JPZpluYTM4XPIY7XfFWVM7P+G1locVdRmfMBNUUbBgV+w8B+YDg6Pw2ya5u835TMO2R0Ljldxelu+HPJH370TNE2L/hjJtWJfAReG3R8OB/wGHbWCEuKtdfAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c78a9517&apos; title=&apos;&apos; src=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png&apos; srcset=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/e7570/c78a9517.png 170w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/f46e7/c78a9517.png 340w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png 680w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/02d09/c78a9517.png 1020w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png 1021w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVR42pWUWW+bQBSF+f8/qw9J5FRK89ImYrFZhp3BgPGKfTrnIlBsJY2LdDQznjvfXWXL85ZYLldYrXx0XYfNZnOlvu+/Fe12ux2UUrDW6zWGYcD5fMblcpk1fdzz7vb+VvyKohiBF2PcmLWsKjRNC61rUV3X2G638mAg8Asonc3ArmtxND/8eHjGYvFT9Pi4wNMT9YwgCMV4yuIz8W4G9ib/wUTc9Kc5RWYwpXEbybfAV+cVbuogrH2oWiHLMoRhhNY0iCn7fiDF1rqSc5pmxiY3pWnkzJVNORwOY1N+O3/w5r3DizwkZYI4SQXIGpZliSiKkOe5OCpLQtfSUUIIY40pAuM4hmXbDmKVoMgL6ErLg6Io59VxHDNSK+MkFCeVaVxl7DguhOz3e3FwOp2QJAks13WR5hmKskClR2OlYolAa42Xl19wXU+M6YSRMu227QT2OTBNJS0WlaOTm2jbtpVogiAQCMUaUSwDH38BdCR31o2GSkXzo/F8vb8D6MqGUGp69PF8e/dPoG3bYsCi3yuWgWCCqKsuE8bij927TxwnziCjI4wNPB6P0gtrmjNCOVf/I/4PUISzib7v4y8mPXFDELhsegAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82bae04f&apos; title=&apos;&apos; src=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png&apos; srcset=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/e7570/82bae04f.png 170w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/f46e7/82bae04f.png 340w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png 680w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png 1009w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;초기 Admin 유저를 생성할 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABV0lEQVR42pWT3W6CMBiGufOd7VJ2suwSlp2pi2Yao6A7QMlQERVULD+l9F1b0TQRRL/kSf/fvv3aGpZlYT53YNszBEGAKIpwPB5VqSP76jgcDiCEwHEcGK7rQkaSpMiyDHmeI00zUadlmYHSXLUppeAcN8HLTs/zpOBCNZbLFTqdLnq9HwyHI/T7Q4zHFlqtDkYjE6Y5Qbv9rTbWRfT6er2GsVicBU8nIiYnKMSgnFAUxQ1MwMvxRkF5VLlACrJyMdOEdFFJzthVqNqhSKoUrXJWR4NDBsYeF2NNDqPopK6+Ln9PO6TiuFTsqufvHo05jOPkeoxHue9QPFq566PQJoeExCqHlwnPOCyKy0/RBOWjJnF8zmUDeVlyLi+GVzvkVZ+0JniJjH1M8buKMNummNgujOl0Ct/3lXoYhnfZCzbbAH+eL9hgs9vha2Dj5a2N1/cuPj57+AeZf421Ajk8yQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8f14e43&apos; title=&apos;&apos; src=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png&apos; srcset=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/e7570/a8f14e43.png 170w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/f46e7/a8f14e43.png 340w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png 680w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/02d09/a8f14e43.png 1020w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png 1023w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABNklEQVR42u2Uy26DMBBF8/Vd9kMqddEv6CpRUJoqUtpUICIBKY+WDYSnbcytx0CiEDZRN13U0tHg8ej6zkh4ZpomXNeD47hI0xRFUSDPcx0Hzvtcf4/JsgxVVSkNB7MgCEGrLEtFBca4goFzpnNUyDnXZxSnVtu2Ovq+j1kYdoKed8BiYWC93mC7fYdl2XhZvarcUu/n8yVse38hMBYMguAsSK7yvDgdUiyVu0y1lB6ppRpSSjRE03RRIQi1v3LYtVVqYaKuaz3TJCESHPs5VSqvYw9dOinIWH0a/iBKCMH1ZYKLbrYDKsf7GnJ+1bIQQrsiBofkYMiNz6iehIiLGUZRNDnoW9a/4O8FpRz+lL/okAmJ3WeKXVjgzVKPA702pEzEcXwT0dc3PvYH3D8auHsw8PS8wg++b41+WLe4nQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;84efb2c8&apos; title=&apos;&apos; src=&apos;/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png&apos; srcset=&apos;/static/4035960bbafbca7af5331b1611fac0f0/e7570/84efb2c8.png 170w,
-/static/4035960bbafbca7af5331b1611fac0f0/f46e7/84efb2c8.png 340w,
-/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png 680w,
-/static/4035960bbafbca7af5331b1611fac0f0/02d09/84efb2c8.png 1020w,
-/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png 1024w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;여기까지 했으면 초기 설정은 완료했다고 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;만약 위 과정에서 admin 유저를 생성하지 않았다면 &lt;code class=&quot;language-text&quot;&gt;admin&lt;/code&gt; 이라는 기본 유저로 로그인 할 수 있다고 설명하고 있다.
-비밀번호는 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt; 과정에서 입력했던 값으로 설정되어있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR42u2Uy07DMBBF+/8s+QW+gBV71kioQNOmzqNpQiFt3onzqJ3L2G2A0iJUNmwY6WTuWJrrkZ1kNJ/PwZgFy7IRxzGyLDubNE1RFAWCIMBovV5DSqkZou979TyoB07FsJ4kCUZhGOpisfAxHk8wmzE47hIu1RPDhGla4LyF2k+InjJB/Z8RcmcYx2S42US6CDwGZt7DtR7hu1MsXQPm5A4ue0DXJNRZohcFevkFkUPS+vuE6txUiMZHU5io8xl4ZoCnBupsqnNTMrSlpekqG21laZTuKIvm+diwTB3kEZmUDupCNTlkRDq3CEabzDVKqzWeMU1DWrQvx4bblqOtS3RthbquUFUF2oar2ffIPaR7caCl3H4YJsnO8OrWxsX1Ey5vDIQp17c8HPZPcXDLw4R+XMF+LbBY05RbiXPipOF379i/4R8Yep6HKIp0of4YvyHPc/reOVarFd4AhmyNTDDm+BMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;60ba97ad&apos; title=&apos;&apos; src=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png&apos; srcset=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/e7570/60ba97ad.png 170w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/f46e7/60ba97ad.png 340w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png 680w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png 1011w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이렇게 Jenkins를 설치할 수 있다.&lt;/p&gt;
-&lt;h2&gt;Reference&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;https://www.jenkins.io/doc/book/installing/linux/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://kafcamus.tistory.com/15&quot;&gt;https://kafcamus.tistory.com/15&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
