@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 28 Jul 2023 05:20:03 GMT</lastBuildDate><item><title><![CDATA[내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 피움팀 서버는  요청으로 이뤄져있다.
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 28 Jul 2023 05:39:51 GMT</lastBuildDate><item><title><![CDATA[내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 피움팀 서버는  요청으로 이뤄져있다.
 는 WWW…]]></description><link>https://pium-official.github.io/apply-https/</link><guid isPermaLink="false">https://pium-official.github.io/apply-https/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -30,7 +30,8 @@
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# certbot을 설치하기 위한 snap을 설치한다.&lt;/span&gt;
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; snap &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; hello-world
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; snapd
 
 &lt;span class=&quot;token comment&quot;&gt;# 이미 설치되어있는 certbot을 제거한다.&lt;/span&gt;
 &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; remove certbot

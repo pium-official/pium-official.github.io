@@ -259,7 +259,8 @@ data-styled.g45[id="Footer__HiddenWrapper-sc-zqxmks-9"]{content:"yzdKT,ivqWaF,"}
   </a>
     </span></p>
 <div class="gatsby-highlight" data-language="shell"><pre class="language-shell"><code class="language-shell"><span class="token comment"># certbot을 설치하기 위한 snap을 설치한다.</span>
-<span class="token function">sudo</span> snap <span class="token function">install</span> hello-world
+<span class="token function">sudo</span> <span class="token function">apt</span> update
+<span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> snapd
 
 <span class="token comment"># 이미 설치되어있는 certbot을 제거한다.</span>
 <span class="token function">sudo</span> <span class="token function">apt-get</span> remove certbot
