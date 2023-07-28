@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 28 Jul 2023 02:24:35 GMT</lastBuildDate><item><title><![CDATA[[작성중] 내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 HTTP 요청으로 이뤄져있다. Certbot 설치 서버에 HTTPS 설정을 해보자
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 28 Jul 2023 03:20:27 GMT</lastBuildDate><item><title><![CDATA[[작성중] 내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 HTTP 요청으로 이뤄져있다. Certbot 설치 서버에 HTTPS 설정을 해보자
 Certbot…]]></description><link>https://pium-official.github.io/apply-https/</link><guid isPermaLink="false">https://pium-official.github.io/apply-https/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -103,7 +103,121 @@ Certbot…]]></description><link>https://pium-official.github.io/apply-https/</l
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;h2&gt;Let&apos;s Encrypt와 Certbot&lt;/h2&gt;
-&lt;p&gt;Let&apos;s Encrypt와 Certbot으로 SSL 인증서를 적용해보자.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[PR 라벨로 젠킨스 빌드유발을 구분하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움팀의 젠킨스에서 빌드 트리거로 을 사용하고있다.  해당 설정은 Github에서 유발되는 모든 WebHook…]]></description><link>https://pium-official.github.io/jenkins-hook-by-label/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-hook-by-label/</guid><pubDate>Tue, 25 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;Let&apos;s Encrypt와 Certbot으로 SSL 인증서를 적용해보자.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Table Drop 못하게 막아버리기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 본 설명 글은 다음과 같은 환경에서 진행됩니다. 배포서버 : Ubuntu 22.04.2 LTS DB서버 : Ubuntu 22.04.2 LTS 배포서버와 DB…]]></description><link>https://pium-official.github.io/db-drop-stop/</link><guid isPermaLink="false">https://pium-official.github.io/db-drop-stop/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;본 설명 글은 다음과 같은 환경에서 진행됩니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;배포서버 : Ubuntu 22.04.2 LTS&lt;/li&gt;
+&lt;li&gt;DB서버 : Ubuntu 22.04.2 LTS&lt;/li&gt;
+&lt;li&gt;배포서버와 DB서버는 동일한 VPC를 사용하고 있습니다.&lt;/li&gt;
+&lt;li&gt;DB : MySQL 8.0.33&lt;/li&gt;
+&lt;li&gt;Application : SpringBoot 3.1.1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;개발 과정에서 실수로 Application 단에서 DB 혹은 테이블을 Drop 해버리는 상황이 있을 수 있다.&lt;/p&gt;
+&lt;p&gt;테이블의 수정이 제한된 유저를 생성하여 해당 유저를 Application에서 사용하도록 구성해보자. &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;도움을 주신 G선생님께 감사의 인사 올리며 시작하겠습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 636px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 43.529411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABIUlEQVR42q2STU/CQBCG9w+ZUAoCtbAf7bYV6ZbS8pGoCYL+BS9evXvy6G99nd0WgiExRj08eWd2JjOzmWFT84zgSmM40vB7Ar2+/BPsdv8BzlMEYfY/Bb2LAF6Xo0vYgl2f1BcNv2jA5NMWWlfIrldIsiXSVg/IaA6hih/Dbt5eUOR3qFd7LOod6vUjymqLarlDWT8gm26gM9vke3S6dLCQFiLUHBNhWnJwaTDmufObzvMzmskPdgkVLxDRT1m5eUU4TiCVoYBxKmSOWJeUnENF1p85XE4b52KGKC7Ib+xRkKB/qcDW9+90NpFLskFJau0kXUCImXuz2sQNTVI4tUWOzcgeDCJaJAfrdIa0WUGbnnyh443P3k6x13D0fX68iE9C9T4iTjV+ggAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c34a6c3a&apos; title=&apos;&apos; src=&apos;/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png&apos; srcset=&apos;/static/8f933cb276f688c756d9cbf5800a4405/e7570/c34a6c3a.png 170w,
+/static/8f933cb276f688c756d9cbf5800a4405/f46e7/c34a6c3a.png 340w,
+/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png 636w&apos; sizes=&apos;(max-width: 636px) 100vw, 636px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;유저 생성하기&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;이후 진행할 작업에서 권한 부여를 위해 root 권한이 필요합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;우선 root 권한을 가진 계정으로 MySQL에 로그인 한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# MySQL에 로그인&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; mysql &lt;span class=&quot;token parameter variable&quot;&gt;-u&lt;/span&gt; root &lt;span class=&quot;token parameter variable&quot;&gt;-p&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Application에서 사용할 유저를 생성한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;localhost&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;만약 외부에서 접근해야하는 유저의 경우 다음 명령어를 참고하세요&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# 외부 모든 IP에 대한 pium 이라는 유저 생성 &lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;%&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# 특정 인스턴스에서만 접속가능한 pium 이라는 유저 생성 &lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;접속할 인스턴스의 private ip&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;권한 부여하기&lt;/h2&gt;
+&lt;p&gt;MySQL에서 설정할 수 있는 권한은 아래와 같다.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;권한&lt;/th&gt;
+&lt;th&gt;내용&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;CREATE, ALTER, DROP&lt;/td&gt;
+&lt;td&gt;테이블 생성, 변경, 삭제&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SELECT, INSERT, UPDATE, DELETE&lt;/td&gt;
+&lt;td&gt;테이블의 레코드 조회, 입력, 수정, 삭제&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;RELOAD&lt;/td&gt;
+&lt;td&gt;권한 부여된 내용을 리로드&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SHUTDOWN&lt;/td&gt;
+&lt;td&gt;서버 종료 작업 실행&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ALL&lt;/td&gt;
+&lt;td&gt;모든 권한 허용&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;USAGE&lt;/td&gt;
+&lt;td&gt;권한 없이 계정만 생성&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;우리는 &lt;code class=&quot;language-text&quot;&gt;INSERT&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;UPDATE&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;SELECT&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;DELETE&lt;/code&gt;만 사용하면 되기 떄문에, 새로 생성한 유저에게 해당 권한만 부여한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;GRANT&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;SELECT&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;INSERT&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;UPDATE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;DELETE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;ON&lt;/span&gt; pium_db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;TO&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;localhost&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설정한 권한을 &lt;code class=&quot;language-text&quot;&gt;flush&lt;/code&gt; 명령어를 이용해 적용한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;FLUSH &lt;span class=&quot;token keyword&quot;&gt;PRIVILEGES&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;확인하기&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/dc3f7abd340d9d43646bcd6592067702/2573e/bd8e631c.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 4.705882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAR0lEQVR42mMwUFf7b6Sh8d9IR++/nqrGfy1ltf86Kur/tZXV/2sC2WqKKv8FBAT/c3Pz/Ofh4cXAXEBxKQmp/1pAPVrKqv8BQz4aj54VZi8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;bd8e631c&apos; title=&apos;&apos; src=&apos;/static/dc3f7abd340d9d43646bcd6592067702/ca1dc/bd8e631c.png&apos; srcset=&apos;/static/dc3f7abd340d9d43646bcd6592067702/e7570/bd8e631c.png 170w,
+/static/dc3f7abd340d9d43646bcd6592067702/f46e7/bd8e631c.png 340w,
+/static/dc3f7abd340d9d43646bcd6592067702/ca1dc/bd8e631c.png 680w,
+/static/dc3f7abd340d9d43646bcd6592067702/02d09/bd8e631c.png 1020w,
+/static/dc3f7abd340d9d43646bcd6592067702/9d567/bd8e631c.png 1360w,
+/static/dc3f7abd340d9d43646bcd6592067702/2573e/bd8e631c.png 1380w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;실제로 생성된 유저로 접속하여 Drop Table 명령어를 수행했을 때 권한 부족으로 수행되지 않음을 확인할 수 있다.&lt;/p&gt;
+&lt;h2&gt;Application properties 적용&lt;/h2&gt;
+&lt;p&gt;Application의 설정파일에 생성한 유저의 정보를 작성한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7448/54161808.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 21.176470588235293%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjUlEQVR42pWOSQ7CMBAEx0uwsmLHdhIkC/H/TxZDTogLyqHUc2jVtMhakPZEjgdm2xlTYlkWombLK61WSh+4izAaYfii/0mnHZF7OmVSKlZxMfJqjWPbEGNwvsMai9Gy/YM5hXFF9uPE54KfZ+w00Q09LgQ68yldIWVdp2uSinPVe8frk9s0E8aBcFH4BvinVdVHH7LcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;54161808&apos; title=&apos;&apos; src=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/ca1dc/54161808.png&apos; srcset=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7570/54161808.png 170w,
+/static/a5fdcb6a4b9204f52f0ba28e89ec7605/f46e7/54161808.png 340w,
+/static/a5fdcb6a4b9204f52f0ba28e89ec7605/ca1dc/54161808.png 680w,
+/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7448/54161808.png 900w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이를 통해 Applicaiton에서는 Table의 생성, 수정, 삭제에 대한 조작을 할 수 없게 되었다.&lt;/p&gt;
+&lt;p&gt;만약 테이블의 생성, 수정, 삭제에 대한 작업이 필요할 경우 DBA 혹은 DB 담당자에게 요청하는 프로세스를 거쳐야만 한다.&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Chat GTP 4&lt;/li&gt;
+&lt;li&gt;피움 백엔드 팀의 집단지성&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[PR 라벨로 젠킨스 빌드유발을 구분하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움팀의 젠킨스에서 빌드 트리거로 을 사용하고있다.  해당 설정은 Github에서 유발되는 모든 WebHook…]]></description><link>https://pium-official.github.io/jenkins-hook-by-label/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-hook-by-label/</guid><pubDate>Tue, 25 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
