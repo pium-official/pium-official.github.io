@@ -36,7 +36,8 @@ HTTP, HTTPS에 대한 자세한 내용은 별도의 글에서 다룰 예정이�
 
 ```shell
 # certbot을 설치하기 위한 snap을 설치한다.
-sudo snap install hello-world
+sudo apt update
+sudo apt install snapd
 
 # 이미 설치되어있는 certbot을 제거한다.
 sudo apt-get remove certbot
