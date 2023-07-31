@@ -53,21 +53,8 @@ sudo certbot --nginx
 ```
 ## HTTPS 설정
 
-### pium.life 추가
+![](.index_images/5498d43a.png)
 
-![](.index_images/5659e6de.png)
-
-![](.index_images/32a6db8d.png)
-
-![](.index_images/fa858e9a.png)
-
-### api.pium.life 추가
-
-![](.index_images/686fd7a3.png)
-
-### www.pium.life 추가
-
-![](.index_images/315f0e63.png)
 ```shell
 # certbot이 SSL 인증서를 자동 갱신하는 cron을 등록한다
 sudo certbot renew --dry-run
@@ -79,8 +66,6 @@ NGINX 설정에 다음과 같이 certbot이 HTTPS 설정을 추가한 것을 확
 
 ![](.index_images/3d08df23.png)
 
-## Let's Encrypt와 Certbot
+## Reference
 
-Let's Encrypt와 Certbot으로 SSL 인증서를 적용해보자.
-
-
+https://certbot.eff.org/instructions
