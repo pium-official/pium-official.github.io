@@ -5,7 +5,7 @@ date: 2023-07-25
 update: 2023-07-25
 tags:
   - 젠킨스
-  - CD
+  - CI
 ---
 
 > 이 글은 우테코 피움팀 크루 '[주노](https://github.com/Choi-JJunho)'가 작성했습니다.
