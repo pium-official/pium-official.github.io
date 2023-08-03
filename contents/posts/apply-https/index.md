@@ -24,6 +24,13 @@ tags:
 
 HTTP, HTTPS에 대한 자세한 내용은 별도의 글에서 다룰 예정이다.
 
+`Let's Encrypt`에서는 인증서를 무료로 발급해주고 있고 `Certbots`과 함께 사용하기를 권장하기 때문에 `Certbots`을 사용하기로 결정했다.  
+
+이 내용은 아래 이미지에서 확인할 수 있다.  
+![img.png](img.png)
+
+
+
 ## Certbot 설치
 
 서버에 HTTPS 설정을 해보자
