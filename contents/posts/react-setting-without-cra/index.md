@@ -8,6 +8,9 @@ tags:
   - Webpack
 ---
 
+> 이 글은 우테코 피움팀 크루 '[클린](https://github.com/hozzijeong)'가 작성했습니다.
+
+
 # CRA없에 webpack으로 react 세팅하기
 
 피움 서비스 환경을 만들기로 하면서, FE의 개발 스펙은 React + TypeScript로 설정하였습니다. React는 당연 현존 최강 라이브러리이고, 여기에 JavaScript의 동적 타입을 컴파일 단계에서 잡아주는 TypeScript까지 더해서 안정적인 서비스를 개발하려고 합니다. 
