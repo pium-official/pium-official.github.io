@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 10 Aug 2023 14:28:13 GMT</lastBuildDate><item><title><![CDATA[RestDocs로 API 문서화하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 사건의 발단  3차 스프린트를 진행하기 하루 전날 프론트가 배포되었다.  그런데 배포된 사이트에 들어가보니 반려 식물의 타임라인을 보는 페이지가 404를 띄우고있었다. 당황하지 않고 침착하게 f1…]]></description><link>https://pium-official.github.io/restdocs-start/</link><guid isPermaLink="false">https://pium-official.github.io/restdocs-start/</guid><pubDate>Fri, 11 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 10 Aug 2023 14:31:52 GMT</lastBuildDate><item><title><![CDATA[RestDocs로 API 문서화하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 사건의 발단  3차 스프린트를 진행하기 하루 전날 프론트가 배포되었다.  그런데 배포된 사이트에 들어가보니 반려 식물의 타임라인을 보는 페이지가 404를 띄우고있었다. 당황하지 않고 침착하게 f1…]]></description><link>https://pium-official.github.io/restdocs-start/</link><guid isPermaLink="false">https://pium-official.github.io/restdocs-start/</guid><pubDate>Fri, 11 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;사건의 발단&lt;/h2&gt;
@@ -39,16 +39,14 @@
 &lt;h2&gt;서론&lt;/h2&gt;
 &lt;p&gt;API 문서화 방식에 대해 찾아본 결과 크게 두가지 방법을 알 수 있었다.&lt;/p&gt;
 &lt;h3&gt;알아보기&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;Spring RestDocs&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;1. Spring RestDocs&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Spring Rest Docs는 Spring에서 제공하는 문서화 도구다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;테스트 작성이 강제된다는 특징이 있다.&lt;/li&gt;
 &lt;li&gt;테스트를 통해 도출된 결과를 문서로 작성하기 프로덕션 코드에 영향이 없다는 특징이 있다.&lt;/li&gt;
 &lt;li&gt;아래 설명할 Swagger와 비교했을 때 설정이 약간 번거롭다는 단점이 있다. &lt;/li&gt;
-&lt;li&gt;Swagger&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;2. Swagger&lt;/code&gt; &lt;/p&gt;
 &lt;p&gt;Swagger는 API 문서화를 돕는 오픈소스 툴이다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;테스트 작성이 필수가 아니라는 특징이 있다.&lt;/li&gt;
@@ -1441,7 +1439,39 @@ select 쿼리가 잘못된게 아닌가? 확인해봤지만 예상한대로 나�
 이제는 스레드 B에서도 동일한 데이터를 확인할 수 있다.&lt;/p&gt;
 &lt;h2&gt;결론&lt;/h2&gt;
 &lt;p&gt;결국 메소드 레벨에 &lt;code class=&quot;language-text&quot;&gt;@Transactional&lt;/code&gt; 어노테이션이 붙은 탓에 save 메소드를 성공적으로 수행해도, 트랜잭션이 끝나지 않아(정확히 말하면 커밋되지 않아) 랜덤 포트 서버의 스레드에서 확인할 수 없는 것이다.
-따라서 랜덤 포트 환경의 격리성을 보장하고자 할 때는 &lt;code class=&quot;language-text&quot;&gt;@Transactional&lt;/code&gt; 어노테이션을 사용하기 보다는, truncate를 하는 sql 스크립트를 사용하는 방법을 고려하는게 더 적절하다고 생각한다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 피움팀 서버는  요청으로 이뤄져있다.
+따라서 랜덤 포트 환경의 격리성을 보장하고자 할 때는 &lt;code class=&quot;language-text&quot;&gt;@Transactional&lt;/code&gt; 어노테이션을 사용하기 보다는, truncate를 하는 sql 스크립트를 사용하는 방법을 고려하는게 더 적절하다고 생각한다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[bundle-analyze를 통한 bundle 크기 분석]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '클린'가 작성했습니다. 사건의 발단 이번 Level3 2차 데모데이때 권장사항을 맞추기 위해서 프로덕션 배포까지 진행했습니다. 어찌 저찌 배포는 잘 끝이 났는데 문제는 첫 페이지가 로드 되는데 약…]]></description><link>https://pium-official.github.io/bundle-analyze/</link><guid isPermaLink="false">https://pium-official.github.io/bundle-analyze/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/hozzijeong&quot;&gt;클린&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;사건의 발단&lt;/h2&gt;
+&lt;p&gt;이번 Level3 2차 데모데이때 권장사항을 맞추기 위해서 프로덕션 배포까지 진행했습니다. 어찌 저찌 배포는 잘 끝이 났는데 문제는 첫 페이지가 로드 되는데 약 4초 가량의 시간이 걸린다는 것이었습니다. 네트워크 문제 문제인가? 하고 봤는데 아니었고, 결국 &lt;code class=&quot;language-text&quot;&gt;bundle.js&lt;/code&gt; 파일의 크기를 보니 무려 16m나 되었던 것입니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/pium-official/pium-official.github.io/assets/50974359/72ec258f-77e0-41aa-8bcd-c4c3d3b0410e&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;왜 이렇게 크기가 크지? 라는 생각을 하며 크게 2가지의 경우를 생찾아봤습니다. 하지만 다음과 같은 이유로 원인이 아님을 알았습니다.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;minify가 되지 않았다 → webpack 4 이상을 사용하면서 자동으로 &lt;code class=&quot;language-text&quot;&gt;production&lt;/code&gt; 일때는 자동으로 설정&lt;/li&gt;
+&lt;li&gt;css 파일 크기가 너무 큼 → &lt;code class=&quot;language-text&quot;&gt;styled-component&lt;/code&gt;를 사용하기 때문에 .css 가 없음.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;따라서 &lt;code class=&quot;language-text&quot;&gt;bundle.js&lt;/code&gt;의 성능을 확인해 볼 필요가 있었고 검색하던 도중 &lt;a href=&quot;https://www.npmjs.com/package/webpack-bundle-analyzer&quot;&gt;webpack-bundle-analyzer&lt;/a&gt;라는 라이브러리를 알게되었습니다.&lt;/p&gt;
+&lt;h2&gt;Webpack Bundle Analyzer&lt;/h2&gt;
+&lt;p&gt;webpack을 통해 build한 bundle의 성능을 측정하는 라이브러리로 모든 번들에 대한 트리를 시각화 해서 보여주는 이점을 갖고 있습니다. 사용법은 매우 간단합니다. 우선 설치를 해줍니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;jsx&quot;&gt;&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;# &lt;span class=&quot;token constant&quot;&gt;NPM&lt;/span&gt;
+npm install &lt;span class=&quot;token operator&quot;&gt;--&lt;/span&gt;save&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;dev webpack&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;bundle&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;analyzer
+# Yarn
+yarn add &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;D&lt;/span&gt; webpack&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;bundle&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;analyzer&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설치를 한 뒤 &lt;code class=&quot;language-text&quot;&gt;webpack.config.js&lt;/code&gt; 파일 내부에서 플러그인을 사용해 줍니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;jsx&quot;&gt;&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; BundleAnalyzerPlugin &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;webpack-bundle-analyzer&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;BundleAnalyzerPlugin&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+module&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;exports &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;token literal-property property&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BundleAnalyzerPlugin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;플러그인 안에 옵션을 설정할 수 있는데, &lt;a href=&quot;https://github.com/webpack-contrib/webpack-bundle-analyzer#options-for-plugin&quot;&gt;여기&lt;/a&gt;에서 옵션에 대한 정보를 확인할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;위에 플러그인 옵션에서 &lt;code class=&quot;language-text&quot;&gt;generateStatsFile&lt;/code&gt; 을 &lt;code class=&quot;language-text&quot;&gt;true&lt;/code&gt; 로 설정한 다음에 &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;에 &lt;code class=&quot;language-text&quot;&gt;scripts&lt;/code&gt; 에다음 명령어를 통해 실행할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;jsx&quot;&gt;&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;&lt;span class=&quot;token literal-property property&quot;&gt;analyze&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; webpack&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;bundle&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;analyzer bundle&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;output&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;path&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;stats&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;https://github.com/pium-official/pium-official.github.io/assets/50974359/6bc524c4-4866-4ebe-9daa-95035e0c0dd5&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;실행한 뒤에 bundle을 분석해 봤더니 react-icons에서 15.3m나 차지하고 있었습니다. 드디어 문제의 원흉을 찾아냈습니다. 그렇다면 react-icons를 대체할 수 있는 방법이 있을까요?&lt;/p&gt;
+&lt;h3&gt;Icons&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://icones.js.org/collection/all?s=material-symbols:cancel&quot;&gt;여기&lt;/a&gt;에 가시면 다양한 아이콘들을 찾아볼 수 있습니다. 원하는 아이콘을 선택한 다음에 SVG, Component 등으로 코드를 반환해 줍니다. 이를 통해서 react-icons를 제거하고 icons를 사용해서 아이콘을 대체할 수 있었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 피움팀 서버는  요청으로 이뤄져있다.
 는 WWW…]]></description><link>https://pium-official.github.io/apply-https/</link><guid isPermaLink="false">https://pium-official.github.io/apply-https/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -1526,39 +1556,7 @@ select 쿼리가 잘못된게 아닌가? 확인해봤지만 예상한대로 나�
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;h2&gt;Reference&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://certbot.eff.org/instructions&quot;&gt;https://certbot.eff.org/instructions&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[bundle-analyze를 통한 bundle 크기 분석]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '클린'가 작성했습니다. 사건의 발단 이번 Level3 2차 데모데이때 권장사항을 맞추기 위해서 프로덕션 배포까지 진행했습니다. 어찌 저찌 배포는 잘 끝이 났는데 문제는 첫 페이지가 로드 되는데 약…]]></description><link>https://pium-official.github.io/bundle-analyze/</link><guid isPermaLink="false">https://pium-official.github.io/bundle-analyze/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/hozzijeong&quot;&gt;클린&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;사건의 발단&lt;/h2&gt;
-&lt;p&gt;이번 Level3 2차 데모데이때 권장사항을 맞추기 위해서 프로덕션 배포까지 진행했습니다. 어찌 저찌 배포는 잘 끝이 났는데 문제는 첫 페이지가 로드 되는데 약 4초 가량의 시간이 걸린다는 것이었습니다. 네트워크 문제 문제인가? 하고 봤는데 아니었고, 결국 &lt;code class=&quot;language-text&quot;&gt;bundle.js&lt;/code&gt; 파일의 크기를 보니 무려 16m나 되었던 것입니다.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/pium-official/pium-official.github.io/assets/50974359/72ec258f-77e0-41aa-8bcd-c4c3d3b0410e&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
-&lt;p&gt;왜 이렇게 크기가 크지? 라는 생각을 하며 크게 2가지의 경우를 생찾아봤습니다. 하지만 다음과 같은 이유로 원인이 아님을 알았습니다.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;minify가 되지 않았다 → webpack 4 이상을 사용하면서 자동으로 &lt;code class=&quot;language-text&quot;&gt;production&lt;/code&gt; 일때는 자동으로 설정&lt;/li&gt;
-&lt;li&gt;css 파일 크기가 너무 큼 → &lt;code class=&quot;language-text&quot;&gt;styled-component&lt;/code&gt;를 사용하기 때문에 .css 가 없음.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;따라서 &lt;code class=&quot;language-text&quot;&gt;bundle.js&lt;/code&gt;의 성능을 확인해 볼 필요가 있었고 검색하던 도중 &lt;a href=&quot;https://www.npmjs.com/package/webpack-bundle-analyzer&quot;&gt;webpack-bundle-analyzer&lt;/a&gt;라는 라이브러리를 알게되었습니다.&lt;/p&gt;
-&lt;h2&gt;Webpack Bundle Analyzer&lt;/h2&gt;
-&lt;p&gt;webpack을 통해 build한 bundle의 성능을 측정하는 라이브러리로 모든 번들에 대한 트리를 시각화 해서 보여주는 이점을 갖고 있습니다. 사용법은 매우 간단합니다. 우선 설치를 해줍니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;jsx&quot;&gt;&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;# &lt;span class=&quot;token constant&quot;&gt;NPM&lt;/span&gt;
-npm install &lt;span class=&quot;token operator&quot;&gt;--&lt;/span&gt;save&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;dev webpack&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;bundle&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;analyzer
-# Yarn
-yarn add &lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;D&lt;/span&gt; webpack&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;bundle&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;analyzer&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;설치를 한 뒤 &lt;code class=&quot;language-text&quot;&gt;webpack.config.js&lt;/code&gt; 파일 내부에서 플러그인을 사용해 줍니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;jsx&quot;&gt;&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; BundleAnalyzerPlugin &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;webpack-bundle-analyzer&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;BundleAnalyzerPlugin&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-module&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;exports &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;token literal-property property&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BundleAnalyzerPlugin&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;플러그인 안에 옵션을 설정할 수 있는데, &lt;a href=&quot;https://github.com/webpack-contrib/webpack-bundle-analyzer#options-for-plugin&quot;&gt;여기&lt;/a&gt;에서 옵션에 대한 정보를 확인할 수 있습니다.&lt;/p&gt;
-&lt;p&gt;위에 플러그인 옵션에서 &lt;code class=&quot;language-text&quot;&gt;generateStatsFile&lt;/code&gt; 을 &lt;code class=&quot;language-text&quot;&gt;true&lt;/code&gt; 로 설정한 다음에 &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;에 &lt;code class=&quot;language-text&quot;&gt;scripts&lt;/code&gt; 에다음 명령어를 통해 실행할 수 있습니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;jsx&quot;&gt;&lt;pre class=&quot;language-jsx&quot;&gt;&lt;code class=&quot;language-jsx&quot;&gt;&lt;span class=&quot;token literal-property property&quot;&gt;analyze&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; webpack&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;bundle&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;analyzer bundle&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;output&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;path&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;stats&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/pium-official/pium-official.github.io/assets/50974359/6bc524c4-4866-4ebe-9daa-95035e0c0dd5&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
-&lt;p&gt;실행한 뒤에 bundle을 분석해 봤더니 react-icons에서 15.3m나 차지하고 있었습니다. 드디어 문제의 원흉을 찾아냈습니다. 그렇다면 react-icons를 대체할 수 있는 방법이 있을까요?&lt;/p&gt;
-&lt;h3&gt;Icons&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://icones.js.org/collection/all?s=material-symbols:cancel&quot;&gt;여기&lt;/a&gt;에 가시면 다양한 아이콘들을 찾아볼 수 있습니다. 원하는 아이콘을 선택한 다음에 SVG, Component 등으로 코드를 반환해 줍니다. 이를 통해서 react-icons를 제거하고 icons를 사용해서 아이콘을 대체할 수 있었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Table Drop 못하게 막아버리기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 본 설명 글은 다음과 같은 환경에서 진행됩니다. 배포서버 : Ubuntu 22.04.2 LTS DB서버 : Ubuntu 22.04.2 LTS 배포서버와 DB…]]></description><link>https://pium-official.github.io/db-drop-stop/</link><guid isPermaLink="false">https://pium-official.github.io/db-drop-stop/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://certbot.eff.org/instructions&quot;&gt;https://certbot.eff.org/instructions&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Table Drop 못하게 막아버리기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 본 설명 글은 다음과 같은 환경에서 진행됩니다. 배포서버 : Ubuntu 22.04.2 LTS DB서버 : Ubuntu 22.04.2 LTS 배포서버와 DB…]]></description><link>https://pium-official.github.io/db-drop-stop/</link><guid isPermaLink="false">https://pium-official.github.io/db-drop-stop/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -2800,165 +2798,7 @@ server &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl restart nginx&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Reference&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://jminie.tistory.com/110&quot;&gt;https://jminie.tistory.com/110&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://customer.gabia.com/manual/domain/287/1201&quot;&gt;https://customer.gabia.com/manual/domain/287/1201&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[젠킨스 설치하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다. 정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
-이에 Jenkins…]]></description><link>https://pium-official.github.io/jenkins-setting/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-setting/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;서론&lt;/h2&gt;
-&lt;p&gt;피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다.&lt;/p&gt;
-&lt;p&gt;정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
-이에 Jenkins를 설치하고 환경설정을 빌드서버 환경을 구축한 일련의 과정을 기록해두려고한다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;작업 환경 : Ubuntu 22.04.2 LTS&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;공식문서 살펴보기&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;젠킨스 공식문서&lt;/a&gt;를 확인하면 설치 방법이 친절하게 나와있다.&lt;/p&gt;
-&lt;p&gt;아무것도 없는 EC2 환경에서 Jenkins를 설치하고 구동하는 과정을 따라가보자.&lt;/p&gt;
-&lt;h2&gt;(Optional) Swap 메모리 설정하기&lt;/h2&gt;
-&lt;p&gt;프리티어환경에서 Jenkins를 사용하면 자칫 메모리가 부족한 상황이 발생할 수도 있다.
-2GB의 메모리는 젠킨스와 빌드를 모두 견디기 어려울 수도 있다.&lt;/p&gt;
-&lt;p&gt;다음 명령어를 통해 서버에 Swap 메모리를 할당하자.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; fallocate &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt; 2G /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;600&lt;/span&gt; /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkswap&lt;/span&gt; /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;swapon&lt;/span&gt; /swapfile
-
-&lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확인명령어&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://velog.io/@junho5336/Swap-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot;&gt;Swap 메모리 할당하기&lt;/a&gt;를 참고&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;java 설치하기&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;설치 방법은 &lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;공식문서&lt;/a&gt;를 확인하면서 진행하고있습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;현재 사용할 jenkins의 버전은 java 17을 사용한다.
-java 17버전을 설치하자&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; openjdk-17-jre
-&lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-version&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10.588235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAdElEQVR42mXNwQ6CMBRE0RIIW16j1LRpBfqoYP3/77tqF25cnGQyixnjHo75OXPdLshdkEW4RU/elJQSIQTGcWQYhj9932OM+em6DlOPF/WonOVkTSu6KJoz+74TY8Q510ZVlfzpSyktf8+891hrEZFmmibeU5cx4lWIWHEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;93d56503&apos; title=&apos;&apos; src=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png&apos; srcset=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/e7570/93d56503.png 170w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/f46e7/93d56503.png 340w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png 680w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png 775w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;h2&gt;jenkins 설치하기&lt;/h2&gt;
-&lt;p&gt;다음 명령어를 수행하여 jenkins를 설치한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-fsSL&lt;/span&gt; https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  /usr/share/keyrings/jenkins-keyring.asc &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
-&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;signed-by&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/usr/share/keyrings/jenkins-keyring.asc&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  https://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  /etc/apt/sources.list.d/jenkins.list &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins
-
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins &lt;span class=&quot;token comment&quot;&gt;# 실행상태 확인&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAf0lEQVR42m2OywrFIAxEleIjahdy1YIbBW3//w/n1oC7Lg5DEmYywmeHOipiiyi9oI2OOSfmPTHGQK3vLUbGOYcQAqy1EEJ8Q5bw3M8b1JBqAp0EpRRzHAer1ppDpJRs2vrJMqWc0XvHVS6kX+I2q4kxhtmhRMTs/Z699/xw8Qe0b0Pn0GyF9wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;99b45540&apos; title=&apos;&apos; src=&apos;/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png&apos; srcset=&apos;/static/377aacf35597393970adf4d2f550dffe/e7570/99b45540.png 170w,
-/static/377aacf35597393970adf4d2f550dffe/f46e7/99b45540.png 340w,
-/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png 680w,
-/static/377aacf35597393970adf4d2f550dffe/02d09/99b45540.png 1020w,
-/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png 1206w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;h2&gt;jenkins 접속하기 &amp;#x26; 초기설정&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;jenkins는 기본적으로 8080포트를 사용한다.
-jenkins의 포트를 변경하는 방법에 대해서는 본 글에서 다루지는 않는다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{인스턴스-public-ip}:8080&lt;/code&gt; 으로 접속하면 다음과 같은 화면을 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVR42qVT7VLCMBDk6X0Xx1fwAQT8Ib+AoQ7IYBXblCYhTT9S1rtAwA9AGDOzXELJdm9v6QyHI8xmL5hOZ5BSoSgKrNdrFKbY77XWZ6HU9t5isUCHP3jxRYYhorKsfOVz0zT4a202G1+TJDkQTiYRug99DJ4GGI/G6HV7dO5hPufnGzjn0Lath3Nc3Zd9eyCM49gfDEleKY2VLiDUGqkyyKgqailnUFt5npNq49Vzi1wZoYtvhKU20EJCZtojF+SNIG9E7mGlRlVV+/ZOthwIraZBrCRsHqB8NRkRMmhgZVl6cPu8WBnvjxKmWYa35RLvHwm0MWjIl5ou1K7xtSKUpLCqazREYq3dDdF45b8Im8b5t50FD4FgSeXWR+vB0fGi0vRAeMybUxHZDoSGs4sa55An/S9CVhVaZl9/tXwJIf+GL0spPVEYyNGhXELIJJzFoOhsbNiD8LZT4JiwXyHI4fuj/5RrPPy5bO3wnBQYTV/RiaLIeyKEQEZZvAZCZFAyx3gW4+auj9v7R3wC/VKL2SHZQ34AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4492665d&apos; title=&apos;&apos; src=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png&apos; srcset=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/e7570/4492665d.png 170w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/f46e7/4492665d.png 340w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png 680w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png 1019w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;다시 EC2 화면으로 넘어와서 다음 명령어를 수행하여 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt;를 알 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.294117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARElEQVR42h2KOwrAMAzFegN/Y5OlS4OTqfe/3WvxIBBCF92EfBN5flbAlmE+E7sOqgrMDCKCqsLdYWbtItJ9jNFERL8f97MZQConaOsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f55b94c9&apos; title=&apos;&apos; src=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png&apos; srcset=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e7570/f55b94c9.png 170w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/f46e7/f55b94c9.png 340w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png 680w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png 734w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;확인한 암호를 화면에 입력한 뒤 Continue 버튼을 눌러 계속 진행한다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpElEQVR42p1T7U7jMBDsq9/LIPEM9x+O4yh/oZxU2gM1JDTxR+wkTtthZ1FaQG2BW2lkx94dz35kNJlMMJ3eYzaboa5rNE2DEAJijLqPMej5MXjv1XexWGCUZRk2m41cBL0IIaJtOwQh9L5G3/f4zBhPK8tyIATuJn9x8es3rsfXuL25xdWfMc7PLjCf/VNnEm/Wa6w/YLVa6bolzPNcP6jIOI/SR5QuYCmoBFZUK5yDMVYzYTmGsnBNqd8RFkWhH42TWiwNzFKCSw8jcKVDlLMgaIxD6tJWzcGU3xLGyqKpGMzVKkksjZJG2XddJ8VvNc2hDHxgL2HxvMQie0KWF6ilMUmCmErqdyAh0csdu8oOM+VOlNOq6g1hK46tOLVtq13m61TyDmyCoBEf1i9yrAScBqqsqmpHOMj+zJji0AyCKp00jA/+FyH9os6o35Iy/deUv0lIH5aEikiksylne5vyFUIqs9Yq6cGxGQZ7aP8xpJRUHdeBiHj3p3y3hvss9Ws8mg7Thxyj+Xyu9WAqfP0YPvpYK4Mfakwfc/w4vcTJzzFeAINXjf7ZXI+HAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;28fea7e9&apos; title=&apos;&apos; src=&apos;/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png&apos; srcset=&apos;/static/34da90f6397f6f2e2761f50b1c127250/e7570/28fea7e9.png 170w,
-/static/34da90f6397f6f2e2761f50b1c127250/f46e7/28fea7e9.png 340w,
-/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png 680w,
-/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png 1013w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;초기 플러그인 세팅 화면이 나오는데 &lt;code class=&quot;language-text&quot;&gt;Install suggested plugins&lt;/code&gt; 를 눌러 초기 플러그인 설정을 진행한다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR42p1UiW6bQBT0/39SPyCRq9RxrMolji9ALAHMfS6Hp++9GIvUaatkpdGwCzs771hmhmFgt9sLwjBEksSI488hiiLal2C73WLmeR66rkdZlsQd2rYT7vte0Lat8L/G+XwWdhwHM9/3MQwDDGOD+fwB9/ffhde/nrFYLHF3Nyd+gtatbORvmafgtatgEAQyqasKNbmsqzdU9JxnGYqiEPd13VxQ01p5WatvHZ5OJ5mouMYhKGCFJfZ+DjdtEBQdorIT0TTNKE8p8ryQFHFqRmcfCq7sGN9WeyytAD9VBJVrRPqM16zDZrPBer2G67pSAMmt5Lu9hn0VDEmQp7tTiWNUwkpqqEzDJnaIraiSCmaX8PM8J7eprDHzGgvfCK6cGD8sHw+mj4Ud0HOAlRvjxctg2zZMy3zj4xGKNopbahk+iIUlbUpNQnYSLFWMJ5Vc8UiHPLsJAuoELh7D8z0Se4WjXBHi4rDojWDV9ig09eMEPNfdIDnrLn3JPZpluYTM4XPIY7XfFWVM7P+G1locVdRmfMBNUUbBgV+w8B+YDg6Pw2ya5u835TMO2R0Ljldxelu+HPJH370TNE2L/hjJtWJfAReG3R8OB/wGHbWCEuKtdfAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c78a9517&apos; title=&apos;&apos; src=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png&apos; srcset=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/e7570/c78a9517.png 170w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/f46e7/c78a9517.png 340w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png 680w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/02d09/c78a9517.png 1020w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png 1021w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVR42pWUWW+bQBSF+f8/qw9J5FRK89ImYrFZhp3BgPGKfTrnIlBsJY2LdDQznjvfXWXL85ZYLldYrXx0XYfNZnOlvu+/Fe12ux2UUrDW6zWGYcD5fMblcpk1fdzz7vb+VvyKohiBF2PcmLWsKjRNC61rUV3X2G638mAg8Asonc3ArmtxND/8eHjGYvFT9Pi4wNMT9YwgCMV4yuIz8W4G9ib/wUTc9Kc5RWYwpXEbybfAV+cVbuogrH2oWiHLMoRhhNY0iCn7fiDF1rqSc5pmxiY3pWnkzJVNORwOY1N+O3/w5r3DizwkZYI4SQXIGpZliSiKkOe5OCpLQtfSUUIIY40pAuM4hmXbDmKVoMgL6ErLg6Io59VxHDNSK+MkFCeVaVxl7DguhOz3e3FwOp2QJAks13WR5hmKskClR2OlYolAa42Xl19wXU+M6YSRMu227QT2OTBNJS0WlaOTm2jbtpVogiAQCMUaUSwDH38BdCR31o2GSkXzo/F8vb8D6MqGUGp69PF8e/dPoG3bYsCi3yuWgWCCqKsuE8bij927TxwnziCjI4wNPB6P0gtrmjNCOVf/I/4PUISzib7v4y8mPXFDELhsegAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82bae04f&apos; title=&apos;&apos; src=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png&apos; srcset=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/e7570/82bae04f.png 170w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/f46e7/82bae04f.png 340w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png 680w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png 1009w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;초기 Admin 유저를 생성할 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABV0lEQVR42pWT3W6CMBiGufOd7VJ2suwSlp2pi2Yao6A7QMlQERVULD+l9F1b0TQRRL/kSf/fvv3aGpZlYT53YNszBEGAKIpwPB5VqSP76jgcDiCEwHEcGK7rQkaSpMiyDHmeI00zUadlmYHSXLUppeAcN8HLTs/zpOBCNZbLFTqdLnq9HwyHI/T7Q4zHFlqtDkYjE6Y5Qbv9rTbWRfT6er2GsVicBU8nIiYnKMSgnFAUxQ1MwMvxRkF5VLlACrJyMdOEdFFJzthVqNqhSKoUrXJWR4NDBsYeF2NNDqPopK6+Ln9PO6TiuFTsqufvHo05jOPkeoxHue9QPFq566PQJoeExCqHlwnPOCyKy0/RBOWjJnF8zmUDeVlyLi+GVzvkVZ+0JniJjH1M8buKMNummNgujOl0Ct/3lXoYhnfZCzbbAH+eL9hgs9vha2Dj5a2N1/cuPj57+AeZf421Ajk8yQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8f14e43&apos; title=&apos;&apos; src=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png&apos; srcset=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/e7570/a8f14e43.png 170w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/f46e7/a8f14e43.png 340w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png 680w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/02d09/a8f14e43.png 1020w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png 1023w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABNklEQVR42u2Uy26DMBBF8/Vd9kMqddEv6CpRUJoqUtpUICIBKY+WDYSnbcytx0CiEDZRN13U0tHg8ej6zkh4ZpomXNeD47hI0xRFUSDPcx0Hzvtcf4/JsgxVVSkNB7MgCEGrLEtFBca4goFzpnNUyDnXZxSnVtu2Ovq+j1kYdoKed8BiYWC93mC7fYdl2XhZvarcUu/n8yVse38hMBYMguAsSK7yvDgdUiyVu0y1lB6ppRpSSjRE03RRIQi1v3LYtVVqYaKuaz3TJCESHPs5VSqvYw9dOinIWH0a/iBKCMH1ZYKLbrYDKsf7GnJ+1bIQQrsiBofkYMiNz6iehIiLGUZRNDnoW9a/4O8FpRz+lL/okAmJ3WeKXVjgzVKPA702pEzEcXwT0dc3PvYH3D8auHsw8PS8wg++b41+WLe4nQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;84efb2c8&apos; title=&apos;&apos; src=&apos;/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png&apos; srcset=&apos;/static/4035960bbafbca7af5331b1611fac0f0/e7570/84efb2c8.png 170w,
-/static/4035960bbafbca7af5331b1611fac0f0/f46e7/84efb2c8.png 340w,
-/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png 680w,
-/static/4035960bbafbca7af5331b1611fac0f0/02d09/84efb2c8.png 1020w,
-/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png 1024w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;여기까지 했으면 초기 설정은 완료했다고 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;만약 위 과정에서 admin 유저를 생성하지 않았다면 &lt;code class=&quot;language-text&quot;&gt;admin&lt;/code&gt; 이라는 기본 유저로 로그인 할 수 있다고 설명하고 있다.
-비밀번호는 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt; 과정에서 입력했던 값으로 설정되어있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR42u2Uy07DMBBF+/8s+QW+gBV71kioQNOmzqNpQiFt3onzqJ3L2G2A0iJUNmwY6WTuWJrrkZ1kNJ/PwZgFy7IRxzGyLDubNE1RFAWCIMBovV5DSqkZou979TyoB07FsJ4kCUZhGOpisfAxHk8wmzE47hIu1RPDhGla4LyF2k+InjJB/Z8RcmcYx2S42US6CDwGZt7DtR7hu1MsXQPm5A4ue0DXJNRZohcFevkFkUPS+vuE6txUiMZHU5io8xl4ZoCnBupsqnNTMrSlpekqG21laZTuKIvm+diwTB3kEZmUDupCNTlkRDq3CEabzDVKqzWeMU1DWrQvx4bblqOtS3RthbquUFUF2oar2ffIPaR7caCl3H4YJsnO8OrWxsX1Ey5vDIQp17c8HPZPcXDLw4R+XMF+LbBY05RbiXPipOF379i/4R8Yep6HKIp0of4YvyHPc/reOVarFd4AhmyNTDDm+BMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;60ba97ad&apos; title=&apos;&apos; src=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png&apos; srcset=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/e7570/60ba97ad.png 170w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/f46e7/60ba97ad.png 340w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png 680w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png 1011w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이렇게 Jenkins를 설치할 수 있다.&lt;/p&gt;
-&lt;h2&gt;Reference&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;https://www.jenkins.io/doc/book/installing/linux/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[@NotNull과 nullable = false는 어떤 차이가 있을까?]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 서론 JPA를 이용해 엔티티를 설계하다가  어노테이션과 @Column의 의 차이점이 궁금해져 알아보았습니다. nullable = false ?? JPA는 엔티티를 매핑하고 설계하면 자동으로 DDL…]]></description><link>https://pium-official.github.io/jpa-notnull-nullable/</link><guid isPermaLink="false">https://pium-official.github.io/jpa-notnull-nullable/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://customer.gabia.com/manual/domain/287/1201&quot;&gt;https://customer.gabia.com/manual/domain/287/1201&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[@NotNull과 nullable = false는 어떤 차이가 있을까?]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 서론 JPA를 이용해 엔티티를 설계하다가  어노테이션과 @Column의 의 차이점이 궁금해져 알아보았습니다. nullable = false ?? JPA는 엔티티를 매핑하고 설계하면 자동으로 DDL…]]></description><link>https://pium-official.github.io/jpa-notnull-nullable/</link><guid isPermaLink="false">https://pium-official.github.io/jpa-notnull-nullable/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -3158,7 +2998,165 @@ DDL을 자동으로 생성하고 애플리케이션의 영속성 컨텍스트에
 &lt;p&gt;하이버네이트에서는 nullable=false보다 @NotNull 사용을 조금 더 권장하고 있다.&lt;/p&gt;
 &lt;h2&gt;레퍼런스&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.baeldung.com/hibernate-notnull-vs-nullable&quot;&gt;https://www.baeldung.com/hibernate-notnull-vs-nullable&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://kafcamus.tistory.com/15&quot;&gt;https://kafcamus.tistory.com/15&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://kafcamus.tistory.com/15&quot;&gt;https://kafcamus.tistory.com/15&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[젠킨스 설치하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다. 정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
+이에 Jenkins…]]></description><link>https://pium-official.github.io/jenkins-setting/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-setting/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다.&lt;/p&gt;
+&lt;p&gt;정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
+이에 Jenkins를 설치하고 환경설정을 빌드서버 환경을 구축한 일련의 과정을 기록해두려고한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;작업 환경 : Ubuntu 22.04.2 LTS&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;공식문서 살펴보기&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;젠킨스 공식문서&lt;/a&gt;를 확인하면 설치 방법이 친절하게 나와있다.&lt;/p&gt;
+&lt;p&gt;아무것도 없는 EC2 환경에서 Jenkins를 설치하고 구동하는 과정을 따라가보자.&lt;/p&gt;
+&lt;h2&gt;(Optional) Swap 메모리 설정하기&lt;/h2&gt;
+&lt;p&gt;프리티어환경에서 Jenkins를 사용하면 자칫 메모리가 부족한 상황이 발생할 수도 있다.
+2GB의 메모리는 젠킨스와 빌드를 모두 견디기 어려울 수도 있다.&lt;/p&gt;
+&lt;p&gt;다음 명령어를 통해 서버에 Swap 메모리를 할당하자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; fallocate &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt; 2G /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;600&lt;/span&gt; /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkswap&lt;/span&gt; /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;swapon&lt;/span&gt; /swapfile
+
+&lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확인명령어&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://velog.io/@junho5336/Swap-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot;&gt;Swap 메모리 할당하기&lt;/a&gt;를 참고&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;java 설치하기&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;설치 방법은 &lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;공식문서&lt;/a&gt;를 확인하면서 진행하고있습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;현재 사용할 jenkins의 버전은 java 17을 사용한다.
+java 17버전을 설치하자&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; openjdk-17-jre
+&lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-version&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10.588235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAdElEQVR42mXNwQ6CMBRE0RIIW16j1LRpBfqoYP3/77tqF25cnGQyixnjHo75OXPdLshdkEW4RU/elJQSIQTGcWQYhj9932OM+em6DlOPF/WonOVkTSu6KJoz+74TY8Q510ZVlfzpSyktf8+891hrEZFmmibeU5cx4lWIWHEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;93d56503&apos; title=&apos;&apos; src=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png&apos; srcset=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/e7570/93d56503.png 170w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/f46e7/93d56503.png 340w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png 680w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png 775w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;jenkins 설치하기&lt;/h2&gt;
+&lt;p&gt;다음 명령어를 수행하여 jenkins를 설치한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-fsSL&lt;/span&gt; https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  /usr/share/keyrings/jenkins-keyring.asc &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
+&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;signed-by&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/usr/share/keyrings/jenkins-keyring.asc&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  https://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  /etc/apt/sources.list.d/jenkins.list &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins
+
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins &lt;span class=&quot;token comment&quot;&gt;# 실행상태 확인&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAf0lEQVR42m2OywrFIAxEleIjahdy1YIbBW3//w/n1oC7Lg5DEmYywmeHOipiiyi9oI2OOSfmPTHGQK3vLUbGOYcQAqy1EEJ8Q5bw3M8b1JBqAp0EpRRzHAer1ppDpJRs2vrJMqWc0XvHVS6kX+I2q4kxhtmhRMTs/Z699/xw8Qe0b0Pn0GyF9wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;99b45540&apos; title=&apos;&apos; src=&apos;/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png&apos; srcset=&apos;/static/377aacf35597393970adf4d2f550dffe/e7570/99b45540.png 170w,
+/static/377aacf35597393970adf4d2f550dffe/f46e7/99b45540.png 340w,
+/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png 680w,
+/static/377aacf35597393970adf4d2f550dffe/02d09/99b45540.png 1020w,
+/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png 1206w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;jenkins 접속하기 &amp;#x26; 초기설정&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;jenkins는 기본적으로 8080포트를 사용한다.
+jenkins의 포트를 변경하는 방법에 대해서는 본 글에서 다루지는 않는다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{인스턴스-public-ip}:8080&lt;/code&gt; 으로 접속하면 다음과 같은 화면을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVR42qVT7VLCMBDk6X0Xx1fwAQT8Ib+AoQ7IYBXblCYhTT9S1rtAwA9AGDOzXELJdm9v6QyHI8xmL5hOZ5BSoSgKrNdrFKbY77XWZ6HU9t5isUCHP3jxRYYhorKsfOVz0zT4a202G1+TJDkQTiYRug99DJ4GGI/G6HV7dO5hPufnGzjn0Lath3Nc3Zd9eyCM49gfDEleKY2VLiDUGqkyyKgqailnUFt5npNq49Vzi1wZoYtvhKU20EJCZtojF+SNIG9E7mGlRlVV+/ZOthwIraZBrCRsHqB8NRkRMmhgZVl6cPu8WBnvjxKmWYa35RLvHwm0MWjIl5ou1K7xtSKUpLCqazREYq3dDdF45b8Im8b5t50FD4FgSeXWR+vB0fGi0vRAeMybUxHZDoSGs4sa55An/S9CVhVaZl9/tXwJIf+GL0spPVEYyNGhXELIJJzFoOhsbNiD8LZT4JiwXyHI4fuj/5RrPPy5bO3wnBQYTV/RiaLIeyKEQEZZvAZCZFAyx3gW4+auj9v7R3wC/VKL2SHZQ34AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4492665d&apos; title=&apos;&apos; src=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png&apos; srcset=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/e7570/4492665d.png 170w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/f46e7/4492665d.png 340w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png 680w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png 1019w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;다시 EC2 화면으로 넘어와서 다음 명령어를 수행하여 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt;를 알 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.294117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARElEQVR42h2KOwrAMAzFegN/Y5OlS4OTqfe/3WvxIBBCF92EfBN5flbAlmE+E7sOqgrMDCKCqsLdYWbtItJ9jNFERL8f97MZQConaOsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f55b94c9&apos; title=&apos;&apos; src=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png&apos; srcset=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e7570/f55b94c9.png 170w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/f46e7/f55b94c9.png 340w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png 680w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png 734w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;확인한 암호를 화면에 입력한 뒤 Continue 버튼을 눌러 계속 진행한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpElEQVR42p1T7U7jMBDsq9/LIPEM9x+O4yh/oZxU2gM1JDTxR+wkTtthZ1FaQG2BW2lkx94dz35kNJlMMJ3eYzaboa5rNE2DEAJijLqPMej5MXjv1XexWGCUZRk2m41cBL0IIaJtOwQh9L5G3/f4zBhPK8tyIATuJn9x8es3rsfXuL25xdWfMc7PLjCf/VNnEm/Wa6w/YLVa6bolzPNcP6jIOI/SR5QuYCmoBFZUK5yDMVYzYTmGsnBNqd8RFkWhH42TWiwNzFKCSw8jcKVDlLMgaIxD6tJWzcGU3xLGyqKpGMzVKkksjZJG2XddJ8VvNc2hDHxgL2HxvMQie0KWF6ilMUmCmErqdyAh0csdu8oOM+VOlNOq6g1hK46tOLVtq13m61TyDmyCoBEf1i9yrAScBqqsqmpHOMj+zJji0AyCKp00jA/+FyH9os6o35Iy/deUv0lIH5aEikiksylne5vyFUIqs9Yq6cGxGQZ7aP8xpJRUHdeBiHj3p3y3hvss9Ws8mg7Thxyj+Xyu9WAqfP0YPvpYK4Mfakwfc/w4vcTJzzFeAINXjf7ZXI+HAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;28fea7e9&apos; title=&apos;&apos; src=&apos;/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png&apos; srcset=&apos;/static/34da90f6397f6f2e2761f50b1c127250/e7570/28fea7e9.png 170w,
+/static/34da90f6397f6f2e2761f50b1c127250/f46e7/28fea7e9.png 340w,
+/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png 680w,
+/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png 1013w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;초기 플러그인 세팅 화면이 나오는데 &lt;code class=&quot;language-text&quot;&gt;Install suggested plugins&lt;/code&gt; 를 눌러 초기 플러그인 설정을 진행한다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR42p1UiW6bQBT0/39SPyCRq9RxrMolji9ALAHMfS6Hp++9GIvUaatkpdGwCzs771hmhmFgt9sLwjBEksSI488hiiLal2C73WLmeR66rkdZlsQd2rYT7vte0Lat8L/G+XwWdhwHM9/3MQwDDGOD+fwB9/ffhde/nrFYLHF3Nyd+gtatbORvmafgtatgEAQyqasKNbmsqzdU9JxnGYqiEPd13VxQ01p5WatvHZ5OJ5mouMYhKGCFJfZ+DjdtEBQdorIT0TTNKE8p8ryQFHFqRmcfCq7sGN9WeyytAD9VBJVrRPqM16zDZrPBer2G67pSAMmt5Lu9hn0VDEmQp7tTiWNUwkpqqEzDJnaIraiSCmaX8PM8J7eprDHzGgvfCK6cGD8sHw+mj4Ud0HOAlRvjxctg2zZMy3zj4xGKNopbahk+iIUlbUpNQnYSLFWMJ5Vc8UiHPLsJAuoELh7D8z0Se4WjXBHi4rDojWDV9ig09eMEPNfdIDnrLn3JPZpluYTM4XPIY7XfFWVM7P+G1locVdRmfMBNUUbBgV+w8B+YDg6Pw2ya5u835TMO2R0Ljldxelu+HPJH370TNE2L/hjJtWJfAReG3R8OB/wGHbWCEuKtdfAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c78a9517&apos; title=&apos;&apos; src=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png&apos; srcset=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/e7570/c78a9517.png 170w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/f46e7/c78a9517.png 340w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png 680w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/02d09/c78a9517.png 1020w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png 1021w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVR42pWUWW+bQBSF+f8/qw9J5FRK89ImYrFZhp3BgPGKfTrnIlBsJY2LdDQznjvfXWXL85ZYLldYrXx0XYfNZnOlvu+/Fe12ux2UUrDW6zWGYcD5fMblcpk1fdzz7vb+VvyKohiBF2PcmLWsKjRNC61rUV3X2G638mAg8Asonc3ArmtxND/8eHjGYvFT9Pi4wNMT9YwgCMV4yuIz8W4G9ib/wUTc9Kc5RWYwpXEbybfAV+cVbuogrH2oWiHLMoRhhNY0iCn7fiDF1rqSc5pmxiY3pWnkzJVNORwOY1N+O3/w5r3DizwkZYI4SQXIGpZliSiKkOe5OCpLQtfSUUIIY40pAuM4hmXbDmKVoMgL6ErLg6Io59VxHDNSK+MkFCeVaVxl7DguhOz3e3FwOp2QJAks13WR5hmKskClR2OlYolAa42Xl19wXU+M6YSRMu227QT2OTBNJS0WlaOTm2jbtpVogiAQCMUaUSwDH38BdCR31o2GSkXzo/F8vb8D6MqGUGp69PF8e/dPoG3bYsCi3yuWgWCCqKsuE8bij927TxwnziCjI4wNPB6P0gtrmjNCOVf/I/4PUISzib7v4y8mPXFDELhsegAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82bae04f&apos; title=&apos;&apos; src=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png&apos; srcset=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/e7570/82bae04f.png 170w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/f46e7/82bae04f.png 340w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png 680w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png 1009w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;초기 Admin 유저를 생성할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABV0lEQVR42pWT3W6CMBiGufOd7VJ2suwSlp2pi2Yao6A7QMlQERVULD+l9F1b0TQRRL/kSf/fvv3aGpZlYT53YNszBEGAKIpwPB5VqSP76jgcDiCEwHEcGK7rQkaSpMiyDHmeI00zUadlmYHSXLUppeAcN8HLTs/zpOBCNZbLFTqdLnq9HwyHI/T7Q4zHFlqtDkYjE6Y5Qbv9rTbWRfT6er2GsVicBU8nIiYnKMSgnFAUxQ1MwMvxRkF5VLlACrJyMdOEdFFJzthVqNqhSKoUrXJWR4NDBsYeF2NNDqPopK6+Ln9PO6TiuFTsqufvHo05jOPkeoxHue9QPFq566PQJoeExCqHlwnPOCyKy0/RBOWjJnF8zmUDeVlyLi+GVzvkVZ+0JniJjH1M8buKMNummNgujOl0Ct/3lXoYhnfZCzbbAH+eL9hgs9vha2Dj5a2N1/cuPj57+AeZf421Ajk8yQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8f14e43&apos; title=&apos;&apos; src=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png&apos; srcset=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/e7570/a8f14e43.png 170w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/f46e7/a8f14e43.png 340w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png 680w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/02d09/a8f14e43.png 1020w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png 1023w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABNklEQVR42u2Uy26DMBBF8/Vd9kMqddEv6CpRUJoqUtpUICIBKY+WDYSnbcytx0CiEDZRN13U0tHg8ej6zkh4ZpomXNeD47hI0xRFUSDPcx0Hzvtcf4/JsgxVVSkNB7MgCEGrLEtFBca4goFzpnNUyDnXZxSnVtu2Ovq+j1kYdoKed8BiYWC93mC7fYdl2XhZvarcUu/n8yVse38hMBYMguAsSK7yvDgdUiyVu0y1lB6ppRpSSjRE03RRIQi1v3LYtVVqYaKuaz3TJCESHPs5VSqvYw9dOinIWH0a/iBKCMH1ZYKLbrYDKsf7GnJ+1bIQQrsiBofkYMiNz6iehIiLGUZRNDnoW9a/4O8FpRz+lL/okAmJ3WeKXVjgzVKPA702pEzEcXwT0dc3PvYH3D8auHsw8PS8wg++b41+WLe4nQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;84efb2c8&apos; title=&apos;&apos; src=&apos;/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png&apos; srcset=&apos;/static/4035960bbafbca7af5331b1611fac0f0/e7570/84efb2c8.png 170w,
+/static/4035960bbafbca7af5331b1611fac0f0/f46e7/84efb2c8.png 340w,
+/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png 680w,
+/static/4035960bbafbca7af5331b1611fac0f0/02d09/84efb2c8.png 1020w,
+/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png 1024w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;여기까지 했으면 초기 설정은 완료했다고 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;만약 위 과정에서 admin 유저를 생성하지 않았다면 &lt;code class=&quot;language-text&quot;&gt;admin&lt;/code&gt; 이라는 기본 유저로 로그인 할 수 있다고 설명하고 있다.
+비밀번호는 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt; 과정에서 입력했던 값으로 설정되어있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR42u2Uy07DMBBF+/8s+QW+gBV71kioQNOmzqNpQiFt3onzqJ3L2G2A0iJUNmwY6WTuWJrrkZ1kNJ/PwZgFy7IRxzGyLDubNE1RFAWCIMBovV5DSqkZou979TyoB07FsJ4kCUZhGOpisfAxHk8wmzE47hIu1RPDhGla4LyF2k+InjJB/Z8RcmcYx2S42US6CDwGZt7DtR7hu1MsXQPm5A4ue0DXJNRZohcFevkFkUPS+vuE6txUiMZHU5io8xl4ZoCnBupsqnNTMrSlpekqG21laZTuKIvm+diwTB3kEZmUDupCNTlkRDq3CEabzDVKqzWeMU1DWrQvx4bblqOtS3RthbquUFUF2oar2ffIPaR7caCl3H4YJsnO8OrWxsX1Ey5vDIQp17c8HPZPcXDLw4R+XMF+LbBY05RbiXPipOF379i/4R8Yep6HKIp0of4YvyHPc/reOVarFd4AhmyNTDDm+BMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;60ba97ad&apos; title=&apos;&apos; src=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png&apos; srcset=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/e7570/60ba97ad.png 170w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/f46e7/60ba97ad.png 340w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png 680w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png 1011w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 Jenkins를 설치할 수 있다.&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;https://www.jenkins.io/doc/book/installing/linux/&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
