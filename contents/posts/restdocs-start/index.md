@@ -37,7 +37,7 @@ API 문서화 방식에 대해 찾아본 결과 크게 두가지 방법을 알 �
 
 ### 알아보기
 
-1. Spring RestDocs
+`1. Spring RestDocs`
 
 Spring Rest Docs는 Spring에서 제공하는 문서화 도구다.
 
@@ -45,7 +45,7 @@ Spring Rest Docs는 Spring에서 제공하는 문서화 도구다.
 - 테스트를 통해 도출된 결과를 문서로 작성하기 프로덕션 코드에 영향이 없다는 특징이 있다.
 - 아래 설명할 Swagger와 비교했을 때 설정이 약간 번거롭다는 단점이 있다. 
 
-2. Swagger
+`2. Swagger` 
 
 Swagger는 API 문서화를 돕는 오픈소스 툴이다.
 
