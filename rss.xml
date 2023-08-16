@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 16 Aug 2023 02:37:40 GMT</lastBuildDate><item><title><![CDATA[Logback을 이용해 운영 환경 별 로그 남기기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 로깅이란 ? 우리가 처음 개발을 할 때 System.out.println(), cout << "hello world" << endl, print…]]></description><link>https://pium-official.github.io/server-logging/</link><guid isPermaLink="false">https://pium-official.github.io/server-logging/</guid><pubDate>Wed, 16 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 16 Aug 2023 02:41:09 GMT</lastBuildDate><item><title><![CDATA[Logback을 이용해 운영 환경 별 로그 남기기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 로깅이란 ? 우리가 처음 개발을 할 때 System.out.println(), cout << "hello world" << endl, print…]]></description><link>https://pium-official.github.io/server-logging/</link><guid isPermaLink="false">https://pium-official.github.io/server-logging/</guid><pubDate>Wed, 16 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;로깅이란 ?&lt;/h2&gt;
@@ -66,7 +66,7 @@
 &lt;p&gt;또한 원하는 레벨 별로 로그를 확인하기 제한이 있고, 별도의 파일로 저장해 로그를 관리하기에도 제한이 있습니다.&lt;/p&gt;
 &lt;p&gt;이런 상황을 해결할 수 있는, logback을 활용한 효과적으로 로깅할 수 있는 방법을 알아봅시다.&lt;/p&gt;
 &lt;h2&gt;Logback을 활용해 효과적으로 로깅하기&lt;/h2&gt;
-&lt;p&gt;스프링 부트에서 콘솔 로그의 수준을 변경하는 방법은 application.properties나 logback-spring.xml 에서 설정하는 방법이 있습니다.&lt;/p&gt;
+&lt;p&gt;스프링 부트에서 콘솔 로그의 수준을 변경하는 방법은 &lt;code class=&quot;language-text&quot;&gt;application.properties&lt;/code&gt;나 &lt;code class=&quot;language-text&quot;&gt;logback-spring.xml&lt;/code&gt; 에서 설정하는 방법이 있습니다.&lt;/p&gt;
 &lt;p&gt;application.properties로 설정하는 방법이 있지만 세세한 설정을 하는데 제한이 있습니다.&lt;/p&gt;
 &lt;p&gt;그러므로 logback-spring.xml로 관리하여 세부적인 설정을 할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;스프링 부트는 로깅 설정 파일의 네이밍에 관한 규칙을 가지고 있습니다.&lt;/p&gt;
@@ -81,7 +81,7 @@
 &lt;p&gt;여기서 logback-spring.xml은 Spring Boot에 특화된 설정 파일입니다.&lt;/p&gt;
 &lt;p&gt;이 파일을 사용하면 Spring Boot의 로깅 확장 기능을 활용할 수 있습니다. 예를 들면, 프로파일에 따른 로그 레벨 설정이나 Spring 환경 변수를 로깅 설정에 사용하는 것 같은 기능들을 활용할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;만약 다른 파일 이름으로 된 로그 설정 파일을 사용하고 싶으면 logging.config 값을 변경한 후 프로그램 실행 시 JVM 인자로 설정하면 됩니다.&lt;/p&gt;
-&lt;p&gt;Logback 설정을 하기 전, 구조를 간단하게 살펴보면 Logback은 크게 3가지 Logger, Appender, Layout의 구성 요소를 가지고 있습니다.&lt;/p&gt;
+&lt;p&gt;Logback 설정을 하기 전, 구조를 간단하게 살펴보면 Logback은 크게 3가지 &lt;code class=&quot;language-text&quot;&gt;Logger&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Appender&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Layout&lt;/code&gt;의 구성 요소를 가지고 있습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
       &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/09e8fa1cc96338605cc06bae60ba647c/ef0cc/img_3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
     &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 58.235294117647065%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAABkUlEQVR42p1TyW7CUAx8//89PbQSPVCpFYUT5MASsrJDAoSQhJTANGP6orSqqFRLFsbPy4ztKJQSBAEajQaazSZ2ux1duF6v+Cn03VOKWiwWMAwDrVYL7XZb7OVyiaIo8B9RYRjicrlgu92KstN6vRbUdTmfz2Dz6XSK2WxW/WqbOayjDoeDJFiWhcFgIPZ+v5dkBkVRJD4m0k9hYl0pBEZmyjRNjMdjeJ4H3/fFpuZ5LmgZOJ/P5S3LMoxGIzCn1+vB9VyJdRwHaZoKCOW6rkBmAosSiW3biOO4WgTnOZlMpAkbMNa1HPiOJ7H7ksXpdJLGKkkSUPv9PobDoSSRJhM1PQqD+ZYmKUzbxFPnGQ9vj+gaXfHxTQqyG6Fqyto+Ho/fzofBpCVNwgC79xdEnVcU8W0HmaZMyKStN0abPlKoF+RYOMMvZ1khB/KPm10KWTJf6VkRHZXC49aUdUFeA9+rUykRT0rV/zljMlCr1UoMbkpvktB/+2K4nHsqh81bo7IAD5sNNptNtYz6Z/eXMOYT8oaSPcczsJEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
@@ -91,7 +91,7 @@
 /static/09e8fa1cc96338605cc06bae60ba647c/ef0cc/img_3.png 962w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
   &lt;/a&gt;
     &lt;/span&gt;
-Logger는 로깅을 수행하는 주요 객체입니다.
+&lt;code class=&quot;language-text&quot;&gt;Logger&lt;/code&gt;는 로깅을 수행하는 주요 객체입니다.
 로거는 이름을 가지며 주로 패키지 이름 또는 클래스 이름과 일치하게 설정합니다.
 또한 로거는 계층 구조를 가지는데 ROOT 로거는 모든 로거의 상위 로거입니다.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
@@ -103,10 +103,10 @@ Logger는 로깅을 수행하는 주요 객체입니다.
 /static/43d35f9a20e5195647f6511eb9a7b7b6/d7258/img_4.png 966w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
   &lt;/a&gt;
     &lt;/span&gt;
-Appender는 로깅 이벤트를 특정 출력 대상으로 전송하는 구성 요소입니다.
+&lt;code class=&quot;language-text&quot;&gt;Appender&lt;/code&gt;는 로깅 이벤트를 특정 출력 대상으로 전송하는 구성 요소입니다.
 쉽게 말해 로그 메세지가 출력할 대상을 결정한다고 할 수 있습니다.
 콘솔에 출력할지, 파일에 출력할지 등등.&lt;/p&gt;
-&lt;p&gt;각 로거는 하나 이상의 Appender에 연결될 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;각 로거는 하나 이상의 Appender에 연결될 수 있습니다.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
       &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d6df828e4016d1e73476adb4d4199514/8aec5/img_5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
     &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 56.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABlUlEQVR42pVTa0/CQBDs//9BGo0ao8QPPBKFAAV5llL6bmmbFvpg7KwpQUNi3GRz173u7MzennI8HhFFEabTKdrtNna7HdI0RVmW+I+dTidxRdM0uK4roIfDAfv9Hoz5vn/+8VriNacpm81GNqZpotvtgoyTJIFt2z8AyXq9XsMwDOi6ju12e3bGSCIIAig8bJh5nocsy4Qx97SqqmTlN+O/WTd75hFLWS6X6PV6GA6HGI1GGAwG8s0ClwlhGAoTMlInE6xWK8xmM8znc6iqWhdzRKUwpHElbfbyUnLDkOwIcHN7i4f7O7y9vuD56RGDj3e0Wi3JZY70kElkulgspA/0S0CyIwvGa8pYuzE+7Qial0APUxRlJZKpQCFIp9MRuePxGP1+Xy6nkcwxiuNYbt33A4kFWQkjKbCr3YxzifEyBbCRzCQ2vigKkc1DsqR8GguwuGlZsOteebYF1zbhWqb0jpKt+uw8Nkye1M3O81xAOCKX88WV00DPsoNIbPw7lsljEIas4DiOMCQwq7Fv1wb7r9fyBbiYQ9oRstJbAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
@@ -116,7 +116,7 @@ Appender는 로깅 이벤트를 특정 출력 대상으로 전송하는 구성 �
 /static/d6df828e4016d1e73476adb4d4199514/8aec5/img_5.png 942w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
   &lt;/a&gt;
     &lt;/span&gt;
-Layout은 로깅 이벤트가 어떻게 포맷되어 출력될지 결정하는 구성 요소입니다.
+&lt;code class=&quot;language-text&quot;&gt;Layout&lt;/code&gt;은 로깅 이벤트가 어떻게 포맷되어 출력될지 결정하는 구성 요소입니다.
 사용자가 지정한 형식으로 로그 메세지를 변환한다는 것을 의미합니다.
 예를 들어 자바에서 문자열 포맷팅과 비슷하다고 할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;이제 로그를 남기는 방법을 알아보겠습니다.&lt;/p&gt;
@@ -226,8 +226,8 @@ Layout은 로깅 이벤트가 어떻게 포맷되어 출력될지 결정하는 �
 Property는 콘솔에서 지정한 방법과 동일하지만 파일에 저장하는 경우에는 색이 들어갈 필요가 없고, 색 코드가 들어가면 글자가 깨지는 현상이 발생합니다.
 그러므로 색을 제거한 패턴을 작성했습니다.&lt;/p&gt;
 &lt;p&gt;Appender의 경우 File로 로그를 남기기 위해 RollingFileAppender를 사용했습니다.
-INFO와 ERROR로 appender를 구분해 레벨 수준에 따라 별도의 appender로 분리했습니다.
-RollingFileAppender는 maxFileSize와 maxHistory, totalSizeCap 설정을 통해 한 로그 파일의 최대 크기, 며칠 동안 보관할지, 모든 로그 파일(./logs/..)의 크기를 설정할 수 있습니다.&lt;/p&gt;
+&lt;code class=&quot;language-text&quot;&gt;INFO&lt;/code&gt;와 &lt;code class=&quot;language-text&quot;&gt;ERROR&lt;/code&gt;로 appender를 구분해 레벨 수준에 따라 별도의 appender로 분리했습니다.
+RollingFileAppender는 &lt;strong&gt;maxFileSize&lt;/strong&gt;와 &lt;strong&gt;maxHistory&lt;/strong&gt;, &lt;strong&gt;totalSizeCap&lt;/strong&gt; 설정을 통해 한 로그 파일의 최대 크기, 며칠 동안 보관할지, 모든 로그 파일(./logs/..)의 크기를 설정할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
       &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/ec20e9af53f0f1185e8c1bf011ce922a/bbbf7/img_7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
     &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 57.05882352941176%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAABg0lEQVR42p2TS47bMBBEfY/YEiXx0/xKlDVjZBAHyf0PVSnS2mUxkywKLRHkQ3WzeFmsh/YBNhRYKRC/QsoDs43Q2mGhpsV8Lm2xiMdlGBWmWSOVO+J6R65vqN9/IeQdltBxmHG9Dl/TbWzACYOaIbHAUyFtiDsdasEwTF1t41fVgTMtx1IRc0Whw+3xhKQK5zLGcfl34EiHPq0dKiFjdmx1MnSncPsfh22oIW+93cQ5ro+fp0OCxxnfbsNL18/1l8PAOhsLxYuaJg3FlhtUNanllO7q69ynZgM1veqlwazzMJR1AucTjo8fKOVAMAXJbRATEdzKb87Zssrev40OTMaOvL3BiLCr3IATnAQY66CNg+MMP56/Ubf38zBb1wmR4HyCijBejrEisMVsZSoWZ3k2vhy+gNKhLTrH84mtviPZ2iHelhO2daclHsiBuU1cq3dqh2Z3hlG7tAw20NKSrg3hEXLsPZdCZ2IyPNWqs/zna4q8MOsSx5N7Ry4kvrLIsxl/ACInPAm+pUi6AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
@@ -238,7 +238,7 @@ RollingFileAppender는 maxFileSize와 maxHistory, totalSizeCap 설정을 통해 
 /static/ec20e9af53f0f1185e8c1bf011ce922a/bbbf7/img_7.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;환경 별로 분리하기에 앞서, 각 appender 들은 분리 하여 설정 파일로 저장해 두면 재사용을 할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;환경 별로 분리하기에 앞서, &lt;strong&gt;각 appender 들은 분리 하여 설정 파일로 저장해 두면 재사용을 할 수 있습니다.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;위에서 작성한 console, file-info, file-error appender 들을 각각의 xml 파일로 분리합니다.&lt;/p&gt;
 &lt;p&gt;자바에서 클래스로 분리하는 것과 동일한 맥락입니다.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;console-appender.xml&lt;/strong&gt;&lt;/p&gt;
@@ -328,7 +328,7 @@ RollingFileAppender는 maxFileSize와 maxHistory, totalSizeCap 설정을 통해 
     &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;springProfile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;
 
 &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;/&lt;/span&gt;configuration&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;springProfile 태그를 이용해 local, dev, prod로 분리할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;springProfile&lt;/code&gt; 태그를 이용해 local, dev, prod로 분리할 수 있습니다.&lt;/p&gt;
 &lt;p&gt;include 태그를 이용해 어떤 appender를 사용할지 추가합니다. 자바에서 import와 동일하다고 생각하면 됩니다.&lt;/p&gt;
 &lt;p&gt;이후 각 profile 별로 로그 레벨을 설정하고 필요한 appender를 appender-ref 태그에 추가하면 됩니다.&lt;/p&gt;
 &lt;p&gt;개발 서버의 경우 쿼리와 쿼리에 바인딩되는 파라미터를 확인하기 위해 DEBUG, TRACE 레벨의 appender를 추가해 줬습니다.&lt;/p&gt;
