@@ -93,7 +93,7 @@ private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Lo
 이런 상황을 해결할 수 있는, logback을 활용한 효과적으로 로깅할 수 있는 방법을 알아봅시다.
 
 ## Logback을 활용해 효과적으로 로깅하기
-스프링 부트에서 콘솔 로그의 수준을 변경하는 방법은 application.properties나 logback-spring.xml 에서 설정하는 방법이 있습니다.
+스프링 부트에서 콘솔 로그의 수준을 변경하는 방법은 `application.properties`나 `logback-spring.xml` 에서 설정하는 방법이 있습니다.
 
 application.properties로 설정하는 방법이 있지만 세세한 설정을 하는데 제한이 있습니다.
 
@@ -133,22 +133,22 @@ application.properties로 설정하는 방법이 있지만 세세한 설정을 �
 
 
 
-Logback 설정을 하기 전, 구조를 간단하게 살펴보면 Logback은 크게 3가지 Logger, Appender, Layout의 구성 요소를 가지고 있습니다.
+Logback 설정을 하기 전, 구조를 간단하게 살펴보면 Logback은 크게 3가지 `Logger`, `Appender`, `Layout`의 구성 요소를 가지고 있습니다.
 
 ![](.index_images/img_3.png)
-Logger는 로깅을 수행하는 주요 객체입니다. 
+`Logger`는 로깅을 수행하는 주요 객체입니다. 
 로거는 이름을 가지며 주로 패키지 이름 또는 클래스 이름과 일치하게 설정합니다. 
 또한 로거는 계층 구조를 가지는데 ROOT 로거는 모든 로거의 상위 로거입니다.
 
 ![](.index_images/img_4.png)
-Appender는 로깅 이벤트를 특정 출력 대상으로 전송하는 구성 요소입니다. 
+`Appender`는 로깅 이벤트를 특정 출력 대상으로 전송하는 구성 요소입니다. 
 쉽게 말해 로그 메세지가 출력할 대상을 결정한다고 할 수 있습니다. 
 콘솔에 출력할지, 파일에 출력할지 등등.
 
-각 로거는 하나 이상의 Appender에 연결될 수 있습니다.
+**각 로거는 하나 이상의 Appender에 연결될 수 있습니다.**
 
 ![](.index_images/img_5.png)
-Layout은 로깅 이벤트가 어떻게 포맷되어 출력될지 결정하는 구성 요소입니다. 
+`Layout`은 로깅 이벤트가 어떻게 포맷되어 출력될지 결정하는 구성 요소입니다. 
 사용자가 지정한 형식으로 로그 메세지를 변환한다는 것을 의미합니다. 
 예를 들어 자바에서 문자열 포맷팅과 비슷하다고 할 수 있습니다.
   
@@ -305,12 +305,12 @@ Property는 콘솔에서 지정한 방법과 동일하지만 파일에 저장하
 그러므로 색을 제거한 패턴을 작성했습니다.
 
 Appender의 경우 File로 로그를 남기기 위해 RollingFileAppender를 사용했습니다. 
-INFO와 ERROR로 appender를 구분해 레벨 수준에 따라 별도의 appender로 분리했습니다. 
-RollingFileAppender는 maxFileSize와 maxHistory, totalSizeCap 설정을 통해 한 로그 파일의 최대 크기, 며칠 동안 보관할지, 모든 로그 파일(./logs/..)의 크기를 설정할 수 있습니다.
+`INFO`와 `ERROR`로 appender를 구분해 레벨 수준에 따라 별도의 appender로 분리했습니다. 
+RollingFileAppender는 **maxFileSize**와 **maxHistory**, **totalSizeCap** 설정을 통해 한 로그 파일의 최대 크기, 며칠 동안 보관할지, 모든 로그 파일(./logs/..)의 크기를 설정할 수 있습니다.
 
 ![](.index_images/img_7.png)
 
-환경 별로 분리하기에 앞서, 각 appender 들은 분리 하여 설정 파일로 저장해 두면 재사용을 할 수 있습니다.
+환경 별로 분리하기에 앞서, **각 appender 들은 분리 하여 설정 파일로 저장해 두면 재사용을 할 수 있습니다.**
 
 위에서 작성한 console, file-info, file-error appender 들을 각각의 xml 파일로 분리합니다.
 
@@ -416,7 +416,7 @@ RollingFileAppender는 maxFileSize와 maxHistory, totalSizeCap 설정을 통해 
 </configuration>
 ```
 
-springProfile 태그를 이용해 local, dev, prod로 분리할 수 있습니다.
+`springProfile` 태그를 이용해 local, dev, prod로 분리할 수 있습니다.
 
 include 태그를 이용해 어떤 appender를 사용할지 추가합니다. 자바에서 import와 동일하다고 생각하면 됩니다.
 
