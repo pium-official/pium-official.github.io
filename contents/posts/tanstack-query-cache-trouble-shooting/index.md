@@ -1,8 +1,8 @@
 ---
 title: "InfinityQuery에서 fetch가 제대로 이루어지지 않는다?!?!"
 description: "Tanstack Query를 사용하면서 마주친 문제로 Tanstack Query Cache에 대한 이해 부족으로 인해 겪은 트러블 슈팅입니다."
-date: 2023-08-10
-update: 2023-08-10
+date: 2023-08-22
+update: 2023-08-22
 tags:
   - Tanstack Query
   - Cache
