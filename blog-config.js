@@ -5,7 +5,8 @@ module.exports = {
   siteUrl: "https://pium-official.github.io/",
   links: {
     github: "https://github.com/woowacourse-teams/2023-pium",
-    instagram: "https://www.instagram.com/official_pium"
+    instagram: "https://www.instagram.com/official_pium",
+    etc: "https://github.com/pium-official/pium-official.github.io"
   },
   utterances: {
     repo: "pium-official/pium-official.github.io",
