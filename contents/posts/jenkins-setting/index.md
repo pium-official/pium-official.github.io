@@ -125,4 +125,4 @@ jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다.
 
 ## Reference
 
-https://www.jenkins.io/doc/book/installing/linux/
+- https://www.jenkins.io/doc/book/installing/linux/

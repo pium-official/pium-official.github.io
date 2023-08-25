@@ -437,9 +437,8 @@ include 태그를 이용해 어떤 appender를 사용할지 추가합니다. 자
 dev, prod 환경에서의 로깅을 인텔리제이로 확인하고 싶은 경우에는 동일하게 profiles에 입력하고 RUN 하면 됩니다.
 
 ### Reference
-https://www.baeldung.com/logback
 
-https://www.youtube.com/watch?v=1MD5xbwznlI
-
-https://www.youtube.com/watch?v=JqZzy7RyudI 
+- https://www.baeldung.com/logback
+- https://www.youtube.com/watch?v=1MD5xbwznlI
+- https://www.youtube.com/watch?v=JqZzy7RyudI 
 

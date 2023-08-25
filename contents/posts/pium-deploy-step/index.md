@@ -372,6 +372,5 @@ sudo systemctl restart nginx
 
 ## Reference
 
-https://jminie.tistory.com/110
-
-https://customer.gabia.com/manual/domain/287/1201
+- https://jminie.tistory.com/110
+- https://customer.gabia.com/manual/domain/287/1201

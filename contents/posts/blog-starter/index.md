@@ -302,6 +302,6 @@ main 브랜치에 대한 코드를 build해보고 성공한다면 결과물을 g
 
 ## Reference
 
-https://hoodie.gatsbyjs.io/
-https://docs.github.com/ko/actions/using-workflows/workflow-syntax-for-github-actions
-https://studium-anywhere.tistory.com/21
+- https://hoodie.gatsbyjs.io/
+- https://docs.github.com/ko/actions/using-workflows/workflow-syntax-for-github-actions
+- https://studium-anywhere.tistory.com/21

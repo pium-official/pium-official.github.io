@@ -382,4 +382,4 @@ CI/CD 설정을 모두 마친 후 깃허브 프로젝트에 push, pull request�
 ![](.index_images/img_12.png)
 
 ### Reference
-[베베의 CI/CD 글](https://developer-nyong.tistory.com/47#article-7-1--ssh-%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8-%EC%84%A4%EC%B9%98)
+- [베베의 CI/CD 글](https://developer-nyong.tistory.com/47#article-7-1--ssh-%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8-%EC%84%A4%EC%B9%98)

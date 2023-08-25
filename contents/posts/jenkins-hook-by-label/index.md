@@ -233,13 +233,11 @@ Generic Webhook Trigger 설정 - Token 설정에서 많이 헤맸다.
 
 ### 설정 과정에서 참고한 글
 
-https://bepoz-study-diary.tistory.com/385
-
-https://velog.io/@zayson/Jenkins-CICD-4.-WebHook%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9E%90%EB%8F%99-%EB%B0%B0%ED%8F%AC
+- https://bepoz-study-diary.tistory.com/385
+- https://velog.io/@zayson/Jenkins-CICD-4.-WebHook%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9E%90%EB%8F%99-%EB%B0%B0%ED%8F%AC
 
 
 ### 트러블 슈팅 과정에서 참고한 글
 
-https://georgik.rocks/jenkins-generic-webhook-plugin-failed-with-did-not-find-any-jobs-with-generictrigger-configured/
-
-https://pikachu987.tistory.com/61
+- https://georgik.rocks/jenkins-generic-webhook-plugin-failed-with-did-not-find-any-jobs-with-generictrigger-configured/
+- https://pikachu987.tistory.com/61

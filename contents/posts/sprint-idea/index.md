@@ -209,7 +209,7 @@ BDD(Behavior Driven Development, 행위 주도 개발) 방법론을 차용한 �
 
 ## Reference
 
-[구글스프린트](https://brunch.co.kr/@brunchjwshim/90)
-[테오의 스프린트](https://velog.io/@teo/google-sprint-14)
-[Atlassian Sprint](https://www.atlassian.com/ko/agile/scrum/sprints)
-https://www.thesprintbook.com/the-design-sprint
+- [구글스프린트](https://brunch.co.kr/@brunchjwshim/90)
+- [테오의 스프린트](https://velog.io/@teo/google-sprint-14)
+- [Atlassian Sprint](https://www.atlassian.com/ko/agile/scrum/sprints)
+- https://www.thesprintbook.com/the-design-sprint

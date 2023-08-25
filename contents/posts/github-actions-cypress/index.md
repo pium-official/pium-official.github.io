@@ -218,6 +218,5 @@ jobs:
 
 ## Reference
 
-[Cypress typings not recognized. Cannot find name 'cy'](https://github.com/vuejs/vue-cli/issues/4239#issuecomment-1214261721)
-
-[Cypress 공식 홈페이지: GitHub Actions](https://docs.cypress.io/guides/continuous-integration/github-actions)
+- [Cypress typings not recognized. Cannot find name 'cy'](https://github.com/vuejs/vue-cli/issues/4239#issuecomment-1214261721)
+- [Cypress 공식 홈페이지: GitHub Actions](https://docs.cypress.io/guides/continuous-integration/github-actions)

@@ -463,9 +463,9 @@ class DictionaryPlantApiTest extends AcceptanceTest {
 
 ## Reference
 
-https://ttl-blog.tistory.com/1407
-https://mangkyu.tistory.com/264
-https://stackoverflow.com/questions/41763417/api-test-transactional-rollback
-https://stackoverflow.com/questions/62142428/dirtiescontext-does-not-work-with-nested-tests
-https://unluckyjung.github.io/testcode/2021/05/08/Independent-Test-Mehod/
-https://www.baeldung.com/junit-5-extensions
+- https://ttl-blog.tistory.com/1407
+- https://mangkyu.tistory.com/264
+- https://stackoverflow.com/questions/41763417/api-test-transactional-rollback
+- https://stackoverflow.com/questions/62142428/dirtiescontext-does-not-work-with-nested-tests
+- https://unluckyjung.github.io/testcode/2021/05/08/Independent-Test-Mehod/
+- https://www.baeldung.com/junit-5-extensions
