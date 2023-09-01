@@ -50,8 +50,12 @@ module.exports = {
 
 위에 플러그인 옵션에서 `generateStatsFile` 을 `true` 로 설정한 다음에 `package.json`에 `scripts` 에다음 명령어를 통해 실행할 수 있습니다.
 
-```jsx
-analyze: webpack-bundle-analyzer bundle/output/path/stats.json
+```json
+"scripts":{
+  ...
+  "preanalyze": "npm run build-dev",
+  "analyze": "webpack-bundle-analyzer bundle/output/path/stats.json"
+}
 ```
 
 ![image](https://github.com/pium-official/pium-official.github.io/assets/50974359/6bc524c4-4866-4ebe-9daa-95035e0c0dd5)
