@@ -1,4 +1,227 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 01 Sep 2023 05:33:30 GMT</lastBuildDate><item><title><![CDATA[Spring Data Jpa를 활용한 검색 기능 개발하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '하마드'가 작성했습니다. 개요 피움 서비스 개발을 진행하면서, JPA Method Naming…]]></description><link>https://pium-official.github.io/search_in_spring_data_jpa/</link><guid isPermaLink="false">https://pium-official.github.io/search_in_spring_data_jpa/</guid><pubDate>Thu, 31 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 13 Sep 2023 05:34:20 GMT</lastBuildDate><item><title><![CDATA[Git submodule을 이용한 민감정보 관리]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움 프로젝트는 properties, env…]]></description><link>https://pium-official.github.io/submodule-apply/</link><guid isPermaLink="false">https://pium-official.github.io/submodule-apply/</guid><pubDate>Wed, 13 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;현재 피움 프로젝트는 properties, env 파일과 같은 민감정보 내용을 서버 내부에 저장, 관리하고있다.&lt;/p&gt;
+&lt;p&gt;이렇게 파일을 관리했을 때 다음과 같은 문제점이 생각나 팀원들과 discussion에서 의견을 나눠봤다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;캠퍼스 외부에서 properties / env 파일 관리 불가&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;현재 서버 접속 권한이 캠퍼스 내부 IP로 한정되어있기 때문에 발생한 문제점이다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;properties 설정을 파악하기가 어려움 (vim, cat 명령어로 확인)&lt;/li&gt;
+&lt;li&gt;분업화 진행 간 properties / env 파일 변경에 대한 공유가 어려움&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;자세한 내용은 &lt;a href=&quot;https://github.com/woowacourse-teams/2023-pium/discussions&quot;&gt;discussion - submodule 도입에 대해&lt;/a&gt; 에서 확인&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/abf6986ec3525e64abcb72e1058a22e6/98b00/59c3159b.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 87.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAARCAYAAADdRIy+AAAACXBIWXMAAAsTAAALEwEAmpwYAAABeUlEQVR42p2U2W6DMBBF/Vg1hbAGgzEQwpKNkjRVIlWq+v9fdTvjLMpjzMORhW1doTmeEc32gPH8C7XsEcgSUbaEXm3xEaSEfBknTA0iLVvsTz9Yj2f0wzfa3Qnrz7NZ+eLMT16G74tYLdHtT2iJbjhhtRnhJ9oqiHn3FmYV/iJHWvUomw5Z1Ziw+6ENbpQZBAfEaoVUl3BDrkWGeazo0A4/KeDLAsKhD49C53FuDjiQhXCoDfx3vIq8alH3A+Ksgk8bYVpgkddWhp8RRd2T3S8kRQtHNgiyGgkF2tbwYTmTFUa9QUC2F+UWbqzx5kbTLUdSQ+UN8qpCojTVIsUsSKZbZiGRapAWS7PhhHdzmRXGMiE8Vk5vcR7rxxPgFrK1PI9vliOSkfcHhPIa6FE4d4+14fDa+0K1ewyXP1TtjjqlQ0nfPCgmW7728hG744UGwhHbwxk8MKa0nwm8tw3XgEOY53H0GvImRUPwDJRUR56D3H6eEaQmwYH/qh2pStwvzn8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;59c3159b&apos; title=&apos;&apos; src=&apos;/static/abf6986ec3525e64abcb72e1058a22e6/ca1dc/59c3159b.png&apos; srcset=&apos;/static/abf6986ec3525e64abcb72e1058a22e6/e7570/59c3159b.png 170w,
+/static/abf6986ec3525e64abcb72e1058a22e6/f46e7/59c3159b.png 340w,
+/static/abf6986ec3525e64abcb72e1058a22e6/ca1dc/59c3159b.png 680w,
+/static/abf6986ec3525e64abcb72e1058a22e6/02d09/59c3159b.png 1020w,
+/static/abf6986ec3525e64abcb72e1058a22e6/98b00/59c3159b.png 1202w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;팀원들 모두 동의해줬고 이에 프로젝트에 submodule을 도입하는 과정을 정리해보려고한다.&lt;/p&gt;
+&lt;h2&gt;submodule이란?&lt;/h2&gt;
+&lt;p&gt;서브모듈은 하나의 저장소(레포지토리)에서 다른 저장소를 포함하고 관리할 수 있게 해주는 기능이다.
+주로 의존성 관리 혹은 외부 프로젝트 통합에 사용되곤 한다.&lt;/p&gt;
+&lt;p&gt;피움에서는 private 레포지토리를 이용해 민감정보를 관리하기 위해 submodule을 적용해보려고한다.&lt;/p&gt;
+&lt;h2&gt;시작하기&lt;/h2&gt;
+&lt;p&gt;properties, env 파일 등 다양한 민감정보를 가지는 설정파일들을 private 레포지토리에 저장하고 사용해보자.&lt;/p&gt;
+&lt;h3&gt;Private Repository 생성&lt;/h3&gt;
+&lt;p&gt;민감정보를 관리할 Private Repository를 생성한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f11399d5c823fe9617abd1a86bf8c5f2/85779/0658737b.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 48.8235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAAAsTAAALEwEAmpwYAAABM0lEQVR42q1Ty26DMBDk2pAHTz8A84YSAo3UqD300mP//4umaxMQlYoUqT2MdvF6Z2fHwkqbM5Kyw8GPsHMYbJf/iqdTCJE1dPdsoqp6hFEBkTYI4xJx0UFmLSxOBwEVTmEMT2QUEyKeiYTJHaaQ1hfTEOXPOHzV2H+W4EmFYxCRGIm9J0y0+usbupd31P0rNY00rQJLahODqDTQOVearCOFF6TDFbyib1LFiNTlisSkE2HWjGiHGzU0ptmXeo3WXPRlvkCrn/KCVqVhIjerukSk7ZjtsiT5wVQ1Hd790sUtP9c1bVUQF0vfQjjePozs+aL2Y+tx1mBJAZfFP4Zbeu8ZmuhR6GZFdgVklb0SYD2iZAtHXuAo6cU9+XdCvaaqB4Sqxu4/CI1CUcFJ6KdgOey7j9+DqPsPzDtrIAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;0658737b&apos; title=&apos;&apos; src=&apos;/static/f11399d5c823fe9617abd1a86bf8c5f2/ca1dc/0658737b.png&apos; srcset=&apos;/static/f11399d5c823fe9617abd1a86bf8c5f2/e7570/0658737b.png 170w,
+/static/f11399d5c823fe9617abd1a86bf8c5f2/f46e7/0658737b.png 340w,
+/static/f11399d5c823fe9617abd1a86bf8c5f2/ca1dc/0658737b.png 680w,
+/static/f11399d5c823fe9617abd1a86bf8c5f2/02d09/0658737b.png 1020w,
+/static/f11399d5c823fe9617abd1a86bf8c5f2/85779/0658737b.png 1239w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;submodule 시작하기&lt;/h3&gt;
+&lt;p&gt;우선 백엔드 프로젝트를 기준으로 submodule을 적용시켜보자.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;git submodule add {서브모듈 Repo URL}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8d8bc921711c1e354a6c5fc4efdc709f/908d1/effc0cc4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 18.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA4UlEQVR42n2OwU6DQBRFh0LppoVYoKElVYihmYGBMhREY9wYY6L//z/HgejWxc199+XlnSveu2deVc+XaviWmg/zwqe+YpoI+RjRS8XbNNH3PbrrqKqKuq7RWtM0zZLLsiSOY9I0RehKMd16nsaBmzG0Nt9Mh7GA4phx3u2IHId4teLB8zhnGXlRkFmfHxW/8+l0Is9zhFSKqyX/qbxcGMYRYyGtzff26C6KOB4OZPs9QRAQhiHb7XbxnQXOu1lzSzFXb9t2oQ3DgLIAKSVJkuDYVq7rsvF9fCtvvUYI8a9+AFALbBeQt2A5AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;effc0cc4&apos; title=&apos;&apos; src=&apos;/static/8d8bc921711c1e354a6c5fc4efdc709f/ca1dc/effc0cc4.png&apos; srcset=&apos;/static/8d8bc921711c1e354a6c5fc4efdc709f/e7570/effc0cc4.png 170w,
+/static/8d8bc921711c1e354a6c5fc4efdc709f/f46e7/effc0cc4.png 340w,
+/static/8d8bc921711c1e354a6c5fc4efdc709f/ca1dc/effc0cc4.png 680w,
+/static/8d8bc921711c1e354a6c5fc4efdc709f/02d09/effc0cc4.png 1020w,
+/static/8d8bc921711c1e354a6c5fc4efdc709f/908d1/effc0cc4.png 1286w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;git submodule add 명령어를 수행하면 루트 경로에 &lt;code class=&quot;language-text&quot;&gt;.gitmodules&lt;/code&gt; 파일이 생성된 것을 확인할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/157b140f5387884782bfb0da2ca79aaf/84fe6/20ec3a3b.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 25.882352941176467%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAABDklEQVR42l3ObW+CMBSGYV7kXSUgijBwmSIU5uIWUXHRZNn+/2+61yHZkn240p62z+lRgnzNctMwOXzgNS3T9pNwF+PvbGZvU7I2ZtmGPH4ljF8MjFphFqt4gcam2PKQpjRNQxiGKIqCcmwPdN2ZXV3LC8Hrfs+l6zgdzxzbE8W6YJWtKLclpmneQ/+oqtrr6zzPud2ufbApGyoZvF6ulGWFKAR1URNHMUmckKVZ33Q+n5MmKbWoEZVA1/S/D3RdxzZtnMjBe/aw1hZu7jIyRpjCJHqPcPcu42yMN/HQLA3Ls3CmDv7MJ1gEqIaczpDNNOl3VPdnXCmWfMmWiuHsaVhDKZOW0mJ4Gw37/J77Bv1de3GJvuU1AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;20ec3a3b&apos; title=&apos;&apos; src=&apos;/static/157b140f5387884782bfb0da2ca79aaf/ca1dc/20ec3a3b.png&apos; srcset=&apos;/static/157b140f5387884782bfb0da2ca79aaf/e7570/20ec3a3b.png 170w,
+/static/157b140f5387884782bfb0da2ca79aaf/f46e7/20ec3a3b.png 340w,
+/static/157b140f5387884782bfb0da2ca79aaf/ca1dc/20ec3a3b.png 680w,
+/static/157b140f5387884782bfb0da2ca79aaf/84fe6/20ec3a3b.png 719w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/0deadec1bf2e028d39d68834ad43cfcd/dac1b/a8d5f20f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 45.88235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7UlEQVR42mWSWW/TUBCFr6kUSuIs2FbspN7ipYljZ/WWxIkolKVUgAQSqA/8/79xONcIgcTDyNJ45syZ744Y+7fQ4gxqsIAwXYikgrBjxgJX3hUUT+DaUTBS+R29gK5pMAwDiqJACPF/HKoKqyxFOPNhTyfoqz0Y2ktYho7udRfO1MXzzjVM06KYjsFgAI2ik8kEw+GwFVH+FSzLEuv1BlEUIQhDOK6L3W6Hqq5hWRbOlzN6HLLbbtuakDXz+RxpmsLxvFbkGd1Kx63w4XBAlmUIggC6rrcNq9UKWwqMx2M0TdO6knnbthHHMZYUy/d72EEIMQuhqP2/Dr+y+fNyiXezGfLRCBtVxSMdfNtsUJPVU1G0uQe6e0P3976PB4o+5Tnu2JMGEaqyRnlzg22nA/GJ0z5S4JXjYM3GTb+PL3T8nQ4OdPjzdELW66Fhwx1r7rnJ42KBHxz0lsJ1muF9VTM/wwduKLIkwYI/XDYMKagR9JauC3KcmibOxyPGLCw5ICSzlGIFcby+XJAlSyybMxKGTd6SpZCsJBOf9iUrGZJhTgcmBU+npn3NKL6Fz3VlTn4lw4i9elHDrI7QXO/3o+zJQr6YhK7rBlzPR0KmUlTeW1Hk6PZ4Plz3T7h0mhCTHfFeozmU1Y43bLWP8gvz3vZx9GYHmgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8d5f20f&apos; title=&apos;&apos; src=&apos;/static/0deadec1bf2e028d39d68834ad43cfcd/ca1dc/a8d5f20f.png&apos; srcset=&apos;/static/0deadec1bf2e028d39d68834ad43cfcd/e7570/a8d5f20f.png 170w,
+/static/0deadec1bf2e028d39d68834ad43cfcd/f46e7/a8d5f20f.png 340w,
+/static/0deadec1bf2e028d39d68834ad43cfcd/ca1dc/a8d5f20f.png 680w,
+/static/0deadec1bf2e028d39d68834ad43cfcd/dac1b/a8d5f20f.png 703w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;파일 내용을 살펴보면 submodule이 적용된 path와 submodule을 가져온 url이 표기되어있는 것을 확인할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/92653ba12b70b8c796e3d652462ac46d/64252/0185252a.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 12.941176470588234%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAsElEQVR42h2OSY6FMAxEEb3tv0JCrED6IKYwBgIJJH3/W702WPJsV1X0Fzyb1pTfL/6+cdbxzJyzb6+6jktqZy3rsmDPk33bWOYZs+/odSV4T1WW/MQxUSyhbVtWWaRpyikPtwA92cuhMYZpmt59CIGu77muGy2gm7gaBsxxoEXU7+dDJEae52RZRpIkzMKslKIoCg45XERVVVVvfsA7UdyLN03zEtV1zTiODAL8EPwDv1JbQfvBgr8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;0185252a&apos; title=&apos;&apos; src=&apos;/static/92653ba12b70b8c796e3d652462ac46d/ca1dc/0185252a.png&apos; srcset=&apos;/static/92653ba12b70b8c796e3d652462ac46d/e7570/0185252a.png 170w,
+/static/92653ba12b70b8c796e3d652462ac46d/f46e7/0185252a.png 340w,
+/static/92653ba12b70b8c796e3d652462ac46d/ca1dc/0185252a.png 680w,
+/static/92653ba12b70b8c796e3d652462ac46d/64252/0185252a.png 696w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;추가로 branch 정보를 넣으면 해당 branch를 기준으로 submodule 정보를 가져온다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/b9852ec713a3bc20c3bfb9d8e1b57ac1/64252/0ebe1978.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 17.64705882352941%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvElEQVR42k1PyQ6EIBRzOXsw8YrRgxpxRVxw+//P6tA3mWRIgL732lKC930xzzOKosC+77jvG9d1ye2OA1pr6Z/nib7vpWc83y6L6LZtE77Kc4RhiIBH13UizLIMzjkh0YRE505oP1/XVR4Zx1E4rI0xGIZBuNZaJEmCwC80TYOyLKGUwsEEnkghExAzPfHiU7Vti7quJQRxVVWCaTxN09cw93FZ0DBNUzzPIyLOoiiSr3D/MPu/3n8dxzE+HgNx4w2FeSgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;0ebe1978&apos; title=&apos;&apos; src=&apos;/static/b9852ec713a3bc20c3bfb9d8e1b57ac1/ca1dc/0ebe1978.png&apos; srcset=&apos;/static/b9852ec713a3bc20c3bfb9d8e1b57ac1/e7570/0ebe1978.png 170w,
+/static/b9852ec713a3bc20c3bfb9d8e1b57ac1/f46e7/0ebe1978.png 340w,
+/static/b9852ec713a3bc20c3bfb9d8e1b57ac1/ca1dc/0ebe1978.png 680w,
+/static/b9852ec713a3bc20c3bfb9d8e1b57ac1/64252/0ebe1978.png 696w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;.gitsubmodule 파일과 config 폴더가 생성되고 git stage에 올라가있는 상태가 되어있을것이다.&lt;/p&gt;
+&lt;p&gt;commit 후 push를 해보자.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6d613b09a512ee3c07dd96833da40fe8/1b198/2e9366b0.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 15.294117647058824%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAlElEQVR42n2M0QqCMABFJ2kkBNPNHDoUH5oZpdFm9Jb//1Une68eDhy4nCsSbYhXNlKzrTuSpicuD6RNgho02UmyP6bIbkemduhCU1UVUkqMMSilsNbSti1FUSDOveMyDDz8nXCbuA49zxDwk8dWDXmmqUtLY1vyXCGE+I9zjjDP+PXktSyM47T6vMb51yCKop989jd2vElL+5R6qAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2e9366b0&apos; title=&apos;&apos; src=&apos;/static/6d613b09a512ee3c07dd96833da40fe8/ca1dc/2e9366b0.png&apos; srcset=&apos;/static/6d613b09a512ee3c07dd96833da40fe8/e7570/2e9366b0.png 170w,
+/static/6d613b09a512ee3c07dd96833da40fe8/f46e7/2e9366b0.png 340w,
+/static/6d613b09a512ee3c07dd96833da40fe8/ca1dc/2e9366b0.png 680w,
+/static/6d613b09a512ee3c07dd96833da40fe8/02d09/2e9366b0.png 1020w,
+/static/6d613b09a512ee3c07dd96833da40fe8/1b198/2e9366b0.png 1120w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;다음과 같이 서브모듈 폴더가 추가된 것을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/e4a9b501a511b28865efddfbad79ccd4/c2026/8a331998.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 68.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAACbElEQVR42l2TW3faMBCE3TY5gVi+X2QZ342xgRDSJnno//9h01lB3J4+7BGS0Oy3s2snzCoU9YgwLeHHBZKiwdYN8e1hi4cnhe+Pro2HJw8blWDrpXjc+PjB/eM2sLFxY/5HQZctnCzfwYs1VFTgOcgQZTuotIKbVPDzFm5cQvF3VvYIUt4xqcdQkYaXGLsPCCPvt34Gpz9c0E4vyEkZFy0CEofVgrA+wjMT/GKA0h10M5K+hkuh5yi/reFtFdFqOKJoJjhlN6Mez8irm2CkGzTDjGG+QLczsvqAiHRe3iHQpGQFNml+C3mT7QYrtusXOKJs2gM2fmozSmheSpKYlHFzQtKckXYX5MOVfk+sZo+0HGwkpufao1+u6Oc3EvYzOtL49OGrhIy0sg+SEiGJbHAfkUgeR7rlfXUnrdeQc8ew5KwaKJatvmTVHhlpxEM31Ou5PBJrQl3bhB6b5MbG3okVUrol3DHkULFrLg0v2gmmO6xdlBDRiCMlXkkYaWK9QHESFN/IfyWZY2jk9PqJdNfT4JqZSutpTxvEdPc/QU2htJ7hFaMdna+EVpDeOlJGf3pHbNq/HlJ8WF45Cost7UtQSs1pT0JLVN5DSVX/CNqSZUyO109mHtYuJ2WH/ekN8+WDTejus6btiBSkl5BJCHczz429k8RaCMW3w+Udl/ffKOnbll9LQlqha/Yna/bznUQsEAqhlDUoD6ugx4lITAdHUOvxhP35J6rxaAWFann9wPTyyz6WKoRSyIXOsGkRZ1Ol9VqyEBaNEHIjguPxyu+1szRSmnReiIVSVhEM7nMowr4ZVzHrYWpsH/4ApKVmMZQIYhEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8a331998&apos; title=&apos;&apos; src=&apos;/static/e4a9b501a511b28865efddfbad79ccd4/ca1dc/8a331998.png&apos; srcset=&apos;/static/e4a9b501a511b28865efddfbad79ccd4/e7570/8a331998.png 170w,
+/static/e4a9b501a511b28865efddfbad79ccd4/f46e7/8a331998.png 340w,
+/static/e4a9b501a511b28865efddfbad79ccd4/ca1dc/8a331998.png 680w,
+/static/e4a9b501a511b28865efddfbad79ccd4/02d09/8a331998.png 1020w,
+/static/e4a9b501a511b28865efddfbad79ccd4/c2026/8a331998.png 1251w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;submodule 적용하기&lt;/h3&gt;
+&lt;p&gt;내 컴퓨터에서의 submodule 적용은 완료했다.&lt;/p&gt;
+&lt;p&gt;다른 개발자들이 submodule을 어떻게 적용해야할지 가이드를 제공하자.&lt;/p&gt;
+&lt;p&gt;우선 git clone부터 시작해보자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; clone &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;Project&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/62fdf44aba3b27719946c73448871433/a91f8/632999b1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 24.11764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA9UlEQVR42n2QuW6EQBBEASEISBYwIA5xmxvMISHEBgTYiP//ofJ2b2jJQauPmXpTPcJHPeDx2UKrZgTTiKYuECcJfN9HGIZwHAfJqw+CAGmaoixLxHEMz/NQFAWyLOOwbRuCIECYhx5lnmFsG3x1HcZxZCEBCURQXdchiiIkSXqL/ov9+WTI98+Ffd9xHAemaeL6ui6c54n7vtE0DdZ1hSzLHASnrCgKVFXlmoFVVbETst+9HLZty+K+73m9PM95To/QnbquMQwDoijic9d1eQvTNN/AZVn4MmUSk7N5ntnptm08IxCtrWkaDMPg/6Lesqw/K/8CzJ6HOaqaY84AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;632999b1&apos; title=&apos;&apos; src=&apos;/static/62fdf44aba3b27719946c73448871433/ca1dc/632999b1.png&apos; srcset=&apos;/static/62fdf44aba3b27719946c73448871433/e7570/632999b1.png 170w,
+/static/62fdf44aba3b27719946c73448871433/f46e7/632999b1.png 340w,
+/static/62fdf44aba3b27719946c73448871433/ca1dc/632999b1.png 680w,
+/static/62fdf44aba3b27719946c73448871433/a91f8/632999b1.png 960w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;submodule을 초기화하고 update한다.
+&lt;strong&gt;해당 작업은 처음 1번만 수행하면 된다.&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; submodule init
+
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; submodule update&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/e69ecffd799a2343fcc220ddaaa40b00/f963c/3a3b7bf7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 8.235294117647058%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAfUlEQVR42j2NQQqDMAAEPagnQRJixYoERUhSU41J+v+nTYulPcxlZ2GK4RAMQdG/JHfbE47AGU+stXRdh1IKIcQXKRmXhds40jQNbdteXn7236d45gc+bbho2MJGSokYIzlnnHOs64r3nn3fMcYwaY2e5ytWliV1XVNV1Z835Mg1Y3WJbskAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3a3b7bf7&apos; title=&apos;&apos; src=&apos;/static/e69ecffd799a2343fcc220ddaaa40b00/ca1dc/3a3b7bf7.png&apos; srcset=&apos;/static/e69ecffd799a2343fcc220ddaaa40b00/e7570/3a3b7bf7.png 170w,
+/static/e69ecffd799a2343fcc220ddaaa40b00/f46e7/3a3b7bf7.png 340w,
+/static/e69ecffd799a2343fcc220ddaaa40b00/ca1dc/3a3b7bf7.png 680w,
+/static/e69ecffd799a2343fcc220ddaaa40b00/02d09/3a3b7bf7.png 1020w,
+/static/e69ecffd799a2343fcc220ddaaa40b00/9d567/3a3b7bf7.png 1360w,
+/static/e69ecffd799a2343fcc220ddaaa40b00/f963c/3a3b7bf7.png 1853w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h3&gt;submodule 업데이트 반영하기&lt;/h3&gt;
+&lt;p&gt;프로젝트를 진행하는 과정에서 submodule 프로젝트에 수정사항이 생길 수 있다. 이를 반영하기 위해서는 다음과 같은 작업을 수행하면 된다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;아래와 같이 새로운 커밋(변경사항)이 발생했다고 가정해보자.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/22e54044b8dd27156745243c5d5e398a/912c7/8fe95451.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 14.117647058823529%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAfklEQVR42o3OSw6CMACE4a59ELDQltI2QInaaHwsZMVG73+n38YLyOLbTDKTESZMaB8plWdTKraVXk9qdnVLlbulchS1RbyWN+k+o/NwUXe/cBVp2VvHIfTE9GA43TB+QszLhzE98+AR259puohsh/9M5keafCTEKy5eUG7iC9k3Tag4JjrwAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8fe95451&apos; title=&apos;&apos; src=&apos;/static/22e54044b8dd27156745243c5d5e398a/ca1dc/8fe95451.png&apos; srcset=&apos;/static/22e54044b8dd27156745243c5d5e398a/e7570/8fe95451.png 170w,
+/static/22e54044b8dd27156745243c5d5e398a/f46e7/8fe95451.png 340w,
+/static/22e54044b8dd27156745243c5d5e398a/ca1dc/8fe95451.png 680w,
+/static/22e54044b8dd27156745243c5d5e398a/02d09/8fe95451.png 1020w,
+/static/22e54044b8dd27156745243c5d5e398a/912c7/8fe95451.png 1228w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; submodule update &lt;span class=&quot;token parameter variable&quot;&gt;--remote&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;--merge&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;## .gitmodules 파일에 정의되어 있는 브랜치의 최신 버전으로 업데이트 (혹은 default 브랜치)&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; submodule update &lt;span class=&quot;token parameter variable&quot;&gt;--remote&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;## 로컬에서 작업 중인 부분과 원격에 작업된 부분이 다른 경우 머지까지 진행&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; submodule update &lt;span class=&quot;token parameter variable&quot;&gt;--remote&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;--merge&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/ebf8210523413a4e64199b8ae2067903/2f0ac/34d677ff.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 30.58823529411765%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAABHklEQVR42o2Ra0+DQBBFofShUN4JFFhardZAKWVp1VTF9v//quNCo980fjjZnZ3snTsz2mpTkGwl9/LIcicQZcKyzoiKkLlv4bkefuDjOA62beN5Hq7rYpommqahj0bM1H1mWUOsnT87DrKheztx7i40dcP76QO5b9lVO+I4JggCwjBE1/Xrp7+oqopdXQ9IKanVua22NKrI4XBgvV6TZRlJkjCZTK6ulPCv4kVRINuWoix53GyIF4sh0bcYRdGPyL85vb5w6TrlZKXackiViGM5zC2bwAu5vTExRmPG4yuGYTCdTgf6Yt/0cZ/TxFPJcluTquWI/TPr9siqFmpBGQ/HO0SdkOQhC+W8n6PrOgghyPN8GEVPmqbDm+/7fAFOxpQsLr5ipwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;34d677ff&apos; title=&apos;&apos; src=&apos;/static/ebf8210523413a4e64199b8ae2067903/ca1dc/34d677ff.png&apos; srcset=&apos;/static/ebf8210523413a4e64199b8ae2067903/e7570/34d677ff.png 170w,
+/static/ebf8210523413a4e64199b8ae2067903/f46e7/34d677ff.png 340w,
+/static/ebf8210523413a4e64199b8ae2067903/ca1dc/34d677ff.png 680w,
+/static/ebf8210523413a4e64199b8ae2067903/02d09/34d677ff.png 1020w,
+/static/ebf8210523413a4e64199b8ae2067903/2f0ac/34d677ff.png 1323w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;submodule이 update된 정보에 대해 기존 프로젝트에도 반영을 해줘야한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/046bbdd980b8835f6a8880fd4a8ac4ef/1e052/dc253c7e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 27.058823529411764%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAAAsTAAALEwEAmpwYAAABJElEQVR42jWQ61KDQAxGl3K1FadQylIQKFB7c7DQq211Rsf3f6bjguOPs8mXTbLZiKhaIl/WhPMKuVgRv+6Q9ZGsvVI0K8o2ZZQMEa5ADwXGTDHVMC2BO3bxxh5SSmzbRgiB2L3VnI8HFmVJu3vjfNizqkqWivfThSR6xh252JaDbTpYpt3zMBzhOA6GYfw1+ieOY07nM6/bLbfLhfvtRtM0bDcbkiRWdq1i156Tevjz486+2XF9v/Dz/UXbtuR5TlVV+L6P0DStO5gaA2aKJ13ncaDxbOlIXSNQTEyDyNAJ1X3iWISmTqD0RBNkSUJRFNR1TZqmiCAIyOdzMiXyLKObWIZTShWLwpCZDInUjlJVKJXurO/5vV+onG5/nuf1X++G+wXdzYFGX2DB9wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;dc253c7e&apos; title=&apos;&apos; src=&apos;/static/046bbdd980b8835f6a8880fd4a8ac4ef/ca1dc/dc253c7e.png&apos; srcset=&apos;/static/046bbdd980b8835f6a8880fd4a8ac4ef/e7570/dc253c7e.png 170w,
+/static/046bbdd980b8835f6a8880fd4a8ac4ef/f46e7/dc253c7e.png 340w,
+/static/046bbdd980b8835f6a8880fd4a8ac4ef/ca1dc/dc253c7e.png 680w,
+/static/046bbdd980b8835f6a8880fd4a8ac4ef/1e052/dc253c7e.png 872w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;file&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; commit &lt;span class=&quot;token parameter variable&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;build: 서브모듈 최신사항 반영&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; push&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/069f8d65893cf382d002ea19a6a4d400/b00dd/0a7b7407.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 32.94117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABUElEQVR42nWR2W6jQBBFcQwmgz3ewWBsJ8MSFtPs2J5opOQx//9DJ9CZh0RKHq5UJVWfqntbmQQZ2uMTRvOC3r3xK39gWWsYYsKsVVm+3mPFOo+ew+Vy43g8MpvNWK/XrFYrXNfFsix2u52slVDkZE1HXLWk3TNpWxKVQa8QcT3jF39we1gQBHiex2azYTqdslgsmM/nbLdbCTcMA13XUR6yEi+vsNMCW3ScRMRv956JqaI7Kqpzhzofs1wsJWQADpBBQ+04DrZtf8AUBeXWtfx7/kueptzahrqoSKKULBGMx+OPof8ajUZf+m9VlhV10xDFMV3XkYmM8zkl6RdYlonnexwOB2nrM/izvgDT/mEzAKOIqqooiqIP/0IYhnLB9XolSRL5AYNF0zTRNO3nC4fhAVaWJXF/ZZ7nshdCUNc1vu+z3+9lVoNOp5PM7Cf77/lEs1DESh73AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;0a7b7407&apos; title=&apos;&apos; src=&apos;/static/069f8d65893cf382d002ea19a6a4d400/ca1dc/0a7b7407.png&apos; srcset=&apos;/static/069f8d65893cf382d002ea19a6a4d400/e7570/0a7b7407.png 170w,
+/static/069f8d65893cf382d002ea19a6a4d400/f46e7/0a7b7407.png 340w,
+/static/069f8d65893cf382d002ea19a6a4d400/ca1dc/0a7b7407.png 680w,
+/static/069f8d65893cf382d002ea19a6a4d400/02d09/0a7b7407.png 1020w,
+/static/069f8d65893cf382d002ea19a6a4d400/b00dd/0a7b7407.png 1227w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;정리&lt;/h2&gt;
+&lt;p&gt;민감정보를 관리하기위해 submodule 도입방법을 정리해봤다.
+생각보다 간단했다 👍&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://tecoble.techcourse.co.kr/post/2021-07-31-git-submodule/&quot;&gt;https://tecoble.techcourse.co.kr/post/2021-07-31-git-submodule/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Reference&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.com/dream-youngs/lets-encrypt-dns-%EB%A1%9C-%EB%93%B1%EB%A1%9D%ED%95%98%EA%B8%B0-fdc3efda36af&quot;&gt;https://medium.com/dream-youngs/lets-encrypt-dns-%EB%A1%9C-%EB%93%B1%EB%A1%9D%ED%95%98%EA%B8%B0-fdc3efda36af&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://techblog.woowahan.com/6217/&quot;&gt;https://techblog.woowahan.com/6217/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Spring Data Jpa를 활용한 검색 기능 개발하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '하마드'가 작성했습니다. 개요 피움 서비스 개발을 진행하면서, JPA Method Naming…]]></description><link>https://pium-official.github.io/search_in_spring_data_jpa/</link><guid isPermaLink="false">https://pium-official.github.io/search_in_spring_data_jpa/</guid><pubDate>Thu, 31 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;개요&lt;/h2&gt;
