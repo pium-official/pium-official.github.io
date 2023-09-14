@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 13 Sep 2023 05:34:20 GMT</lastBuildDate><item><title><![CDATA[Git submodule을 이용한 민감정보 관리]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움 프로젝트는 properties, env…]]></description><link>https://pium-official.github.io/submodule-apply/</link><guid isPermaLink="false">https://pium-official.github.io/submodule-apply/</guid><pubDate>Wed, 13 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 14 Sep 2023 04:36:28 GMT</lastBuildDate><item><title><![CDATA[Git submodule을 이용한 민감정보 관리]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움 프로젝트는 properties, env…]]></description><link>https://pium-official.github.io/submodule-apply/</link><guid isPermaLink="false">https://pium-official.github.io/submodule-apply/</guid><pubDate>Wed, 13 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -15,7 +15,7 @@
 &lt;li&gt;분업화 진행 간 properties / env 파일 변경에 대한 공유가 어려움&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
-&lt;p&gt;자세한 내용은 &lt;a href=&quot;https://github.com/woowacourse-teams/2023-pium/discussions&quot;&gt;discussion - submodule 도입에 대해&lt;/a&gt; 에서 확인&lt;/p&gt;
+&lt;p&gt;자세한 내용은 &lt;a href=&quot;https://github.com/woowacourse-teams/2023-pium/discussions/324&quot;&gt;discussion - submodule 도입에 대해&lt;/a&gt; 에서 확인&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
       &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/abf6986ec3525e64abcb72e1058a22e6/98b00/59c3159b.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
