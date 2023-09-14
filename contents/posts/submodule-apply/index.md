@@ -22,7 +22,7 @@ tags:
 - 분업화 진행 간 properties / env 파일 변경에 대한 공유가 어려움
 
 
-> 자세한 내용은 [discussion - submodule 도입에 대해](https://github.com/woowacourse-teams/2023-pium/discussions) 에서 확인
+> 자세한 내용은 [discussion - submodule 도입에 대해](https://github.com/woowacourse-teams/2023-pium/discussions/324) 에서 확인
 
 ![](.index_images/59c3159b.png)
 
