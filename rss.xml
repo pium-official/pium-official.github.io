@@ -1,4 +1,155 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 21 Sep 2023 12:44:51 GMT</lastBuildDate><item><title><![CDATA[피움 최적화하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '클린'가 작성했습니다. 피움 최적화 하기 어찌어찌 서비스를 론칭하긴 했지만, 여러가지로 문제가 있었습니다. 첫 페이지 로드시에 미리 이미지 크기를 설정해 놓지 않아서 layout shift…]]></description><link>https://pium-official.github.io/optimize-frontend/</link><guid isPermaLink="false">https://pium-official.github.io/optimize-frontend/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 21 Sep 2023 14:08:13 GMT</lastBuildDate><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우아한테크코스 5기, 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/bassyu&quot;&gt;쵸파&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다.&lt;/p&gt;
+&lt;p&gt;백엔드와의 &lt;strong&gt;관심사 분리&lt;/strong&gt;를 위해 EC2에서 &lt;strong&gt;S3&lt;/strong&gt;로 FE 정적 파일을 옮기고,&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;보안과 CDN 캐시&lt;/strong&gt;를 적용하기 위해 &lt;strong&gt;CloudFront&lt;/strong&gt;를 통해 배포하였습니다.&lt;/p&gt;
+&lt;p&gt;더 나아가서, 같은 리소스는 더 빠르게 접근하고 네트워크 트래픽을 줄이기 위해 &lt;strong&gt;HTTP 캐시&lt;/strong&gt;를 적용했습니다.&lt;/p&gt;
+&lt;p&gt;해당 과정을 어떻게 적용하였는지 공유하고자 합니다.&lt;/p&gt;
+&lt;h2&gt;S3 + CloudFront 배포&lt;/h2&gt;
+&lt;p&gt;이미 S3와 CloudFront로 배포하는 방법은 &lt;a href=&quot;https://blog.pium.life/aws-s3-apply/&quot;&gt;피움 블로그&lt;/a&gt;에 잘 기록되어 있습니다!&lt;/p&gt;
+&lt;p&gt;이외의 프론트엔드 배포를 위한 차이점만 다루었습니다.&lt;/p&gt;
+&lt;h3&gt;S3 업로드 자동화 하기&lt;/h3&gt;
+&lt;h4&gt;aws cli 설치&lt;/h4&gt;
+&lt;p&gt;가장 좋은 방법은 &lt;a href=&quot;https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/getting-started-install.html&quot;&gt;공식 문서의 설치 방법&lt;/a&gt;을 그대로 따라 하는 것이었습니다.&lt;/p&gt;
+&lt;p&gt;피움의 빌드 EC2 환경은 Linux ARM 이어서 해당 명령어를 그대로 따라 해 설치했습니다.&lt;/p&gt;
+&lt;h4&gt;파이프라인 구성&lt;/h4&gt;
+&lt;p&gt;아래의 명령어는 빌드 후 dist 폴더의 파일들을 S3 버킷에 동기화하는(옮기는) 명령어입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;aws s3 sync ./dist s3://{프로젝트 S3 버킷 경로} --delete&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이 1줄만 젠킨스 파이프라인에서 실행하면 됩니다.&lt;/p&gt;
+&lt;h4&gt;빌드 EC2에 권한 주기&lt;/h4&gt;
+&lt;p&gt;이때, 빌드 EC2에서 S3에 업로드할 수 있도록 권한을 줘야 합니다.&lt;/p&gt;
+&lt;p&gt;인스턴스 &gt; 작업 &gt; 보안 &gt; IAM역할 수정&lt;/p&gt;
+&lt;p&gt;에서 권한을 줄 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;CloudFront&lt;/h3&gt;
+&lt;h4&gt;오류 페이지&lt;/h4&gt;
+&lt;p&gt;SPA로 정적 페이지를 배포하면 최상위뿐만 아니라 다른 path로 이동할 때가 많습니다.&lt;/p&gt;
+&lt;p&gt;다른 path에 접근하더라도 index.html을 받을 수 있도록 오류 페이지를 설정해 줍니다.&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/9d567/1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABnUlEQVR42j1Ry47UMBDM/3Fl+RY+BWnhyAU4wE9w4SEusxLLaGc3k8dMEjuxHT8SO1N0e1haasXudFdXlYuqbiDGEceqhpwmlMcKyhjc1RK7SkLPJv+73z9AyBFNe0JZHjGIgc4NjNHQWl2T5goG0fOMXogM3A8CzfmM34cyZ3vuMEiZv5L+87nTASoAo9tgVkAvgKKczIzi3HWoiaXSGj4E+GWBdQ7OWlg757P1HuFf3fuAsP8M8e0Nxp/vIH7cQny/hf71Fk61KO7/7LHb3WGk7RxxXZFiRNoStm1DSgmzdbnOoGtMiF9fo3z/AvXHV2g+3aD6cIPpy0usco+CQaZJ4fHxCQ+HA/kk830gC+qmxUAWOGKmlMpe1nWLXiqENcFYj1MvcOoE2eZhZosiEhs2kyU757EQixhXkmvznVkxS7aDl4zjRLId1SI9iKHH0HnhygrCguJyuTKcCZ3jwgUKQwaz5Ofggaqq0NIrM4mrsikv/t9D9cyQhy35lAggEpuNkhu5gdlt5Gcghn0/QJIlC4HzYmb3PMd9rOYvslReAT0ajTgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;error_page&apos; title=&apos;&apos; src=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/ca1dc/1.png&apos; srcset=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/e7570/1.png 170w,
+/static/5f98c07b753b77ef35dae3e9779697bd/f46e7/1.png 340w,
+/static/5f98c07b753b77ef35dae3e9779697bd/ca1dc/1.png 680w,
+/static/5f98c07b753b77ef35dae3e9779697bd/02d09/1.png 1020w,
+/static/5f98c07b753b77ef35dae3e9779697bd/9d567/1.png 1360w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;error_page&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;h2&gt;HTTP 캐시를 위한 응답 헤더 정책&lt;/h2&gt;
+&lt;p&gt;FE 배포는 성공적으로 마무리되었습니다.&lt;/p&gt;
+&lt;p&gt;이제 더 나은 사용자 경험을 위해 &lt;strong&gt;HTTP 캐시&lt;/strong&gt;를 적용하고자 합니다.&lt;/p&gt;
+&lt;h3&gt;HTTP 캐시를 적용하는 이유&lt;/h3&gt;
+&lt;p&gt;똑같은 리소스는 웹페이지에 들어갈 때마다 새로 요청할 필요가 없습니다.&lt;/p&gt;
+&lt;p&gt;디스크에 저장해 두었다가 새로운 버전만 요청하면 훨씬 더 빠르지 않을까요?&lt;/p&gt;
+&lt;p&gt;네트워크 통신 비용도 크게 줄일 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTTP/Caching&quot;&gt;HTTP 캐시&lt;/a&gt;를 활용하면 같은 리소스는 네트워크를 거치지 않고 디스크나 메모리에서 바로 사용할 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;Cache-Control 헤더&lt;/h3&gt;
+&lt;p&gt;리소스 &lt;strong&gt;응답 헤더의 Cache-Control 필드&lt;/strong&gt;를 통해 HTTP캐시를 설정할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;그중 Cache-Control: &quot;max-age=&lt;second&gt;&quot; 값으로 몇 초간 캐시 할지 설정할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;피움 서비스에서는 &apos;같은 리소스에 대해 한 달은 캐싱한다&apos;는 정책을 주기 위해 아래와 같이 CloudFront의 응답 헤더 정책을 만들었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/eb638/2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAnklEQVR42oWP2Q7CIBRE+f/Pa4320aXRlhY1TdkuywjEVuuLNzkBhskwsJ5zVFWNQ9Og3u3BnzOstX8hItCPprUGk0phlhIqHaRU0IbgnFvx3sOHUNZvnRI2h9LHb4wBm0uIQYyxsEzea202wct45zGMAkI8ENJjq548bJomdF1fUKlteLfJCHHH9dbh0rbgfFjvcpPj6ZxCx40/f/sFStU2yuhlzdAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2&apos; title=&apos;&apos; src=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/ca1dc/2.png&apos; srcset=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/e7570/2.png 170w,
+/static/3729943c9ba25c16c2b9860332ff06c0/f46e7/2.png 340w,
+/static/3729943c9ba25c16c2b9860332ff06c0/ca1dc/2.png 680w,
+/static/3729943c9ba25c16c2b9860332ff06c0/02d09/2.png 1020w,
+/static/3729943c9ba25c16c2b9860332ff06c0/9d567/2.png 1360w,
+/static/3729943c9ba25c16c2b9860332ff06c0/eb638/2.png 1422w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;그리고 동작에 추가합니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/69083/3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAoklEQVR42o3P2w6DIBBFUf//G1svYEVAe5FWQdRd9LkxnWRl3s6cyZRqqYRAyBrVaspK4NybuCyEEA7btvHvZMZaZH2j1YYmhdc3hTY27QaZaNPhfSDGeCrMM5P3ZLbruVxz8rygLCu01pgU3qa2u3Gajstraryu60/7B/snw+DI1PNDaV4UZkD2b+rHhHp55H1EJOo5UnWO3LrUIjKfiHHhC6fONAXwg2aIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3&apos; title=&apos;&apos; src=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/ca1dc/3.png&apos; srcset=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/e7570/3.png 170w,
+/static/587b8c13d9dd6575bdaec5fefb316887/f46e7/3.png 340w,
+/static/587b8c13d9dd6575bdaec5fefb316887/ca1dc/3.png 680w,
+/static/587b8c13d9dd6575bdaec5fefb316887/02d09/3.png 1020w,
+/static/587b8c13d9dd6575bdaec5fefb316887/69083/3.png 1158w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이제 CDN이 보내주는 리소스 헤더에 Cach-Control이 더해져서 HTTP 캐시가 적용됩니다! 🎉&lt;/p&gt;
+&lt;p&gt;그런데 원래 리소스가 캐싱되고 있을 때, 새로운 버전이 업데이트되면 캐시를 어떻게 지울까요?&lt;/p&gt;
+&lt;p&gt;클라이언트는 설정해 준 시간이 지나지 않으면 이전 리소스를 계속 캐싱합니다.&lt;/p&gt;
+&lt;h3&gt;캐시 버스팅&lt;/h3&gt;
+&lt;p&gt;클라이언트는 &lt;strong&gt;파일 이름이 다르면&lt;/strong&gt; 다른 리소스라고 판단할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;그래서 webpack으로 번들을 만들 때, 파일명에 해시를 줘서 캐시 버스팅을 했습니다.&lt;/p&gt;
+&lt;p&gt;아래는 번들 파일에 해시를 주는 webpack.config 설정입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// webpack.config.js
+
+output: {
+  path: path.join(__dirname, &apos;dist&apos;),
+  filename: &apos;[name].[contenthash].bundle.js&apos;,
+  chunkFilename: &apos;[name].[chunkhash].chunk.bundle.js&apos;,
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;자세히 보면 chunkhash와 contenthash가 있는 것을 알 수 있습니다.&lt;/p&gt;
+&lt;p&gt;둘은 어떤 차이일까요?&lt;/p&gt;
+&lt;h4&gt;webpack 해시의 종류&lt;/h4&gt;
+&lt;p&gt;우선 하나의 엔트리 포인트에서 나온 파일들을 청크라고 부릅니다.&lt;br&gt;
+chunkhash는 청크를 기준으로 해시값을 주고, contenthash는 청크가 같더라도 각 파일의 내용을 기준으로 해시값을 줍니다.  &lt;/p&gt;
+&lt;p&gt;만약 하나의 청크에 하나의 파일이 나온다면 chunkhash를 줘도 무방합니다.&lt;/p&gt;
+&lt;p&gt;하나의 청크에서 .js .css 처럼 여러 파일이 나온다면 contenthash로 더욱 뾰족하게 해싱할 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;index.html은 예외&lt;/h3&gt;
+&lt;p&gt;index.html 파일은 이름이 바뀌면 안 됩니다.&lt;/p&gt;
+&lt;p&gt;보통 URL을 입력할 때 &apos;www.pium.life/new-index.html&apos; 이런 식으로 접근하지 않기 때문입니다.&lt;/p&gt;
+&lt;p&gt;파일이 신선하지 않음을 파일이름으로 판단하기 힘들기 때문에&lt;/p&gt;
+&lt;p&gt;CloudFront의 동작 우선순위에서 예외처리해서 해결했습니다.&lt;/p&gt;
+&lt;h4&gt;새로운 동작 생성&lt;/h4&gt;
+&lt;p&gt;index.html을 위한 동작을 위해 경로 패턴에 &apos;/index.html&apos;을 적어줍니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/daf0356cb6fe61c361ccfb626936443b/64756/4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 47.64705882352941%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA1ElEQVR42q3SSXKDMBAFUN3/ZE4WHjdxCB4KE+yABEIMag3+6fgGQBaveqWuX/0ltrs9Vm/v2O0PMF2H1phFxHdR4OP4ifR0/p+FUkr4EOC9h7V2MbHebGGJ4JxbjJgInIzIgnhGTvqMcbbIRHK6oiglck2wPsKF5yzEb/+I5F7jkGbYHM9I8hIPQ5NVvcfXvUH6o7nlUuH2qJAz3fNhA9C7MAtxUnG5XJFlGbtBceMdf50Q/CQxBozj8OpCqEajaVvUWqNSClLVr7amcFxoazoMw4hfJ48F3ZE6Q40AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4&apos; title=&apos;&apos; src=&apos;/static/daf0356cb6fe61c361ccfb626936443b/ca1dc/4.png&apos; srcset=&apos;/static/daf0356cb6fe61c361ccfb626936443b/e7570/4.png 170w,
+/static/daf0356cb6fe61c361ccfb626936443b/f46e7/4.png 340w,
+/static/daf0356cb6fe61c361ccfb626936443b/ca1dc/4.png 680w,
+/static/daf0356cb6fe61c361ccfb626936443b/02d09/4.png 1020w,
+/static/daf0356cb6fe61c361ccfb626936443b/64756/4.png 1200w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;캐시 정책은 CachingDisabled를 사용합니다.&lt;/p&gt;
+&lt;p&gt;그리고 응답 헤더 정책은 주지 않습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/af70e/5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 41.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABCklEQVR42p1Ry26DQAzk//+r7TFCVdsLoSFJJSA89s3CAtO1SdVLyaGWRt61YeyZTbI8x9v7B9L0FU/PLzgcUpRVhXGaMAweg/ew1sE6B+e2TPV1XfFXJD42ldaQSkNFSKniWcEYw0TGWu5RXWsDce8ve4RX4dH2En3fQwjBue06tG2LptnQ8b1DXdfoYv9RJI00yD9PKIoCxyg/y458dneJPyCZWx4eE4YQWB59vK4LlmXDfyPxfsTl+oVTcWa/jLHsHflFXvVCQsfaPP8O2wM9FG94uzVMytLPF1izvaZiUs2DwhQQwryLcZxAyyV0KcuKNyQyIq7iANqQJ8fN5pl+CrugvovekrpvEftrfZT8c/YAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5&apos; title=&apos;&apos; src=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/ca1dc/5.png&apos; srcset=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/e7570/5.png 170w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/f46e7/5.png 340w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/ca1dc/5.png 680w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/02d09/5.png 1020w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/af70e/5.png 1184w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;완성된 모습입니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1b4637919ace76ee198291e378358d80/39d99/6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAABhUlEQVR42m1SCY7bMAz0/79XYFGgBdIkTmzLsnzLZzKdYeLtYlECA4kUjyGp5J7nuGc5qrrGOU1RVh4/fp/x65zCh4A/l6vBhxquqnC+pqZX1DPncLpcEJoGyuO8RzLNM4R+HO1sux51HYga3fCyCQPfhxg/9ZH38a0PY0ScIt9HJKfTCR8fP/F8PrFtGx6PnXgSD+z7jp22dV3tbXvfl2VlscH0aZrQdB06FpSeNKTrfYWBDn3/Bll2RCtHnjFODJw/EZlEjGUXy56xptOeKKBkQsH7gCx3BulF6XG7ZxjZkljN8/IPy4LVWO9vbOaTLHpgGwPnFbiEkZWkN02LqgoWvK4L5PcdNbsLdcN5vyCWyTGfpm1xud7Qtp0lyfIC1/RmLW7bakW+YuYy8sJZB9pwertbrDHU8BWoRUi0ILEtioJwpn+HRAlyFtZIjjgy3LAz0cKqOuUqBP4zJdOsDttXSDR/V5ZcTjTbwxLaV3l9kaOyRDMsuZSD9f+k75nQlbbdQ/4CPagEiTgQb5EAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;6&apos; title=&apos;&apos; src=&apos;/static/1b4637919ace76ee198291e378358d80/ca1dc/6.png&apos; srcset=&apos;/static/1b4637919ace76ee198291e378358d80/e7570/6.png 170w,
+/static/1b4637919ace76ee198291e378358d80/f46e7/6.png 340w,
+/static/1b4637919ace76ee198291e378358d80/ca1dc/6.png 680w,
+/static/1b4637919ace76ee198291e378358d80/02d09/6.png 1020w,
+/static/1b4637919ace76ee198291e378358d80/39d99/6.png 1102w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이제 index.html도 최신 버전으로 잘 받아옵니다. 🎉🎉&lt;/p&gt;
+&lt;h4&gt;s-maxage + 무효화&lt;/h4&gt;
+&lt;p&gt;캐시를 안주는 방법만 있는 것은 아닙니다.&lt;/p&gt;
+&lt;p&gt;응답 헤더 정책에서 Cache-Control의 s-maxage를 통해 CDN에서만 캐싱을 적용하고, 배포할 때 무효화를 해줄 수 있습니다.&lt;/p&gt;
+&lt;p&gt;다만 무효화를 자동으로 하기 위해서는 추가적인 권한이 필요하고, 차이가 크지 않음을 확인해서 아직 적용하지 않았습니다.&lt;/p&gt;
+&lt;h3&gt;HTTP 캐시를 한 달로 설정한 이유&lt;/h3&gt;
+&lt;p&gt;설정을 한 달로 하면 한달 후에는 같은 리소스도 새로 요청을 보냅니다. 왜 최대값인 1년으로 하지 않았을까요?&lt;/p&gt;
+&lt;p&gt;HTTP 캐시는 사용자의 디스크나 메모리에 리소스를 저장합니다.&lt;/p&gt;
+&lt;p&gt;만약 max-age를 최대값인 1년으로 설정하면 새로운 버전의 해시가 배포되어도 사용자는 이전 버전의 리소스를 1년간 가지고 있게 됩니다.&lt;/p&gt;
+&lt;p&gt;그래서 서비스 배포 주기에 맞는 적절한 기간을 논의하여 한달로 설정하였습니다.&lt;/p&gt;
+&lt;h2&gt;정리&lt;/h2&gt;
+&lt;p&gt;HTTP 캐시는 처음 접해보는 분야이고 index.html은 예외를 줘야 한다는 점이 흥미로웠습니다!&lt;/p&gt;
+&lt;p&gt;캐시하는 기간도 길다고 좋은게 아니었습니다.&lt;/p&gt;
+&lt;p&gt;네트워크 트래픽을 줄이고 더 좋은 사용자 경험을 줄 수 있어서 뿌듯한 경험이 되었습니다.&lt;/p&gt;
+&lt;h3&gt;참고한 자료&lt;/h3&gt;
+&lt;p&gt; &lt;a href=&quot;https://toss.tech/article/smart-web-service-cache&quot;&gt;웹 서비스 캐시 똑똑하게 다루기&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 최적화하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '클린'가 작성했습니다. 피움 최적화 하기 어찌어찌 서비스를 론칭하긴 했지만, 여러가지로 문제가 있었습니다. 첫 페이지 로드시에 미리 이미지 크기를 설정해 놓지 않아서 layout shift…]]></description><link>https://pium-official.github.io/optimize-frontend/</link><guid isPermaLink="false">https://pium-official.github.io/optimize-frontend/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/hozzijeong&quot;&gt;클린&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1&gt;피움 최적화 하기&lt;/h1&gt;
