@@ -26,7 +26,7 @@ tags:
 2. 폰트 로딩에 많은 시간이 소요된다.
 3. 파일들이 캐시되지 않는다
 
-![](./.index_images/before_optimize_상세.png)
+![](./.index_images/before_optimize_detail.png)
 
 위 이미지에서 볼 수 있듯이, `bundle.js`의 파일 크기가 무려 444kib이고, 폰트의 크기 역시 합치면 1mb에 달합니다. 또한 캐시 + TTL에서 보면 알 수 있듯이 캐시를 전혀 사용하지 않고, 매번 새 파일을 요철하고 있습니다. 이는 사용자의 데이터를 그만큼 사용하고, 느린 네트워크 환경에서 속도를 저하시키는 요인이 됩니다. 
 
@@ -145,6 +145,8 @@ font-display 속성은 폰트를 선언하는 @fontface 블록 안에서만 유�
   src: url('/fonts/NanumSquareRoundMissingGlyph.woff2') format('woff2');
 }
 ```
+
+<vedio>
 
 ![](./.index_images/preload_success.mov)
 
