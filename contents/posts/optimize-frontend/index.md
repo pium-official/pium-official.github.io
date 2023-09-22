@@ -118,7 +118,7 @@ font-display 속성은 폰트를 선언하는 @fontface 블록 안에서만 유�
 
 ### 폰트 preload 하기
 
-![](./.index_images/preload_fail.mov)
+![](./.index_images/preload_fail.gif)
 
 
 용량과는 큰 상관이 없지만, 폰트 다운로드가 페이지 로드가 완료된 다음에 실행 되었기 때문에 영상과 같이 처음 로드 했을때 혹은 새로고침 했을 때 폰트가 깜빡하는 문제가 있었습니다. 이는 사용자 경험에 매우 좋지 못하다는 생각에 어떻게든 해결을 해야 하는 문제 중 하나 였습니다. 
@@ -149,7 +149,7 @@ font-display 속성은 폰트를 선언하는 @fontface 블록 안에서만 유�
 
 <vedio>
 
-![](./.index_images/preload_success.mov)
+![](./.index_images/preload_success.giff)
 
 
 대체 폰트 설정과 폰트 `preload`를 통해서 용량을 줄이고 사용자 경험을 좀 더 끌어 올릴 수 있었습니다. 궁극적으로 gzip압축, 코드 스플리팅, 폰트 용량 줄이기 이 3가지를 통해서 압축한 용량은 다음과 같습니다.
