@@ -363,7 +363,7 @@ data-styled.g45[id="Footer__HiddenWrapper-sc-zqxmks-9"]{content:"yzdKT,ivqWaF,"}
     </span></p>
 <p>참새 덕분에 지원하지 않는 폰트의 경우에 대체 폰트로 지정할 수 있었고, 용량이 더 작고 원래 선택 했었던 폰트로 되돌아 갈 수 있었습니다.</p>
 <h3>폰트 preload 하기</h3>
-<p><img src="/static/preload_fail-92ab0b276007a8ec4387d958c493d4b4.mov"></p>
+<p><img src="/static/preload_fail-8e18dfcb051a4e6b8f5debc984905c78.gif"></p>
 <p>용량과는 큰 상관이 없지만, 폰트 다운로드가 페이지 로드가 완료된 다음에 실행 되었기 때문에 영상과 같이 처음 로드 했을때 혹은 새로고침 했을 때 폰트가 깜빡하는 문제가 있었습니다. 이는 사용자 경험에 매우 좋지 못하다는 생각에 어떻게든 해결을 해야 하는 문제 중 하나 였습니다. </p>
 <p>폰트 <code class="language-text">preload</code>설정은 생각보다 쉬웠습니다.(끝나고 보니 쉬웠습니다…) 처음에는 단순히 <code class="language-text">link</code>태그에 <code class="language-text">preload</code>만 추가하면 되는 줄 알았는데, css로 폰트를 다운 받고, 해당 폰트에 <code class="language-text">preload</code>를 적용하면 되는 것이었습니다. 처음에는 폰트 CDN을 통해서 다운로드 받는 방식을 했었는데, 폰트의 캐시 설정도 되지 않고 저희의 통제를 벗어난 외부 폰트라는 생각에 한번에 처리할 수 있으면 좋겠다는 생각에 사용하는 폰트 자체를 다운받고, 해당 .css 확장자에 폰트 url을 설정함으로써 preload를 구현할 수 있었습니다.</p>
 <div class="gatsby-highlight" data-language="html"><pre class="language-html"><code class="language-html">// index.html
@@ -383,7 +383,7 @@ data-styled.g45[id="Footer__HiddenWrapper-sc-zqxmks-9"]{content:"yzdKT,ivqWaF,"}
   <span class="token property">src</span><span class="token punctuation">:</span> <span class="token url"><span class="token function">url</span><span class="token punctuation">(</span><span class="token string url">'/fonts/NanumSquareRoundMissingGlyph.woff2'</span><span class="token punctuation">)</span></span> <span class="token function">format</span><span class="token punctuation">(</span><span class="token string">'woff2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></div>
 <vedio>
-<p><img src="/static/preload_success-97320cc7629cdd9684a4f931ab98b50b.mov"></p>
+<p><img src="./.index_images/preload_success.giff"></p>
 <p>대체 폰트 설정과 폰트 <code class="language-text">preload</code>를 통해서 용량을 줄이고 사용자 경험을 좀 더 끌어 올릴 수 있었습니다. 궁극적으로 gzip압축, 코드 스플리팅, 폰트 용량 줄이기 이 3가지를 통해서 압축한 용량은 다음과 같습니다.</p>
 <p><span class='gatsby-resp-image-wrapper' style='position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;'>
       <a class='gatsby-resp-image-link' href='/static/b615dcc1aee4628f2cf542cc3780ee8a/f4146/preload_fail.png' style='display: block' target='_blank' rel='noopener'>
