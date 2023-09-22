@@ -14,6 +14,7 @@ tags:
 
 # 피움 최적화 하기
 
+
 어찌어찌 서비스를 개시하긴 했지만, 여러 가지로 문제가 있었습니다. 첫 페이지 로드 시에 미리 이미지 크기를 설정해 놓지 않아서 layout shift가 발생하기도 하고 전체적인 번들 크기가 400kb가 넘기도 하며, 페이지 로드 후에 폰트가 적용되어서 깜빡이는 현상이 발생하기도 했습니다. http 헤더 설정도 의도적으로 되어 있지 않아서 캐시 기간도 모르고, CDN 적용도 되어있지 않아서 캐시 역시 제대로 되지 않았습니다. 이러한 문제점들이 모여서 결국 사용자의 데이터를 많이 잡아먹고 폰트나 버벅거림 등은 분명한 사용자 경험 저해 요소이기 때문에 이를 해결하기 위한 방안을 세웠습니다.
 
 우선적으로 명시적인 문제를 먼저 해결해야 했습니다. Lighthouse를 통해서 측정을 해본 결과는 다음과 같습니다.
@@ -73,6 +74,8 @@ s3 + cloudfront를 사용한다면 CDN 캐시를 통해 사용자에게 좀 더 
 
 > CDN(Contents Delivery Network)은 콘텐츠 전송 네트워크를 나타내는 약자로, 웹 콘텐츠와 웹 애플리케이션을 효율적으로 제공하기 위한 분산 네트워크입니다. CDN은 전 세계의 다양한 위치에 위치한 서버와 캐시 노드를 사용하여 웹 콘텐츠를 저장하고 전송함으로써 웹 성능을 최적화하고 가용성을 향상 시킵니다.
 > 
+
+좀 더 자세한 내용은 쵸파가 작성한 [Cloudfront와 HTTP캐시](https://blog.pium.life/http-cache/)에 있습니다.
 
 ### 코드 스플리팅
 
@@ -147,9 +150,7 @@ font-display 속성은 폰트를 선언하는 @fontface 블록 안에서만 유�
 }
 ```
 
-<vedio>
-
-![](./.index_images/preload_success.giff)
+![](./.index_images/preload_success.gif)
 
 
 대체 폰트 설정과 폰트 `preload`를 통해서 용량을 줄이고 사용자 경험을 좀 더 끌어 올릴 수 있었습니다. 궁극적으로 gzip압축, 코드 스플리팅, 폰트 용량 줄이기 이 3가지를 통해서 압축한 용량은 다음과 같습니다.
@@ -199,3 +200,92 @@ HTTP 캐시 정책은 각자 서비스에 맞춰서 설정하면 됩니다. 피�
 ## 이미지 최적화
 
 ## SVG-in-JS 개선
+피움에서는 여러 가지 아이콘들을 사용하고 있습니다. 그래서 처음에는 `react-icons`를 통해서 아이콘을 좀 편하게 사용하려고 했었는데 [다음과 같은 문제](https://blog.pium.life/bundle-analyze/)가 있었습니다. 지금 돌이켜 보면 `typescript` 컴파일 옵션을  CommonJS로 했기 때문에 icons에 있는 하나의 모듈이 전부 다운로드 돼서 사용하지 않는 아이콘들까지 같이 import 하는 문제였습니다. 웹팩에서는 자동으로 트리 쉐이킹을 해주기 때문에 일어날 수 없는 문제인데 CommonJS로 받아오게 되면서 트리 쉐이킹이 적용되지 않았던 것입니다. 즉, `react-icons`를 삭제하지 않고 `tsconfig` 파일에서 `module`을 `esnext`나 `target`에 맞춰서 넣으면 되는 해결할 수 있는 문제였는데, 당시에는 이것을 몰라서 라이브러리를 삭제하고 `[icons](https://icones.js.org/collection/all?s=p)`라는 사이트에서 아이콘들을 리액트 컴포넌트로 받아서 렌더링 하는 방식으로 적용했습니다.
+
+그렇게 작업을 하고 있던 와중에 [SVG-in-JS와의 결별](https://kurtextrem.de/posts/svg-in-js) 이라는 글을 봤습니다. 글의 요지는 다음과 같습니다.
+
+- SVG 코드가 JS로 들어있다면 불필요한 번들의 크기가 커진다. 즉 파싱 & 컴파일할 게 많아진다.
+- 자바 스크립트가 실행되는 동안 파싱된 내용이 힙 메모리 내에 존재할 텐데, 다른 어플들을 실행하고 있다면 힙 메모리에 영향을 미칠 수 있다.
+
+svg는 javascript코드가 아닌 xml코드에 가깝습니다. 하지만 그 코드를 JS 파서로 파싱하는 것 자체가 어색한 일 입니다. 따라서 bundle 크기 축소와 사용자 메모리 최적화를 위해서 리액트 컴포넌트 형식으로 선언한 icon 들을 svg로 따로 분리했습니다.
+
+피움에서 사용하는 아이콘의 개수는 거의 40개에 육박합니다. 그렇다고 40개가 넘는 아이콘들은 전부 정적 파일로 저장하게 된다면 파일 용량이 상당히 커지게 됩니다. 그것 또한 사용자 성능에 좋지 못한 요소가 될 수 있습니다.
+
+![](./.index_images/svg_algorithm.png)
+
+위 의사 결정 표(?)를 보면 SVG를 사용할 때 그 용도에 따라 어떻게 설정하는지에 대한 가이드라인이 나와 있습니다. 4kb 미만이면서 폴더 안에 있는 경우에는 inline으로 쓰지만, 4kb 이상이고 정적인 색을 가지고 있다면 img 태그, 그게 아니라면 `SVG sprite`와 `use` 키워드를 사용하라고 했습니다.
+
+`SVG sprite`의 사용법은 간단합니다.
+
+```tsx
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="account-circle" viewBox="0 0 24 24">
+			//...
+			</symbol>
+			// + 필요한 만큼 존재
+		</defs>
+</svg>
+```
+
+사용하고자 하는 `svg` 파일들의 `path`를 고유 `id`를 가진 `symbol`들로 선언합니다.
+
+```tsx
+const SvgFill = ({ icon, size = 24, color = theme.color.gray, ...rest }: SvgIconsProps) => {
+  return (
+    <svg fill={color} width={size} height={size} {...rest}>
+      <use href={`#${icon}`} />
+    </svg>
+  );
+};
+```
+
+그다음에 `svg` 태그 안에 `<use />`태그를 넣고, `href`에 `symbol`로 지정한 `id` 값을 할당하면 끝입니다. 여기서 해당 `svg`의 `props`들을 인자로 받아서 설정할 수 있습니다. 만약에 사용하고자 하는 색이나 크기가 있다면 다음과 같이 선언할 수 있습니다.
+
+```tsx
+<SvgFill
+  icon="flowerpot"
+  color={primaryColor}
+  aria-label="화분"
+  aria-describedby="반려 식물이 담긴 화분의 재질"
+  size={20}
+/>
+```
+
+`svg`를 리액트 컴포넌트처럼 사용하기 위해서는 `webpack`에 플러그인을 하나 추가해 줘야 하는데, 바로 `svgr`입니다. 
+
+```jsx
+// webpack.config.js
+{
+  test: /\.svg$/,
+  include: [resolve(__dirname, 'src'), resolve(__dirname, 'src', 'types', 'module.d.ts')],
+  issuer: /\.[jt]sx?$/,
+  use: ['@svgr/webpack', 'url-loader'],
+},
+```
+
+또한, `typescript`에서 `svg`의 타입이 보통은 `string`이기 때문에 해당 타입이 `ReactComponent`라고 모듈을 선언해 줘야 합니다.
+
+```tsx
+declare module '*.svg' {
+  import React from 'react';
+  export const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  const src: string;
+  export default src;
+}
+```
+
+하지만 위 코드를 보면 약간 의아한 게 있습니다. `React Component`와 `src`를 같이 반환하고 있다는 것입니다. SVG Sprite를 사용하기 위해서는 svg 확장자를 리액트 컴포넌트처럼 사용해야 하는데, 그 반환 값을 커스텀 타입으로 지정해 준 것입니다. 하지만 아예 `ReactCompnent만`을 반환하게 한다면 `<img/>`태그에 `src` 속성에 정적인 `svg` 주소를 넣을 수 없는 문제가 있었습니다. 따라서 `React Component`와 `src` 모두 지원하기 위해서 2가지를 `export` 하도록 설정했습니다.
+
+하지만, 위처럼 2가지를 export 하도록 바꾸니 코드 스플리팅이 제대로 되지 않는 것 같았습니다. 만약에 정적인 데이터를 불러오기 위해서 `assets` 내부에 있는 `.svg`확장자를 불러오고 번들 크기 분석을 해봤는데, 평소보다 2배가 더 큰 용량을 차지하고 있는것을 볼 수 있었습니다.
+
+사용하지 않는 이미지를 불러오는 것을 보고 왜 트리 쉐이킹 안되지? 하는 생각을 했습니다 (애초에 이게 트리 쉐이킹이 맞는지도 잘 모르겠습니다.) 하지만 이미지를 svg가 아닌 png로 변경하니 바로 문제 해결이 됐습니다. 이미지 품질 자체에 문제가 있을까 걱정했지만, 정적으로 제공하는 이미지들이 해상도가 아주 중요한 이미지들이 아니기 때문에 문제가 없을 것으로 생각해서 png로 제공하기로 했습니다.
+
+그다음 문제는 SVG symbol들을 저장하는 코드의 위치였습니다. SVG Sprite를 사용하는 이유가 번들 크기를 줄이기 위해서인데, symbol들을 저장하는 소스 코드 파일 자체가 리액트 컴포넌트 형식으로 작성되어 있어서 이게 맞냐고 생각을 했습니다. 그래서 svg 확장자로 설정하고 CDN으로 받아오려고 시도해 봤지만, cors 문제로 인해 불가능했습니다.
+
+> SVG `<use>` elements don’t currently have any way to ask for cross-origin permissions. They just don’t work cross-origin, at all. - [cors](https://oreillymedia.github.io/Using_SVG/extras/ch10-cors.html#:~:text=SVG%20%3Cuse%3E%20elements%20don%E2%80%99t%20currently%20have%20any%20way%20to%20ask%20for%20cross-origin%20permissions.%20They%20just%20don%E2%80%99t%20work%20cross-origin%2C%20at%20all.)
+> 
+
+따라서 html에 직접 삽입하는 방법밖에 없었는데, 그렇게 된다면 icon이 추가될 때마다 `index`파일을 바꿔야 하는 번거로움이 있었습니다. SPA로 구현하고 있는 상황에서 불특정한 상황에 따라 `index` 파일이 바뀌는 게 괜한 거부감이 있어서 현재는 리액트 컴포넌트로 삽입하고 있는데, 이 방법이 맞는지는 여전히 의문이긴 합니다. (icon 같은 경우에는 그렇게 많이 바뀌는 것이 아니라 상관이 없을 것 같다는 생각이 있어서 그냥 넣어도 되지 않을까 생각하기도 합니다.)
+
+또 하나의 아쉬운 점은 SVG Sprite를 사용함으로써 파싱할 코드의 양이 줄어들어서 사용자에게 감동을 주는 정도로 변화가 있을까 생각했지만, 번들 크기는 30kb가 줄었고 (압축 전) 기능상 큰 변화는 없는 것 같아서 약간 아쉬운 결과를 남겼습니다. 최적화 수업 때 망치를 들면 뭐든지 못으로 보인다고 했는데 저는 오함마를 들고 서비스를 다지려고 하지 않았나 생각이 들었습니다.
