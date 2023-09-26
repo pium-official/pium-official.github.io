@@ -2,14 +2,14 @@
 title: "피움 최적화하기"
 description: "피움 v1.0.0을 최적화 하자"
 date: 2023-09-21
-update: 2023-09-21
+update: 2023-09-26
 tags:
 - 웹 최적화
 - bundle
 - 정적 배포
 ---
 
-> 이 글은 우테코 피움팀 크루 '[클린](https://github.com/hozzijeong)'가 작성했습니다.
+> 이 글은 우테코 피움팀 크루 '[클린](https://github.com/hozzijeong)'가 작성했습니다. 이미지 최적화는 참새가 숟가락 얹었어요.
 
 
 # 피움 최적화 하기
@@ -198,6 +198,77 @@ HTTP 캐시 정책은 각자 서비스에 맞춰서 설정하면 됩니다. 피�
 빠른 3G환경에서 캐시를 사용하지 않았을 때는 로드되는데 까지 3.36초가 걸린 반면에, 캐시를 사용했을 때 로드되는데 까지 0.752초가 걸리는 것을 볼 수 있습니다.
 
 ## 이미지 최적화
+사진은 정말 여러 곳에서 사용됩니다. 크게는 사전 식물이나 반려 식물의 상세 정보부터 작게는 검색창 아래쪽에 나타나는 검색 결과 목록처럼요. 하지만 이 사진들은 전부 '원본 자료'를 요청하고 있었습니다. 가로세로 32픽셀 크기인 곳에서도 원본 사진을 받아왔죠. 그래서 사이트 첫 로딩에 사용하는 자원이 많았습니다.
+
+따라서 작은 사진이 필요한 곳에서는 작은 해상도의 사진을 받아와서 통신 비용을 절약해보자! 라는 생각을 하게 되었죠. 처음에는 Amazon CloudFront의 Lambda@Edge 기능을 활용해서 클라이언트 측에서 특정 해상도의 사진을 요청하면 원본을 변형해서 주는 방법을 적용하고 싶었습니다. 하지만 아쉽게도 Lambda 권한을 허락받지 못해 이 방법을 사용할 수는 없었어요. 그래서 임시로 지금 저장되어있는 사전 식물의 사진들만이라도 수동으로 처리해보자는 결론을 내렸습니다.
+
+방법은 크게 세 단계로 나눌 수 있습니다.
+
+1. S3에 저장된 식물 사진을 로컬로 다운로드
+2. 로컬에서 `node.js`를 이용해서 사진 변환
+3. 변환한 사진을 다시 S3에 업로드
+
+저희는 권한이 없어서 S3에서 바로 자료를 받아올 수는 없어서 EC2를 중간 다리로 활용해 S3에서 EC2로, EC2에서 다시 로컬로 옮기는 방법을 썼어요.
+
+사진 변환은 가장 많이 사용되는 `sharp` 라이브러리를 썼습니다. 가로세로 64픽셀의 초소형과 256픽셀의 소형 사진을 png, webp 형식 두 가지로 변환했어요. 사용한 코드는 아래와 같습니다.
+
+```js
+import Sharp from 'sharp'; // 이 패키지는 npm으로 설치가 필요해요
+import fs from 'fs';
+import { join } from 'path';
+
+const SMALL = {
+  width: 256,
+};
+
+const X_SMALL = {
+  width: 64,
+};
+
+const INPUT_DIR = './static';
+const OUTPUT_DIR = './output';
+
+const getFileNames = (dir) => fs.readdirSync(dir);
+
+const convertImageTo = async (filename, width, type, format) => {
+  const inputPath = join(INPUT_DIR, filename);
+  const filenameWithoutExt = filename.split('.')[0];
+
+  const sharp = new Sharp(inputPath);
+  const { width: imageWidth } = await sharp.metadata();
+
+  if (imageWidth <= width) {
+    console.log(`${filename} image width(${imageWidth}) is smaller than target size(${width}).`);
+    return false;
+  }
+
+  await sharp
+    .resize(width)
+    .toFormat(format.toLowerCase(), { quality: 100 })
+    .toFile(join(OUTPUT_DIR, `${filenameWithoutExt}.${type}.${format.toLowerCase()}`));
+
+  return true;
+};
+
+const filenames = getFileNames(INPUT_DIR);
+
+filenames.forEach(async (filename) => {
+  await convertImageTo(filename, SMALL.width, 'small', 'png');
+  await convertImageTo(filename, SMALL.width, 'small', 'webp');
+  
+  await convertImageTo(filename, X_SMALL.width, 'x-small', 'png');
+  await convertImageTo(filename, X_SMALL.width, 'x-small', 'webp');
+});
+```
+
+정말 단순무식하긴 하지만 가장 확실한 방법이었습니다.
+
+![](./.index_images/image-resize.png)
+
+그 결과 파일의 용량을 어마무시하게 줄일 수 있었어요!
+
+하지만 이 방법은 어디까지나 임시방편이라 나중에는 백엔드와의 협업으로 새로운 방법을 사용하는 게 맞겠다는 생각이 듭니다.
+
 
 ## SVG-in-JS 개선
 피움에서는 여러 가지 아이콘들을 사용하고 있습니다. 그래서 처음에는 `react-icons`를 통해서 아이콘을 좀 편하게 사용하려고 했었는데 [다음과 같은 문제](https://blog.pium.life/bundle-analyze/)가 있었습니다. 지금 돌이켜 보면 `typescript` 컴파일 옵션을  CommonJS로 했기 때문에 icons에 있는 하나의 모듈이 전부 다운로드 돼서 사용하지 않는 아이콘들까지 같이 import 하는 문제였습니다. 웹팩에서는 자동으로 트리 쉐이킹을 해주기 때문에 일어날 수 없는 문제인데 CommonJS로 받아오게 되면서 트리 쉐이킹이 적용되지 않았던 것입니다. 즉, `react-icons`를 삭제하지 않고 `tsconfig` 파일에서 `module`을 `esnext`나 `target`에 맞춰서 넣으면 되는 해결할 수 있는 문제였는데, 당시에는 이것을 몰라서 라이브러리를 삭제하고 `[icons](https://icones.js.org/collection/all?s=p)`라는 사이트에서 아이콘들을 리액트 컴포넌트로 받아서 렌더링 하는 방식으로 적용했습니다.
