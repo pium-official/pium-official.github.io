@@ -1,196 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 26 Sep 2023 05:06:39 GMT</lastBuildDate><item><title><![CDATA[서비스 내에서 발생하는 쿼리를 분석하고 개선하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/query-analysis/</link><guid isPermaLink="false">https://pium-official.github.io/query-analysis/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;서론&lt;/h2&gt;
-&lt;p&gt;피움 서비스의 런칭 페스티벌을 무사히 마쳤습니다.&lt;/p&gt;
-&lt;p&gt;런칭 일정에 맞춰 빠르게 개발을 진행하다 보니 꼼꼼하지 못한 부분이 존재했고, 다음 개발에 착수하기 전 부족한 부분을 개선하고 넘어가기로 했습니다.&lt;/p&gt;
-&lt;p&gt;먼저 서비스 내에서 발생하는 모든 쿼리를 정리해보았습니다.&lt;/p&gt;
-&lt;p&gt;현재 서비스의 모든 기능을 인수 테스트로 작성했기 때문에 인수 테스트를 하나씩 돌려보며 발생하는 쿼리를 추적했습니다.&lt;/p&gt;
-&lt;p&gt;JPA를 사용하는 환경에서 스프링 properties 설정 중 아래 옵션을 설정하면 쿼리를 확인할 수 있습니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token key attr-name&quot;&gt;spring.jpa.show-sql&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token value attr-value&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;token key attr-name&quot;&gt;spring.jpa.properties.hibernate.format_sql&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token value attr-value&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/9278616bd57f30e75430b64b89399923/bbbf7/img.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 70.58823529411764%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVR42p1T2W6DMBDk/x/7RX2t+gFN1CYctgngA3BIuDO1DSFVGrUKK61Ya/F4Zsf2ePwBSgkoIdjtvhBFIYqigIvLBeM4Tmlqu66aEQc9QDcXPAovyxLUdY1hGND3vcsFwETXda7fdb1ZjXgPa7y85ngLatcf73C9tm1RlgWUkobArZsxApUeXN22jTvE9q//XOtrur5JB6h1CSkETqeTY2qDRz546M/wd5vn/AVovp6VI6VEHDMEgY/z+ewg9v4GjAaTrB/s/stFspQCygALw7SqjiCSQhzl84BNc2PIGEUYBNBliW38CSbj9QzTxLg9y7UNlhIIlc5OPsWwMQ4rd//SNFlcnGbor5Hc4Kj1Irs0cm2EnKyboXXZvgxGKXx/bwypHMiGbsFEvI6hvYeCc2RZ6jZPDCPwUqxzOc9z85YjBIahNckxJGaGgq1weWZonc5ztcxQZQfkPHn4zP4C/Aar/0Pc9UXs+QAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img&apos; title=&apos;&apos; src=&apos;/static/9278616bd57f30e75430b64b89399923/ca1dc/img.png&apos; srcset=&apos;/static/9278616bd57f30e75430b64b89399923/e7570/img.png 170w,
-/static/9278616bd57f30e75430b64b89399923/f46e7/img.png 340w,
-/static/9278616bd57f30e75430b64b89399923/ca1dc/img.png 680w,
-/static/9278616bd57f30e75430b64b89399923/02d09/img.png 1020w,
-/static/9278616bd57f30e75430b64b89399923/bbbf7/img.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;현재 서비스에서 사용하고 있는 API에서 발생하는 쿼리를 위와 같이 정리하였고 개선이 필요한 부분, 개선이 불필요한 부분을 먼저 구분했습니다.&lt;/p&gt;
-&lt;p&gt;개선이 필요한 원인들은 아래와 같습니다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;batch로 진행할 수 있는 작업을 단건 질의 여러 번 실행&lt;/li&gt;
-&lt;li&gt;DB 인덱스를 적절히 사용하고 있지 않음&lt;/li&gt;
-&lt;li&gt;PK를 이용해 조회/삭제/수정을 할 수 있음에도 PK를 사용하지 않고 다른 컬럼을 이용해 질의&lt;/li&gt;
-&lt;li&gt;N+1 발생&lt;/li&gt;
-&lt;li&gt;Pagable 사용 시 불필요한 count 쿼리 발생&lt;/li&gt;
-&lt;li&gt;애플리케이션 단에서 처리할 수 있는 로직을 DB로 질의&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;생각보다 개선할 수 있는 부분이 많았습니다.&lt;/p&gt;
-&lt;p&gt;개발 당시에 꼼꼼하게 코드 리뷰를 했다고 생각했었지만...!! 쿼리를 더 꼼꼼히 확인하지 못했던 점이 아쉬웠습니다.&lt;/p&gt;
-&lt;p&gt;위와 같은 문제가 발생한 이유를 하나씩 알아보았습니다.&lt;/p&gt;
-&lt;h2&gt;batch로 진행할 수 있는 작업을 단건 질의 여러 번 실행&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8d04f58740341c7a065c4c8d9ccc26ae/8aec5/img_1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 175.29411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAjCAYAAACU9ioYAAAACXBIWXMAAAsTAAALEwEAmpwYAAACCklEQVR42q1W226jMBTM/3/dSq20iRIId2wD5mYgeZrOcdq0u2/BfbCjWGKYc87MmMM89SiLDHF6RdsauLnHts6712FbJoxjj6SqURDYdgaLG7HyfBegPHi/LXCTRZpEKPIE1/iMrtX+/HWG3G6bg7UNTsd3nP6+IbqcPGhVZh54F+DQt0iuEXKlsPG/nLt5eLn0J+BIwJjMLtEZcXRCXeW7+ugBZzehNIYgGctMOfUU02j9i14GlIfWbYHqLGWjfenCdg+YB5Q+GVMjpWSEmaoLrhyav9PQvQx8EM3VqsYxyX3p9xsZhwhbGCzrgrLt0DRqd+++AWUoy4xMaz9ZaUGQ9cTL0jeZsAxkjzv+YzjBdC3ekgIDPb3t9PCPHs6fsuk80yFAMs+0EWYVe2ipwxCwhw7ZwyxP8X6+MCDa35GNWxxKOmWaBp+FW7gOHWVjfBYG91Aiv6H1RIO2VeGyWVmiMgrHrHhYL3QoX05JlEZFluMQWLKPL/ZQ2w49L6h1GcOtl3MY5zh6XkxBspGt6y1OJZNmDmP3j/WMtT5Yg3soQhaHpGVB+VThDCX/KoZCnDOxWfJ9C7Uet5H6u9QGhoktQwq2nqNsyqaF0VU4oJT8sF7BDyX9C9ajkEveen+iFOM0+vgKls32KRthKmWvAdfAw8scSlIraFWG33rCRpboceY3ohx+ne1ZHyg2g5Z8d25TAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 1&apos; title=&apos;&apos; src=&apos;/static/8d04f58740341c7a065c4c8d9ccc26ae/ca1dc/img_1.png&apos; srcset=&apos;/static/8d04f58740341c7a065c4c8d9ccc26ae/e7570/img_1.png 170w,
-/static/8d04f58740341c7a065c4c8d9ccc26ae/f46e7/img_1.png 340w,
-/static/8d04f58740341c7a065c4c8d9ccc26ae/ca1dc/img_1.png 680w,
-/static/8d04f58740341c7a065c4c8d9ccc26ae/8aec5/img_1.png 942w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-사용자가 서비스를 탈퇴하면 사용자의 반려 식물을 모두 삭제하고 있습니다. 반려 식물을 삭제하는데 반려 식물 개수만큼 delete 쿼리가 발생한다는 점을 파악했습니다. 또한 반려 식물이 삭제되는 경우 해당 반려 식물의 히스토리까지 함께 삭제하고 있기 때문에 히스토리 개수 만큼 delete 쿼리가 발생한다는 점도 함께 파악했습니다. 히스토리는 서비스 내에서 가장 많이 생성되는 정보이고 생성 주기가 짧은 만큼 많은 데이터가 저장되기 때문에 반드시 개선이 필요한 부분입니다.&lt;/p&gt;
-&lt;p&gt;이 문제의 원인은 JPA의 deleteAll 메서드에 있었습니다. JPA의 deleteAll은 iterator 방식으로 동작하며 엔티티를 삭제하기 전 DB에 조회 쿼리를 실행한 후 삭제합니다. 즉, 50개의 데이터를 삭제한다고 했을 때 50개의 조회 쿼리, 50개의 삭제 쿼리가 발생한다는 것입니다. 또한 히스토리도 함께 삭제하고 있기 때문에 훨씬 더 많은 쿼리가 발생하고 있습니다.&lt;/p&gt;
-&lt;p&gt;삭제 시 조회가 발생하는 이유는 영속성 컨텍스트와 관련 있다는 생각이 들었습니다. 만약 엔티티가 cascade나 orphanRemoval과 같은 다른 엔티티의 생명 주기와 관련이 되어 있는 경우, 해당 엔티티의 영속화가 필요하기 때문에 조회를 한다고 생각합니다.&lt;/p&gt;
-&lt;p&gt;현재 반려 식물 엔티티는 다른 엔티티의 생명 주기와 관련이 없으므로 굳이 영속성 컨텍스트에 로드할 필요가 없습니다. 그러므로 &lt;strong&gt;JPA에서 제공하는 delete를 사용하지 않고 queryDsl의 batch delete를 이용해 한번에 삭제하도록 쿼리를 개선&lt;/strong&gt;했습니다.&lt;/p&gt;
-&lt;h2&gt;DB 인덱스를 적절히 사용하고 있을까?&lt;/h2&gt;
-&lt;p&gt;서비스 내에서 발생하는 쿼리들을 조사하며 인덱스는 적절히 타고 있는지도 함께 알아보았습니다.&lt;/p&gt;
-&lt;p&gt;EXPLAIN 명령어를 이용해 쿼리를 하나씩 실행해 보면 해당 쿼리의 실행 계획을 확인할 수 있습니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;--+-----------+-----+----------+----+-------------+----+-------+----+----+--------+-----------+&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;select_type&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;partitions&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;possible_keys&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;key_len&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;ref &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;rows&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;filtered&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Extra      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;--+-----------+-----+----------+----+-------------+----+-------+----+----+--------+-----------+&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;SIMPLE&lt;/span&gt;     &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;d1_0 &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;ALL&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;   &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;297&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;11.11&lt;/span&gt;   &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;Using&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;--+-----------+-----+----------+----+-------------+----+-------+----+----+--------+-----------+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;위 실행 계획은 &lt;strong&gt;사전 식물 검색 쿼리의 실행 계획&lt;/strong&gt;입니다.&lt;/p&gt;
-&lt;p&gt;사전 식물 검색 쿼리는 &lt;code class=&quot;language-text&quot;&gt;like&lt;/code&gt;를 이용해 다음과 같이 작성되고 있고 DB full scan을 하고 있습니다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/626afba9f90deb761ff33774c6ad1016/566b8/img_2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.29411764705883%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRklEQVR42p2USXODMAyF+f9/rJdOJ43DHrOTAFnYbLL08Corzb34IHvswd886Uk456FHeb6i7Rp07QHjcMH9pnBbZqtwpnnEqGZUVY4iTziqMkV/PVmBHbP8PBYUmUQc+fDdLVyx4fPjrrHoaR3QPDAPm0OJskiRyIj3eertUn4Dc1IUBi6+N58IfEFqPWg12gOPpPBdQwMy9bOq4RtY5BJR6ML3BLIkJmMyNsYaWP+5nCYR1zEMdmiOlb0pNSkyMLkPcOqO3JNqHih6O6BJ8aXMZYPMuWtrXM6tHfBQ5wyU+5B3UwJzd720q8xh4POhuffi0CNjPAaaENsvvn9S4/+3lo6mD5dFkZqCnX61ToqqyMltiaFfN4KObE74iCnd2IfnClK4QxoJyEwgr/z1baPUhJF+EMZRM25aDbjrEXrpofT68fsFo4F1DlCqAjYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 2&apos; title=&apos;&apos; src=&apos;/static/626afba9f90deb761ff33774c6ad1016/ca1dc/img_2.png&apos; srcset=&apos;/static/626afba9f90deb761ff33774c6ad1016/e7570/img_2.png 170w,
-/static/626afba9f90deb761ff33774c6ad1016/f46e7/img_2.png 340w,
-/static/626afba9f90deb761ff33774c6ad1016/ca1dc/img_2.png 680w,
-/static/626afba9f90deb761ff33774c6ad1016/566b8/img_2.png 876w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Full scan을 하기 때문에 데이터가 많아지면 조회 성능이 느려질 수 있다고 판단했습니다. 또한 검색 서비스는 비로그인 사용자도 할 수 있고 서비스의 메인 페이지이기 때문에 개선이 필요하다고 생각했습니다.&lt;/p&gt;
-&lt;p&gt;검색 기능에서 적용할 수 있는 인덱스인 FullText 인덱스를 적용한 후 테스트를 진행했습니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; FULLTEXT &lt;span class=&quot;token keyword&quot;&gt;INDEX&lt;/span&gt; plant_name &lt;span class=&quot;token keyword&quot;&gt;ON&lt;/span&gt; dictionary_plant&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;WITH&lt;/span&gt; PARSER ngram&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;----------------+----------+----------+------------+-----------+---------+-----------+--------+------+----+----------+-------+-------------+-------+----------+&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;Table&lt;/span&gt;           &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Non_unique&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Key_name  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Seq_in_index&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Column_name&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Collation&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Cardinality&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Sub_part&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Packed&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;Null&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Index_type&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;Comment&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Index_comment&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Visible&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Expression&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;----------------+----------+----------+------------+-----------+---------+-----------+--------+------+----+----------+-------+-------------+-------+----------+&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;dictionary_plant&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;PRIMARY&lt;/span&gt;   &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;           &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;id         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;A        &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;317&lt;/span&gt;        &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;BTREE&lt;/span&gt;     &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;             &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;YES    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;dictionary_plant&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;plant_name&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;           &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;name       &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;     &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;317&lt;/span&gt;        &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;YES &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;FULLTEXT  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;             &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;YES    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
-&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;----------------+----------+----------+------------+-----------+---------+-----------+--------+------+----+----------+-------+-------------+-------+----------+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;인덱스를 적용하고 동일한 쿼리를 실행했습니다. 현재 사전 식물은 약 350개입니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/ab6265f8faff938d0533ee92768c4a2d/bbbf7/img_3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 4.705882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVElEQVR42mNwszX77+tk9T8jIfJ/uK/bf3sTnf8edmb/48P8//s4WYPFgtwd/qdEh/yP8HP/7+1o+T82xPd/UmTQ/0CgeIS/+/9kIDshPACo3uo/ANZBJdjd883uAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 3&apos; title=&apos;&apos; src=&apos;/static/ab6265f8faff938d0533ee92768c4a2d/ca1dc/img_3.png&apos; srcset=&apos;/static/ab6265f8faff938d0533ee92768c4a2d/e7570/img_3.png 170w,
-/static/ab6265f8faff938d0533ee92768c4a2d/f46e7/img_3.png 340w,
-/static/ab6265f8faff938d0533ee92768c4a2d/ca1dc/img_3.png 680w,
-/static/ab6265f8faff938d0533ee92768c4a2d/02d09/img_3.png 1020w,
-/static/ab6265f8faff938d0533ee92768c4a2d/bbbf7/img_3.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;위가 FULLTEXT &lt;code class=&quot;language-text&quot;&gt;INDEX&lt;/code&gt;로 조회한 결과이고, 아래가 &lt;code class=&quot;language-text&quot;&gt;like&lt;/code&gt; 쿼리로 조회한 결과입니다. &lt;/p&gt;
-&lt;p&gt;인덱스를 설정했음에도 불구하고 like 쿼리의 실행 결과와 큰 차이가 나지 않음을 확인했습니다. 데이터 개수가 많지 않기 때문에 큰 차이가 발생하지 않았습니다.&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;0.0002s&lt;/code&gt;의 차이는 무의미한 차이라고 판단했고, &lt;strong&gt;사전 식물의 경우 데이터가 아무리 많아도 1000개 이상 생길 수 없다고 판단&lt;/strong&gt;했습니다. &lt;/p&gt;
-&lt;p&gt;또한 인덱스를 사용하는 경우 &lt;strong&gt;DB 내에서 인덱스를 위한 별도의 페이지(저장 공간)가 필요하다는 오버헤드도 존재하기 때문에 like 쿼리를 그대로 사용하는 쪽으로 결정&lt;/strong&gt;했습니다.&lt;/p&gt;
-&lt;h2&gt;N+1&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/25ee7b448cec813bb50204c4621135f0/d8a90/img_4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 168.8235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAiCAYAAABfqvm9AAAACXBIWXMAAAsTAAALEwEAmpwYAAACOklEQVR42q2W23LaQBBE+f+/S5VJuEtCd4EEknZ1IQWd6QnkySHyKrjWFjwcz0z39LIYhwFVVcIYg//xWtzvd1jToLmWsO0VQ2/Rd0YPn6eecejwkJ8FqZ1tkKQxtn6AtiHU6Om7duJpFPp4CJC/+ObnrUdRpAiPHoo8wbU6oZd/5ARke+NgcRKQ722x3fxAHPnuFY7SXiNzjLIUWRrKidDU1Txgaw38JEESH5/A0g0IUaazLS4ys/Kc4Xo563Mtfx2B0OHnIogXxWKhWi1wG3tV31FlEWXskOcpjsFBVWa1+vlg3VVOkyP2uzXWqw9R+jvOp0zbnwEM/wBZKefZNhd3YJ7FCPydeHGnbZ9krrOMTQgrO/p7re4mc50FZIWH/Qa77UpXkBVOU/oT4O0pyma9xPLjm4DXMJI+zrbpBMrE4S5zW6qyUE+673JbIykK8V+usGnq/g0o7VqpMBUg9zjPIpTiQadNeQUsK6ORmTJU2DltGA69hEMhsI0kNmFD305cuTeiMLFzaXe/W8E7bBGKH017nXgVvDF2IKYOZFO4MZ2t5xjbKPB1BXBjOMdZFVJhpgxNzedartZZQKbNerXUORJI5WftMiEUhIeVRqE/P218EYMgJjY3hm07AYenKN5hozOk2kwf58S+acuhpjXji3PkPKn2v03+Jm3oQWZhFHpaLav8MvCVNrGEA/eZ8zsVyRci7JMKjXwVSfJM53ipfoO4ek6JzTv51ZaRSnu9jzsRyk4+ZBD4C/D7N7JRv2v2AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 4&apos; title=&apos;&apos; src=&apos;/static/25ee7b448cec813bb50204c4621135f0/ca1dc/img_4.png&apos; srcset=&apos;/static/25ee7b448cec813bb50204c4621135f0/e7570/img_4.png 170w,
-/static/25ee7b448cec813bb50204c4621135f0/f46e7/img_4.png 340w,
-/static/25ee7b448cec813bb50204c4621135f0/ca1dc/img_4.png 680w,
-/static/25ee7b448cec813bb50204c4621135f0/d8a90/img_4.png 920w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;반려 식물을 조회하는 과정에서 사전 식물 정보를 함께 제공해주고 있습니다. 반려 식물이 사전 식물을 Lazy 하게 가지고 있기 때문에 반려 식물을 조회하고 정보를 응답하는 과정에서 사전 식물을 조회하는 추가적인 쿼리가 발생했습니다.&lt;/p&gt;
-&lt;p&gt;조회 기능이 다른 기능보다 압도적으로 많이 발생하는 저희 서비스에서는 반드시 해결하고 넘어가야 하는 문제였습니다.
-위와 같은 N+1이 발생했던 &lt;code class=&quot;language-text&quot;&gt;히스토리 단건 조회-(기본, 필터링, 페이징)&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;반려 식물 조회&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;리마인더 조회&lt;/code&gt; API에서 사용하는 조회 쿼리를 &lt;strong&gt;fetch join을 이용해 한 번에 조회하여 가져올 수 있도록 변경&lt;/strong&gt;했습니다.&lt;/p&gt;
-&lt;h2&gt;PK를 사용하지 않고 다른 컬럼을 이용해 질의&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/71e4bdedc855b2738ed0889682d1beb0/d2d74/img_6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 131.1764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAaCAYAAAC3g3x9AAAACXBIWXMAAAsTAAALEwEAmpwYAAABnklEQVR42qVV2W6EMAzk/7+vx17sQghHOEO4tw9T22pXqvqWPBgFEKOxxzNEbuxRlhrD0OHYF2zrFFTRtjiYtkFW5LB9g5XuufwBtxkHlVZ3nD7fEN/OYNY7PfMC3LcJg7PQhUZZKJgqxzKP/gyPfUZjLVSu0ZhC2g6aIbMZbYehr9E2Fdq6xDJZf8CJ5pVqhbI2ovLXc5P5+QoTycdUSj2g0jvNMcPkBu8ViuRAbDQB3uMLLud3EadrjZc4Asjt6SzB7Xoi0LOAMUtvhgyY60R2sMiZXYWZhPHZxT8Mr5cPZDRHX3b/AOPbCTG1bcjbQQy3lQEfwvBBwtih/VHZ+VnPuhFFmQsz9nGQ9Z4/1tNlIdZryCmT6+mlZzisC1mPWHWdQU2ArPBoW3+G3GKSKVRNjeexSvlG18t6Cx2USmRlmKWvwi+Vl9mh0KmozG4JClhO69YOFLA5uqaSKAvKQwYcJmJIKpsyE5XXkLXh9jj2e0pq3j+2XdhPij5WVYXMUMDSkoco/Gq5G0ektDqO5hcMuNNlIpVFjIBWfwG/Ab3pzXomcuh8AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 6&apos; title=&apos;&apos; src=&apos;/static/71e4bdedc855b2738ed0889682d1beb0/ca1dc/img_6.png&apos; srcset=&apos;/static/71e4bdedc855b2738ed0889682d1beb0/e7570/img_6.png 170w,
-/static/71e4bdedc855b2738ed0889682d1beb0/f46e7/img_6.png 340w,
-/static/71e4bdedc855b2738ed0889682d1beb0/ca1dc/img_6.png 680w,
-/static/71e4bdedc855b2738ed0889682d1beb0/02d09/img_6.png 1020w,
-/static/71e4bdedc855b2738ed0889682d1beb0/d2d74/img_6.png 1152w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/820f2411577d0046763b69bfa418d3a1/bbbf7/img_5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA90lEQVR42o1RXW+EMAzj///I3Z3GTf2mFFooL14dDoY06bYHK03qOk7aWVdg/YJhrMhLxTTNKCUj54x1XVFrlfhfdEEFmN7gSw149BYftzs++ydu9we01hjH8RTetu2CPWf92rRLU4LzDiF4DEOA976JpHYeYK2Dc05EU5oap9UcueSFxomCGMeLYEpC3C+iCB2R4GNCHsedwwYUYeOj2SlIgjYGxlhxx848K6VhW6RD3rPOvV7HrHX9PTI7hJeTeDqIIu68P11urx3++Sm+kcWNpRsve2OulBJndEnHWhu5z7m8FyylYJ5nGecA8yt+ahnLsrwV/AYQ/mXD9UuYSAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 5&apos; title=&apos;&apos; src=&apos;/static/820f2411577d0046763b69bfa418d3a1/ca1dc/img_5.png&apos; srcset=&apos;/static/820f2411577d0046763b69bfa418d3a1/e7570/img_5.png 170w,
-/static/820f2411577d0046763b69bfa418d3a1/f46e7/img_5.png 340w,
-/static/820f2411577d0046763b69bfa418d3a1/ca1dc/img_5.png 680w,
-/static/820f2411577d0046763b69bfa418d3a1/02d09/img_5.png 1020w,
-/static/820f2411577d0046763b69bfa418d3a1/bbbf7/img_5.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;회원을 삭제 기능에서 회원 ID로 삭제하지 않고 unique 컬럼인 kakaoId로 조회한 후 회원을 삭제하고 있음을 확인했습니다.&lt;/p&gt;
-&lt;p&gt;회원 객체가 이미 영속화되어 있는 상황에서 PK가 아닌 unique 컬럼으로 조회 후 삭제 질의를 날렸기 때문에 추가적인 select가 발생했고 &lt;strong&gt;PK를 이용해 삭제하도록 변경&lt;/strong&gt;했습니다. (OSIV가 켜져 있기 때문에 withdraw 메서드가 호출되는 시점에 member는 영속화가 되어 있습니다)&lt;/p&gt;
-&lt;h2&gt;Pagable 사용 시 불필요한 count 쿼리 발생&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/394ef40bb066ff254a206c8f2e6e815e/8d021/img_7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 133.52941176470588%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAYAAAB836/YAAAACXBIWXMAAAsTAAALEwEAmpwYAAACiklEQVR42rVUS28SURjlN7l269q46Na41eCSRBe6MS5csJSEtCZQkzYFmkKHN8yUxnTRpJvuWNc2hvAQaadQhuF4z9WP3CFhrLVOcubc13e+152JlMtlFItF7O3tIZ/Pg/N/QaReryOdTiMajSIWi4HzUql0d0G+KLC1tYVUKoVaraYjlvXbIiBIVKtVLZTNZtFs2kq4rrnRaCo01PgXM4NlMIiAIMUymQzi8TiSyXVs72zgXfwl1j990AaZnQw2Nzexu7sLx3HQarVweHiISqWi7XiG40CERKFQwMdEAq/eP8PT2COsPX+I7VwK5VIVlrWvIzw4ONCgsG3bmomFIAcEo6Tg+sYG3r55gSePHyD6eg2VehHWvqX3aCAREqxdLpfTe0ybOosIObEsS6X2GQ1Vv3QygWIhr6JpLbzTiLVkZARTZSDEIkIeMMG0HMfGl6MjOErMVmuSlqQpMNfFPjKZTCAYj8dwXRc3Nzd6TMi6Ce4LTHsignt+FoLz+VzDfPr9Pnq9HjqdDgaDAc7OztDtdgNnlm0Cgr7vLzZmsxlOT09xcnKC4+NjtNttXTeOTSHTJiD4X1JmQ+jx8vJS89XVlWYW2/M8PWfkbAz5+vo6XJBdI9OAPJ1ONVNM5nQg57i+UvBvnlX1u7Mg05WIQwXlID2TZS6pydzkUEGp2TKzZiJIZ+Z+aFOk6NIEsu6m6j6Z3Zbuktn1P3aZgmaqHPMaed4Uo+EQnnL6YzTSzvn1rBSkkHgeKQO5j5zzfk4HPbgX5/B5hjX+nUmooFxceiYPVUSMmt/0+NsFRudf4Q2/Y6KikwsemrKZqsmMyOfvSon5My9wwW+VsrC71AyX68qJee5eLnbYz+EngPK1ezdhIggAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 7&apos; title=&apos;&apos; src=&apos;/static/394ef40bb066ff254a206c8f2e6e815e/ca1dc/img_7.png&apos; srcset=&apos;/static/394ef40bb066ff254a206c8f2e6e815e/e7570/img_7.png 170w,
-/static/394ef40bb066ff254a206c8f2e6e815e/f46e7/img_7.png 340w,
-/static/394ef40bb066ff254a206c8f2e6e815e/ca1dc/img_7.png 680w,
-/static/394ef40bb066ff254a206c8f2e6e815e/8d021/img_7.png 902w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/333ceb673850ac1c3b6a4674837c1c6d/7bff9/img_8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 107.6470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsTAAALEwEAmpwYAAACMUlEQVR42p1V2Y7bMAzM/39eC2Sby44P2ZIsyfeR7cOUZNZBDyCN8zAJYdjj0QxJ7ypbIk1j5CrDMg2Ypx7T2Mn/O9iNfYOysrjkBZrGy8XP24zbMr5HeCeYYHSO43GPODohSyMEb+T6Mg/bCfkhOfo1QhKfcT59IM+uaGqHllRvseBBqMscp9MPRKTQVaW8oCwyqjXGod1GeCNCRwQRKyw1KfMY+lpu2OqlEI5jD60VHXWPj/03wnfxse/q7aEs9BM6TrpC1zjU5FsdKqxWrDeyj694+SCMVYFLksA7I1iPusyj1CuW/1iwW4vgKyR5Jk1+pnDi6IjL+QBrCknbVUYCYvXPQtrd5h421NAhoCcvfXDw9KCnpFe1DCa25HPw9jmh+EOwRiGJDoguh0dzF/kVPEnc4Iz12M89JIW+aZDqEgUpqKyWo62q6poConDWUB5ggq+Qfg9rx0lOPCnkoaIFwQ1eqhSl0TBNC+UDDMGSFbnzKKlmGLLI1wHKOWgagNWGHaspiMDaAvMy/JHkO1tHto0yBuckR2ctajKdE98ybn+lPKAduG1oCTgrvm2d339Dae+NnagcjsLg1fXzc5YZX298dY1J2wzklaHGjdMUhhQqWl0cDnvbtUG8HMgaxjSy8u756NVdC1ffU+NPQXo9I0suMjUSGL+EepLB9dPGllluW+TUh6bMaHMraXL2sQlWjsqQ9L/ql/ZhFzRUekEcn5CQwjyLZXt7p4Xk1W3zCzeTj1pu9gFrAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 8&apos; title=&apos;&apos; src=&apos;/static/333ceb673850ac1c3b6a4674837c1c6d/ca1dc/img_8.png&apos; srcset=&apos;/static/333ceb673850ac1c3b6a4674837c1c6d/e7570/img_8.png 170w,
-/static/333ceb673850ac1c3b6a4674837c1c6d/f46e7/img_8.png 340w,
-/static/333ceb673850ac1c3b6a4674837c1c6d/ca1dc/img_8.png 680w,
-/static/333ceb673850ac1c3b6a4674837c1c6d/7bff9/img_8.png 874w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-피움 서비스의 물 주기 기능에서 validation을 진행하고 있습니다. 해당 반려 식물의 물주기 히스토리에서 마지막 물주기 이전, 즉 최신 물주기 히스토리 중 2번째 기록을 이용해 잘못된 요청을 하지 않도록 검증하고 있습니다. 그러므로 두 번째 히스토리를 조회하는 쿼리를 질의하고 있습니다. Pagable 객체를 이용해 이 쿼리를 질의하고 반환 타입을 Pagable로 반환받습니다.&lt;/p&gt;
-&lt;p&gt;그렇기 때문에 Pagable 객체에 필요한 총 데이터 수를 가져오는 count 쿼리가 발생합니다.&lt;/p&gt;
-&lt;p&gt;페이징이 필요 없는 기능에서 페이징 객체를 반환받고 있으므로 &lt;strong&gt;Pagable 대신 Slice 객체를 반환받도록 변경하여 count 쿼리가 발생하지 않도록 개선&lt;/strong&gt;했습니다.&lt;/p&gt;
-&lt;h2&gt;애플리케이션 단에서 처리할 수 있는 로직을 DB로 질의&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/337b116ca22b4d31585c6062eb202f76/bbbf7/img_9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 89.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAABiUlEQVR42q1US26DQAzlSL1Cz9AT9B5ddtVVpS56jW56n0QiCX+GYYCBmeHVJoIQhSZRqSVLHts8PfzzMBMhFfzdDrppJl9D9uFwwH6/R9u2k7/SNXaHHZI4mUPA6/serCzW9eg6M71Nb6FtB2ssjDn5WRzZnTnGzgDzPIcQAksibY2oKwDCMdYMoLfEi+N4MVFrjThLkJkSYRiC84qiuA1orT37lVHYp00L5Ro46zAvzVXAa0GCQWokgjDAdrtFlmXrAG3voGxDjeqGEvwLw9woJEkC3/cRRdF6hpXTaOpmaAizXM1QEEMeqzA4dloptZ5hRSBpml4M999qWEsUokBOLLmW3KBVgLJVxLAa2LE6564DlmW5mGSIiVCS1k+j1S2klGfH4VdALvISoKXtkGWOtBJ0cTR1WdwHeOnqx93Dx/Mj3p4e0NGpGn13ATLD+YFgdiUx+v58xdf7CxTZzp3AuDF8A+Y3c/ze4wfPWRAEQ4CHl+3NZjN9wN3lLeEYK18f1vHNuWP8B3XwhPq8mvhbAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 9&apos; title=&apos;&apos; src=&apos;/static/337b116ca22b4d31585c6062eb202f76/ca1dc/img_9.png&apos; srcset=&apos;/static/337b116ca22b4d31585c6062eb202f76/e7570/img_9.png 170w,
-/static/337b116ca22b4d31585c6062eb202f76/f46e7/img_9.png 340w,
-/static/337b116ca22b4d31585c6062eb202f76/ca1dc/img_9.png 680w,
-/static/337b116ca22b4d31585c6062eb202f76/02d09/img_9.png 1020w,
-/static/337b116ca22b4d31585c6062eb202f76/bbbf7/img_9.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/65b0642debc20ccfcf225dd8fecc7370/600ec/img_10.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 117.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAXCAYAAAALHW+jAAAACXBIWXMAAAsTAAALEwEAmpwYAAACGUlEQVR42qVV2Y7bMBDz/39gC6TbJOtbhy3fR7AAy5nY6TbtooDzMJFsKZSG5Iyjrq0RpzGst1iXEfPUvxTROvewISC3Bj3BXwaUn27okGYJ4vcznCthTQ5ni23MYcoMns9VZWHq6rHuubfIE523TYVlHjbAvoPnxrbxulB4D1sfu23UESBO3uGUw0FPeSnlhT9t3+I9iVEWKULtMPTNaxwuFCZLLjidvuEHQ3gRxaexO3bDummQm0LJ3W/Zd+Ggbchb1VHlgsqZTAENQ8Q5BCg3qb3RaEKlQKL2/EW60/Pz075oGhqc0wyZc/i4zcrdbZ2wcFw/hTyLA1aJP9am+/rmjkgEGUaKQiGy5Mpb0ovBoSGPNY0casvRKK+SQd2E7b3TEHN/5jySE9uegMbAsiIqXyIrCxS2JIDTA+5gYvoaoQ0630MOk3G3mnIopwh3wsdICkLXoGU57qnuKT2nvDzNFXAkcloUSKiyXls38c9fqPhfUQT5to5Iaey303fE15/qx/lgCWql9EOroiTxGdfLmwIerWlV2bEfZmWpikprqvyd6OP9kO3LOarMSpHbOYIebRDaviRdaV/yYmT6Ei+1r8JX/ARYTATa7bFv2OeP8R/v/gIcxwE5G0ISX5S/ir70W4jRhQatdxrcsZP/XjP6eZBRPnb6CRDA0LUo3VZiLKucc1Pd3S/elJD5wEY8MIv9+bHG2P34C1zL4ijlVBMZAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 10&apos; title=&apos;&apos; src=&apos;/static/65b0642debc20ccfcf225dd8fecc7370/ca1dc/img_10.png&apos; srcset=&apos;/static/65b0642debc20ccfcf225dd8fecc7370/e7570/img_10.png 170w,
-/static/65b0642debc20ccfcf225dd8fecc7370/f46e7/img_10.png 340w,
-/static/65b0642debc20ccfcf225dd8fecc7370/ca1dc/img_10.png 680w,
-/static/65b0642debc20ccfcf225dd8fecc7370/02d09/img_10.png 1020w,
-/static/65b0642debc20ccfcf225dd8fecc7370/600ec/img_10.png 1126w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;반려 식물을 생성, 환경 변화, 물 주기 등 반려 식물과 관련된 이벤트가 발생했을 때 히스토리를 저장하고 있고, 한 동작에서 여러 히스토리가 생성되고 있습니다. 히스토리를 저장할 때 어떤 히스토리인지 히스토리 카테고리를 이용해 구분합니다. 이때 해당 카테고리가 DB에 존재하는지 확인하고 저장하기 때문에 카테고리 조회가 발생합니다. 현재 카테고리가 총 6개 존재하고 요구사항으로 카테고리가 추가적으로 생길 가능성이 많고 그에 따라 발생하는 쿼리는 증가할 것입니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryCategory&lt;/span&gt; historyCategory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; historyCategoryRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findByHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
-                historyEvent&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;NoSuchElementException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;일치하는 카테고리가 없습니다&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;그러므로 히스토리를 생성하는 시점에 모든 카테고리를 조회한 후, 애플리케이션 단에서 검증하도록 변경했습니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryCategory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; categories &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; historyCategoryRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token class-name&quot;&gt;HistoryCategory&lt;/span&gt; historyCategory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; categories&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;it &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; it&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; historyEvent&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAny&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;NoSuchElementException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f64b382df097ec78f4d880c99d6c5df6/bbbf7/img_11.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 91.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC20lEQVR42pVUy27bMBDM5/av+gU99VAU6DWoU6R5uKmTNLFlW5ZFPShRFPWWPN2lVSUGckgFrEmR6+HszlBnoOfm8we4tx95imHocDgcpvjf54x/vOUXqGhuF94Dwik9xVuZZ33fY7la4/fiHovFHa6vf+LH7DvWzgrz+Q3CMHj3QRPg2lkijkJEUQQhfOz3HuI4smBlWVIbBnTdsRU8n61rfLoxcNNuYjwBcpLWOZqmscmv62rHNd7TWqPtWjQU96LC+apAqBmQDhn7zbm2h77uIZVGmkgwY7tJo/f8gIyY8zFCRdgnIQIVI9Yhilq/OvtFRAu4iluIWEFQqVw2l8cMnV9XkN4W3UBtCfdYChdhJiFzDVUYYtyhGwmcAAqiLlVuGSYUdV1TmTWU+4jwzxWM9KFNCl0QkNHIywK6NEhNhqzM7eEngE9RCy+Q8HZbeJ6H7XYDlSYIFzM4F1+h98/opYND17yU+KadRsCsGlDWDSlaoKBS8vwoUpUK5KGLWifIPQeGlM+SxO4XxkApBUPzsijs+wSoawKsapvY96MVSLFKhTAEWBCgK4g59XPru/AigSCNEVE/k1wh0QppnpHao8rS9FC6sGX2XT9ewQGKQEzCIjVWDEEKCwah3iUEULcNehKMg4WbbMMq76Nk7OHuaGJK8O5m2M3PoaXAJg5I5Q2e/DVEGsGTgY1dLODGvhVoKjkpBpiyhjE5pIxR0e1gw5pwC7V7Qp4GiBR7r0ReFRTGjobeWWUzzidAP+uQZAaZSq0P2TLcQ7ZNvJyjJMAql6joT3XboqL9sqnsAVVb29IPr1Vekm38KIXvuXDd7XhTOojFBTaX35D6DpUZUokCoZKWETNkL/KcQU98uB8ZJmQLScYe7L0kobb3iB4vUcR7lDoiJxTE7MjoXzTEmNnyOAE6cWMZBvSl2e1caLpa7H7v4RaB84C2rmAIiBlp6ll+wrC0awzOX5u/eGxosRaBAu8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 11&apos; title=&apos;&apos; src=&apos;/static/f64b382df097ec78f4d880c99d6c5df6/ca1dc/img_11.png&apos; srcset=&apos;/static/f64b382df097ec78f4d880c99d6c5df6/e7570/img_11.png 170w,
-/static/f64b382df097ec78f4d880c99d6c5df6/f46e7/img_11.png 340w,
-/static/f64b382df097ec78f4d880c99d6c5df6/ca1dc/img_11.png 680w,
-/static/f64b382df097ec78f4d880c99d6c5df6/02d09/img_11.png 1020w,
-/static/f64b382df097ec78f4d880c99d6c5df6/bbbf7/img_11.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;현재 서비스에서 사용하는 쿼리를 정리하고 개선이 필요한 쿼리는 모두 개선을 마쳤습니다.&lt;/p&gt;
-&lt;p&gt;또한 각 쿼리에서 사용하는 인덱스 설정을 확인하였고 인덱스 설정이 필요한 쿼리는 실행 계획을 통해 확인했습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 26 Sep 2023 05:13:22 GMT</lastBuildDate><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우아한테크코스 5기, 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/bassyu&quot;&gt;쵸파&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -266,11 +74,10 @@
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;이제 CDN이 보내주는 리소스 헤더에 Cach-Control이 더해져서 HTTP 캐시가 적용됩니다! 🎉&lt;/p&gt;
-&lt;p&gt;그런데 원래 리소스가 캐싱되고 있을 때, 새로운 버전이 업데이트되면 캐시를 어떻게 지울까요?
-클라이언트는 설정해 준 시간이 지나지 않으면 이전 리소스를 계속 캐싱합니다.&lt;/p&gt;
 &lt;h3&gt;캐시 버스팅&lt;/h3&gt;
-&lt;p&gt;클라이언트는 GET 요청을 할 때 URL이 다르면 다르면 다른 리소스라고 판단할 수 있습니다.
-그래서 &lt;strong&gt;새로운 버전의 URL이 바뀔 수 있도록 번들에 해시&lt;/strong&gt;를 줘서 캐시 버스팅을 했습니다.&lt;/p&gt;
+&lt;p&gt;클라이언트는 설정해 준 시간이 지나지 않으면 동일한 URL의 GET 요청에는 항상 캐시가 적용됩니다.
+새로운 버전이 업데이트되면 원래의 캐시를 어떻게 지울까요?&lt;/p&gt;
+&lt;p&gt;피움은 &lt;strong&gt;새로운 버전의 URL이 바뀔 수 있도록 번들에 해시&lt;/strong&gt;를 줘서 캐시 버스팅을 적용했습니다.&lt;/p&gt;
 &lt;p&gt;아래는 번들 파일에 해시를 주는 webpack.config 설정입니다.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// webpack.config.js
 
@@ -297,10 +104,10 @@ webpack 설정으로 청크를 어떻게 나눌지는 커스텀할 수 있습니
 &lt;p&gt;만약 하나의 청크에 하나의 파일이 나온다면 chunkhash를 줘도 무방합니다.
 하나의 청크에서 .js .css 처럼 여러 파일이 나온다면 contenthash로 더욱 뾰족하게 해싱할 수 있습니다.&lt;/p&gt;
 &lt;h3&gt;index.html은 예외&lt;/h3&gt;
-&lt;p&gt;index.html 파일은 이름이 바뀌면 안 됩니다.
-보통 URL을 입력할 때 &apos;www.pium.life/new-index.html&apos; 이런 식으로 접근하지 않기 때문입니다.&lt;/p&gt;
-&lt;p&gt;파일이 신선하지 않음을 파일이름으로 판단하기 힘들기 때문에
-CloudFront의 동작 우선순위에서 예외처리해서 해결했습니다.&lt;/p&gt;
+&lt;p&gt;index.html 파일은 해시를 주면 안됩니다.
+유저가 저희의 서비스를 들어올 때 &apos;www.pium.life/index.hash.html&apos;이런 식으로 요청하지 않기 때문입니다.&lt;/p&gt;
+&lt;p&gt;다른 리소스와는 달리 파일이 신선하지 않음을 URL로 판단하기 힘들기 때문에
+CloudFront의 동작으로 예외처리해서 해결했습니다.&lt;/p&gt;
 &lt;h4&gt;새로운 동작 생성&lt;/h4&gt;
 &lt;p&gt;index.html을 위한 동작을 위해 경로 패턴에 &apos;/index.html&apos;을 적어줍니다.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
@@ -342,15 +149,16 @@ CloudFront의 동작 우선순위에서 예외처리해서 해결했습니다.&l
 응답 헤더 정책에서 Cache-Control의 s-maxage를 통해 CDN에서만 캐싱을 적용하고, 배포할 때 무효화를 해줄 수 있습니다.&lt;/p&gt;
 &lt;p&gt;다만 무효화를 자동으로 하기 위해서는 추가적인 IAM 권한이 필요하고, 속도 차이가 크지 않음을 확인해서 아직 적용하지 않았습니다.&lt;/p&gt;
 &lt;h3&gt;HTTP 캐시를 한 달로 설정한 이유&lt;/h3&gt;
-&lt;p&gt;설정을 한 달로 하면 한달 후에는 같은 리소스도 새로 요청을 보냅니다.
+&lt;p&gt;설정을 한 달로 하면 한달 후에는 같은 리소스도 다시 검증해야합니다.
 왜 캐싱하는 시간을 최댓값인 1년으로 하지 않았을까요?&lt;/p&gt;
 &lt;p&gt;HTTP 캐시는 사용자의 디스크나 메모리에 리소스를 저장합니다.
-만약 max-age를 최대값인 1년으로 설정하면 새로운 버전의 해시가 배포되어도 사용자는 이전 버전의 리소스를 1년간 가지고 있게 됩니다.&lt;/p&gt;
-&lt;p&gt;그래서 서비스 배포 주기에 맞는 적절한 기간을 논의하여 한 달로 설정하였습니다.&lt;/p&gt;
+만약 max-age를 최댓값인 1년으로 설정하면 새로운 버전의 해시가 배포되어도 사용자는 이전 버전의 리소스를 1년간 가지고 있게 됩니다.&lt;/p&gt;
+&lt;p&gt;그래서 서비스 배포 주기에 맞는 적절한 기간을 논의하여 한 달로 설정하였습니다.
+소중한 고객님이 불필요한 리소스를 1년간 저장할 필요는 없으니까요!&lt;/p&gt;
 &lt;h2&gt;정리&lt;/h2&gt;
 &lt;p&gt;HTTP 캐시는 처음 접해보는 분야이고 index.html은 예외를 줘야 한다는 점이 흥미로웠습니다!
-캐시하는 기간도 길다고 무조건 좋은게 아니었습니다.
-네트워크 트래픽을 줄이고 더 빠른 사용자 경험을 줄 수 있어서 뿌듯한 경험이었습니다.&lt;/p&gt;
+캐시 기간도 길다고 무조건 좋은 게 아니었습니다.
+결과적으로 네트워크 트래픽을 줄이고 더 빠른 사용자 경험을 줄 수 있어서 뿌듯한 경험이 되었습니다.&lt;/p&gt;
 &lt;h3&gt;참고한 자료&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&quot;https://toss.tech/article/smart-web-service-cache&quot;&gt;웹 서비스 캐시 똑똑하게 다루기&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 최적화하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/optimize-frontend/</link><guid isPermaLink="false">https://pium-official.github.io/optimize-frontend/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/hozzijeong&quot;&gt;클린&lt;/a&gt;&apos;가 작성했습니다. 이미지 최적화는 참새가 숟가락 얹었어요.&lt;/p&gt;
@@ -714,7 +522,199 @@ filenames&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span 
 &lt;p&gt;SVG &lt;code class=&quot;language-text&quot;&gt;&amp;lt;use&gt;&lt;/code&gt; elements don’t currently have any way to ask for cross-origin permissions. They just don’t work cross-origin, at all. - &lt;a href=&quot;https://oreillymedia.github.io/Using_SVG/extras/ch10-cors.html#:~:text=SVG%20%3Cuse%3E%20elements%20don%E2%80%99t%20currently%20have%20any%20way%20to%20ask%20for%20cross-origin%20permissions.%20They%20just%20don%E2%80%99t%20work%20cross-origin%2C%20at%20all.&quot;&gt;cors&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;따라서 html에 직접 삽입하는 방법밖에 없었는데, 그렇게 된다면 icon이 추가될 때마다 &lt;code class=&quot;language-text&quot;&gt;index&lt;/code&gt;파일을 바꿔야 하는 번거로움이 있었습니다. SPA로 구현하고 있는 상황에서 불특정한 상황에 따라 &lt;code class=&quot;language-text&quot;&gt;index&lt;/code&gt; 파일이 바뀌는 게 괜한 거부감이 있어서 현재는 리액트 컴포넌트로 삽입하고 있는데, 이 방법이 맞는지는 여전히 의문이긴 합니다. (icon 같은 경우에는 그렇게 많이 바뀌는 것이 아니라 상관이 없을 것 같다는 생각이 있어서 그냥 넣어도 되지 않을까 생각하기도 합니다.)&lt;/p&gt;
-&lt;p&gt;또 하나의 아쉬운 점은 SVG Sprite를 사용함으로써 파싱할 코드의 양이 줄어들어서 사용자에게 감동을 주는 정도로 변화가 있을까 생각했지만, 번들 크기는 30kb가 줄었고 (압축 전) 기능상 큰 변화는 없는 것 같아서 약간 아쉬운 결과를 남겼습니다. 최적화 수업 때 망치를 들면 뭐든지 못으로 보인다고 했는데 저는 오함마를 들고 서비스를 다지려고 하지 않았나 생각이 들었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[톰캣 스레드 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 우아한테크코스 레벨4 5차 데모데이 요구사항으로부터 Tomcat Thread의 적절한 설정값에 대해 고민하게 되었다.  현재 피움 서비스는 Tomcat의 Thread…]]></description><link>https://pium-official.github.io/tomcat-thread-config/</link><guid isPermaLink="false">https://pium-official.github.io/tomcat-thread-config/</guid><pubDate>Wed, 20 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;또 하나의 아쉬운 점은 SVG Sprite를 사용함으로써 파싱할 코드의 양이 줄어들어서 사용자에게 감동을 주는 정도로 변화가 있을까 생각했지만, 번들 크기는 30kb가 줄었고 (압축 전) 기능상 큰 변화는 없는 것 같아서 약간 아쉬운 결과를 남겼습니다. 최적화 수업 때 망치를 들면 뭐든지 못으로 보인다고 했는데 저는 오함마를 들고 서비스를 다지려고 하지 않았나 생각이 들었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[서비스 내에서 발생하는 쿼리를 분석하고 개선하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/query-analysis/</link><guid isPermaLink="false">https://pium-official.github.io/query-analysis/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움 서비스의 런칭 페스티벌을 무사히 마쳤습니다.&lt;/p&gt;
+&lt;p&gt;런칭 일정에 맞춰 빠르게 개발을 진행하다 보니 꼼꼼하지 못한 부분이 존재했고, 다음 개발에 착수하기 전 부족한 부분을 개선하고 넘어가기로 했습니다.&lt;/p&gt;
+&lt;p&gt;먼저 서비스 내에서 발생하는 모든 쿼리를 정리해보았습니다.&lt;/p&gt;
+&lt;p&gt;현재 서비스의 모든 기능을 인수 테스트로 작성했기 때문에 인수 테스트를 하나씩 돌려보며 발생하는 쿼리를 추적했습니다.&lt;/p&gt;
+&lt;p&gt;JPA를 사용하는 환경에서 스프링 properties 설정 중 아래 옵션을 설정하면 쿼리를 확인할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;properties&quot;&gt;&lt;pre class=&quot;language-properties&quot;&gt;&lt;code class=&quot;language-properties&quot;&gt;&lt;span class=&quot;token key attr-name&quot;&gt;spring.jpa.show-sql&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token value attr-value&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;token key attr-name&quot;&gt;spring.jpa.properties.hibernate.format_sql&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token value attr-value&quot;&gt;true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/9278616bd57f30e75430b64b89399923/bbbf7/img.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 70.58823529411764%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVR42p1T2W6DMBDk/x/7RX2t+gFN1CYctgngA3BIuDO1DSFVGrUKK61Ya/F4Zsf2ePwBSgkoIdjtvhBFIYqigIvLBeM4Tmlqu66aEQc9QDcXPAovyxLUdY1hGND3vcsFwETXda7fdb1ZjXgPa7y85ngLatcf73C9tm1RlgWUkobArZsxApUeXN22jTvE9q//XOtrur5JB6h1CSkETqeTY2qDRz546M/wd5vn/AVovp6VI6VEHDMEgY/z+ewg9v4GjAaTrB/s/stFspQCygALw7SqjiCSQhzl84BNc2PIGEUYBNBliW38CSbj9QzTxLg9y7UNlhIIlc5OPsWwMQ4rd//SNFlcnGbor5Hc4Kj1Irs0cm2EnKyboXXZvgxGKXx/bwypHMiGbsFEvI6hvYeCc2RZ6jZPDCPwUqxzOc9z85YjBIahNckxJGaGgq1weWZonc5ztcxQZQfkPHn4zP4C/Aar/0Pc9UXs+QAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img&apos; title=&apos;&apos; src=&apos;/static/9278616bd57f30e75430b64b89399923/ca1dc/img.png&apos; srcset=&apos;/static/9278616bd57f30e75430b64b89399923/e7570/img.png 170w,
+/static/9278616bd57f30e75430b64b89399923/f46e7/img.png 340w,
+/static/9278616bd57f30e75430b64b89399923/ca1dc/img.png 680w,
+/static/9278616bd57f30e75430b64b89399923/02d09/img.png 1020w,
+/static/9278616bd57f30e75430b64b89399923/bbbf7/img.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;현재 서비스에서 사용하고 있는 API에서 발생하는 쿼리를 위와 같이 정리하였고 개선이 필요한 부분, 개선이 불필요한 부분을 먼저 구분했습니다.&lt;/p&gt;
+&lt;p&gt;개선이 필요한 원인들은 아래와 같습니다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;batch로 진행할 수 있는 작업을 단건 질의 여러 번 실행&lt;/li&gt;
+&lt;li&gt;DB 인덱스를 적절히 사용하고 있지 않음&lt;/li&gt;
+&lt;li&gt;PK를 이용해 조회/삭제/수정을 할 수 있음에도 PK를 사용하지 않고 다른 컬럼을 이용해 질의&lt;/li&gt;
+&lt;li&gt;N+1 발생&lt;/li&gt;
+&lt;li&gt;Pagable 사용 시 불필요한 count 쿼리 발생&lt;/li&gt;
+&lt;li&gt;애플리케이션 단에서 처리할 수 있는 로직을 DB로 질의&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;생각보다 개선할 수 있는 부분이 많았습니다.&lt;/p&gt;
+&lt;p&gt;개발 당시에 꼼꼼하게 코드 리뷰를 했다고 생각했었지만...!! 쿼리를 더 꼼꼼히 확인하지 못했던 점이 아쉬웠습니다.&lt;/p&gt;
+&lt;p&gt;위와 같은 문제가 발생한 이유를 하나씩 알아보았습니다.&lt;/p&gt;
+&lt;h2&gt;batch로 진행할 수 있는 작업을 단건 질의 여러 번 실행&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8d04f58740341c7a065c4c8d9ccc26ae/8aec5/img_1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 175.29411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAjCAYAAACU9ioYAAAACXBIWXMAAAsTAAALEwEAmpwYAAACCklEQVR42q1W226jMBTM/3/dSq20iRIId2wD5mYgeZrOcdq0u2/BfbCjWGKYc87MmMM89SiLDHF6RdsauLnHts6712FbJoxjj6SqURDYdgaLG7HyfBegPHi/LXCTRZpEKPIE1/iMrtX+/HWG3G6bg7UNTsd3nP6+IbqcPGhVZh54F+DQt0iuEXKlsPG/nLt5eLn0J+BIwJjMLtEZcXRCXeW7+ugBZzehNIYgGctMOfUU02j9i14GlIfWbYHqLGWjfenCdg+YB5Q+GVMjpWSEmaoLrhyav9PQvQx8EM3VqsYxyX3p9xsZhwhbGCzrgrLt0DRqd+++AWUoy4xMaz9ZaUGQ9cTL0jeZsAxkjzv+YzjBdC3ekgIDPb3t9PCPHs6fsuk80yFAMs+0EWYVe2ipwxCwhw7ZwyxP8X6+MCDa35GNWxxKOmWaBp+FW7gOHWVjfBYG91Aiv6H1RIO2VeGyWVmiMgrHrHhYL3QoX05JlEZFluMQWLKPL/ZQ2w49L6h1GcOtl3MY5zh6XkxBspGt6y1OJZNmDmP3j/WMtT5Yg3soQhaHpGVB+VThDCX/KoZCnDOxWfJ9C7Uet5H6u9QGhoktQwq2nqNsyqaF0VU4oJT8sF7BDyX9C9ajkEveen+iFOM0+vgKls32KRthKmWvAdfAw8scSlIraFWG33rCRpboceY3ohx+ne1ZHyg2g5Z8d25TAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 1&apos; title=&apos;&apos; src=&apos;/static/8d04f58740341c7a065c4c8d9ccc26ae/ca1dc/img_1.png&apos; srcset=&apos;/static/8d04f58740341c7a065c4c8d9ccc26ae/e7570/img_1.png 170w,
+/static/8d04f58740341c7a065c4c8d9ccc26ae/f46e7/img_1.png 340w,
+/static/8d04f58740341c7a065c4c8d9ccc26ae/ca1dc/img_1.png 680w,
+/static/8d04f58740341c7a065c4c8d9ccc26ae/8aec5/img_1.png 942w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+사용자가 서비스를 탈퇴하면 사용자의 반려 식물을 모두 삭제하고 있습니다. 반려 식물을 삭제하는데 반려 식물 개수만큼 delete 쿼리가 발생한다는 점을 파악했습니다. 또한 반려 식물이 삭제되는 경우 해당 반려 식물의 히스토리까지 함께 삭제하고 있기 때문에 히스토리 개수 만큼 delete 쿼리가 발생한다는 점도 함께 파악했습니다. 히스토리는 서비스 내에서 가장 많이 생성되는 정보이고 생성 주기가 짧은 만큼 많은 데이터가 저장되기 때문에 반드시 개선이 필요한 부분입니다.&lt;/p&gt;
+&lt;p&gt;이 문제의 원인은 JPA의 deleteAll 메서드에 있었습니다. JPA의 deleteAll은 iterator 방식으로 동작하며 엔티티를 삭제하기 전 DB에 조회 쿼리를 실행한 후 삭제합니다. 즉, 50개의 데이터를 삭제한다고 했을 때 50개의 조회 쿼리, 50개의 삭제 쿼리가 발생한다는 것입니다. 또한 히스토리도 함께 삭제하고 있기 때문에 훨씬 더 많은 쿼리가 발생하고 있습니다.&lt;/p&gt;
+&lt;p&gt;삭제 시 조회가 발생하는 이유는 영속성 컨텍스트와 관련 있다는 생각이 들었습니다. 만약 엔티티가 cascade나 orphanRemoval과 같은 다른 엔티티의 생명 주기와 관련이 되어 있는 경우, 해당 엔티티의 영속화가 필요하기 때문에 조회를 한다고 생각합니다.&lt;/p&gt;
+&lt;p&gt;현재 반려 식물 엔티티는 다른 엔티티의 생명 주기와 관련이 없으므로 굳이 영속성 컨텍스트에 로드할 필요가 없습니다. 그러므로 &lt;strong&gt;JPA에서 제공하는 delete를 사용하지 않고 queryDsl의 batch delete를 이용해 한번에 삭제하도록 쿼리를 개선&lt;/strong&gt;했습니다.&lt;/p&gt;
+&lt;h2&gt;DB 인덱스를 적절히 사용하고 있을까?&lt;/h2&gt;
+&lt;p&gt;서비스 내에서 발생하는 쿼리들을 조사하며 인덱스는 적절히 타고 있는지도 함께 알아보았습니다.&lt;/p&gt;
+&lt;p&gt;EXPLAIN 명령어를 이용해 쿼리를 하나씩 실행해 보면 해당 쿼리의 실행 계획을 확인할 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;--+-----------+-----+----------+----+-------------+----+-------+----+----+--------+-----------+&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;id&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;select_type&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;partitions&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;possible_keys&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;key_len&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;ref &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;rows&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;filtered&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Extra      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;--+-----------+-----+----------+----+-------------+----+-------+----+----+--------+-----------+&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;SIMPLE&lt;/span&gt;     &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;d1_0 &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;ALL&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;   &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;297&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;11.11&lt;/span&gt;   &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;Using&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;--+-----------+-----+----------+----+-------------+----+-------+----+----+--------+-----------+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위 실행 계획은 &lt;strong&gt;사전 식물 검색 쿼리의 실행 계획&lt;/strong&gt;입니다.&lt;/p&gt;
+&lt;p&gt;사전 식물 검색 쿼리는 &lt;code class=&quot;language-text&quot;&gt;like&lt;/code&gt;를 이용해 다음과 같이 작성되고 있고 DB full scan을 하고 있습니다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/626afba9f90deb761ff33774c6ad1016/566b8/img_2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.29411764705883%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRklEQVR42p2USXODMAyF+f9/rJdOJ43DHrOTAFnYbLL08Corzb34IHvswd886Uk456FHeb6i7Rp07QHjcMH9pnBbZqtwpnnEqGZUVY4iTziqMkV/PVmBHbP8PBYUmUQc+fDdLVyx4fPjrrHoaR3QPDAPm0OJskiRyIj3eertUn4Dc1IUBi6+N58IfEFqPWg12gOPpPBdQwMy9bOq4RtY5BJR6ML3BLIkJmMyNsYaWP+5nCYR1zEMdmiOlb0pNSkyMLkPcOqO3JNqHih6O6BJ8aXMZYPMuWtrXM6tHfBQ5wyU+5B3UwJzd720q8xh4POhuffi0CNjPAaaENsvvn9S4/+3lo6mD5dFkZqCnX61ToqqyMltiaFfN4KObE74iCnd2IfnClK4QxoJyEwgr/z1baPUhJF+EMZRM25aDbjrEXrpofT68fsFo4F1DlCqAjYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 2&apos; title=&apos;&apos; src=&apos;/static/626afba9f90deb761ff33774c6ad1016/ca1dc/img_2.png&apos; srcset=&apos;/static/626afba9f90deb761ff33774c6ad1016/e7570/img_2.png 170w,
+/static/626afba9f90deb761ff33774c6ad1016/f46e7/img_2.png 340w,
+/static/626afba9f90deb761ff33774c6ad1016/ca1dc/img_2.png 680w,
+/static/626afba9f90deb761ff33774c6ad1016/566b8/img_2.png 876w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Full scan을 하기 때문에 데이터가 많아지면 조회 성능이 느려질 수 있다고 판단했습니다. 또한 검색 서비스는 비로그인 사용자도 할 수 있고 서비스의 메인 페이지이기 때문에 개선이 필요하다고 생각했습니다.&lt;/p&gt;
+&lt;p&gt;검색 기능에서 적용할 수 있는 인덱스인 FullText 인덱스를 적용한 후 테스트를 진행했습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; FULLTEXT &lt;span class=&quot;token keyword&quot;&gt;INDEX&lt;/span&gt; plant_name &lt;span class=&quot;token keyword&quot;&gt;ON&lt;/span&gt; dictionary_plant&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;name&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;WITH&lt;/span&gt; PARSER ngram&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;----------------+----------+----------+------------+-----------+---------+-----------+--------+------+----+----------+-------+-------------+-------+----------+&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;Table&lt;/span&gt;           &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Non_unique&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Key_name  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Seq_in_index&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Column_name&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Collation&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Cardinality&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Sub_part&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Packed&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;Null&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Index_type&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;Comment&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Index_comment&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Visible&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;Expression&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;----------------+----------+----------+------------+-----------+---------+-----------+--------+------+----+----------+-------+-------------+-------+----------+&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;dictionary_plant&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;PRIMARY&lt;/span&gt;   &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;           &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;id         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;A        &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;317&lt;/span&gt;        &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;BTREE&lt;/span&gt;     &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;             &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;YES    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;dictionary_plant&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;         &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;plant_name&lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;           &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;name       &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;     &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;317&lt;/span&gt;        &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;YES &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;FULLTEXT  &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;       &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;             &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;YES    &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;null&lt;/span&gt;      &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;----------------+----------+----------+------------+-----------+---------+-----------+--------+------+----+----------+-------+-------------+-------+----------+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;인덱스를 적용하고 동일한 쿼리를 실행했습니다. 현재 사전 식물은 약 350개입니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/ab6265f8faff938d0533ee92768c4a2d/bbbf7/img_3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 4.705882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVElEQVR42mNwszX77+tk9T8jIfJ/uK/bf3sTnf8edmb/48P8//s4WYPFgtwd/qdEh/yP8HP/7+1o+T82xPd/UmTQ/0CgeIS/+/9kIDshPACo3uo/ANZBJdjd883uAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 3&apos; title=&apos;&apos; src=&apos;/static/ab6265f8faff938d0533ee92768c4a2d/ca1dc/img_3.png&apos; srcset=&apos;/static/ab6265f8faff938d0533ee92768c4a2d/e7570/img_3.png 170w,
+/static/ab6265f8faff938d0533ee92768c4a2d/f46e7/img_3.png 340w,
+/static/ab6265f8faff938d0533ee92768c4a2d/ca1dc/img_3.png 680w,
+/static/ab6265f8faff938d0533ee92768c4a2d/02d09/img_3.png 1020w,
+/static/ab6265f8faff938d0533ee92768c4a2d/bbbf7/img_3.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위가 FULLTEXT &lt;code class=&quot;language-text&quot;&gt;INDEX&lt;/code&gt;로 조회한 결과이고, 아래가 &lt;code class=&quot;language-text&quot;&gt;like&lt;/code&gt; 쿼리로 조회한 결과입니다. &lt;/p&gt;
+&lt;p&gt;인덱스를 설정했음에도 불구하고 like 쿼리의 실행 결과와 큰 차이가 나지 않음을 확인했습니다. 데이터 개수가 많지 않기 때문에 큰 차이가 발생하지 않았습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;0.0002s&lt;/code&gt;의 차이는 무의미한 차이라고 판단했고, &lt;strong&gt;사전 식물의 경우 데이터가 아무리 많아도 1000개 이상 생길 수 없다고 판단&lt;/strong&gt;했습니다. &lt;/p&gt;
+&lt;p&gt;또한 인덱스를 사용하는 경우 &lt;strong&gt;DB 내에서 인덱스를 위한 별도의 페이지(저장 공간)가 필요하다는 오버헤드도 존재하기 때문에 like 쿼리를 그대로 사용하는 쪽으로 결정&lt;/strong&gt;했습니다.&lt;/p&gt;
+&lt;h2&gt;N+1&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/25ee7b448cec813bb50204c4621135f0/d8a90/img_4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 168.8235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAiCAYAAABfqvm9AAAACXBIWXMAAAsTAAALEwEAmpwYAAACOklEQVR42q2W23LaQBBE+f+/S5VJuEtCd4EEknZ1IQWd6QnkySHyKrjWFjwcz0z39LIYhwFVVcIYg//xWtzvd1jToLmWsO0VQ2/Rd0YPn6eecejwkJ8FqZ1tkKQxtn6AtiHU6Om7duJpFPp4CJC/+ObnrUdRpAiPHoo8wbU6oZd/5ARke+NgcRKQ722x3fxAHPnuFY7SXiNzjLIUWRrKidDU1Txgaw38JEESH5/A0g0IUaazLS4ys/Kc4Xo563Mtfx2B0OHnIogXxWKhWi1wG3tV31FlEWXskOcpjsFBVWa1+vlg3VVOkyP2uzXWqw9R+jvOp0zbnwEM/wBZKefZNhd3YJ7FCPydeHGnbZ9krrOMTQgrO/p7re4mc50FZIWH/Qa77UpXkBVOU/oT4O0pyma9xPLjm4DXMJI+zrbpBMrE4S5zW6qyUE+673JbIykK8V+usGnq/g0o7VqpMBUg9zjPIpTiQadNeQUsK6ORmTJU2DltGA69hEMhsI0kNmFD305cuTeiMLFzaXe/W8E7bBGKH017nXgVvDF2IKYOZFO4MZ2t5xjbKPB1BXBjOMdZFVJhpgxNzedartZZQKbNerXUORJI5WftMiEUhIeVRqE/P218EYMgJjY3hm07AYenKN5hozOk2kwf58S+acuhpjXji3PkPKn2v03+Jm3oQWZhFHpaLav8MvCVNrGEA/eZ8zsVyRci7JMKjXwVSfJM53ipfoO4ek6JzTv51ZaRSnu9jzsRyk4+ZBD4C/D7N7JRv2v2AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 4&apos; title=&apos;&apos; src=&apos;/static/25ee7b448cec813bb50204c4621135f0/ca1dc/img_4.png&apos; srcset=&apos;/static/25ee7b448cec813bb50204c4621135f0/e7570/img_4.png 170w,
+/static/25ee7b448cec813bb50204c4621135f0/f46e7/img_4.png 340w,
+/static/25ee7b448cec813bb50204c4621135f0/ca1dc/img_4.png 680w,
+/static/25ee7b448cec813bb50204c4621135f0/d8a90/img_4.png 920w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;반려 식물을 조회하는 과정에서 사전 식물 정보를 함께 제공해주고 있습니다. 반려 식물이 사전 식물을 Lazy 하게 가지고 있기 때문에 반려 식물을 조회하고 정보를 응답하는 과정에서 사전 식물을 조회하는 추가적인 쿼리가 발생했습니다.&lt;/p&gt;
+&lt;p&gt;조회 기능이 다른 기능보다 압도적으로 많이 발생하는 저희 서비스에서는 반드시 해결하고 넘어가야 하는 문제였습니다.
+위와 같은 N+1이 발생했던 &lt;code class=&quot;language-text&quot;&gt;히스토리 단건 조회-(기본, 필터링, 페이징)&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;반려 식물 조회&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;리마인더 조회&lt;/code&gt; API에서 사용하는 조회 쿼리를 &lt;strong&gt;fetch join을 이용해 한 번에 조회하여 가져올 수 있도록 변경&lt;/strong&gt;했습니다.&lt;/p&gt;
+&lt;h2&gt;PK를 사용하지 않고 다른 컬럼을 이용해 질의&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/71e4bdedc855b2738ed0889682d1beb0/d2d74/img_6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 131.1764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAaCAYAAAC3g3x9AAAACXBIWXMAAAsTAAALEwEAmpwYAAABnklEQVR42qVV2W6EMAzk/7+vx17sQghHOEO4tw9T22pXqvqWPBgFEKOxxzNEbuxRlhrD0OHYF2zrFFTRtjiYtkFW5LB9g5XuufwBtxkHlVZ3nD7fEN/OYNY7PfMC3LcJg7PQhUZZKJgqxzKP/gyPfUZjLVSu0ZhC2g6aIbMZbYehr9E2Fdq6xDJZf8CJ5pVqhbI2ovLXc5P5+QoTycdUSj2g0jvNMcPkBu8ViuRAbDQB3uMLLud3EadrjZc4Asjt6SzB7Xoi0LOAMUtvhgyY60R2sMiZXYWZhPHZxT8Mr5cPZDRHX3b/AOPbCTG1bcjbQQy3lQEfwvBBwtih/VHZ+VnPuhFFmQsz9nGQ9Z4/1tNlIdZryCmT6+mlZzisC1mPWHWdQU2ArPBoW3+G3GKSKVRNjeexSvlG18t6Cx2USmRlmKWvwi+Vl9mh0KmozG4JClhO69YOFLA5uqaSKAvKQwYcJmJIKpsyE5XXkLXh9jj2e0pq3j+2XdhPij5WVYXMUMDSkoco/Gq5G0ektDqO5hcMuNNlIpVFjIBWfwG/Ab3pzXomcuh8AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 6&apos; title=&apos;&apos; src=&apos;/static/71e4bdedc855b2738ed0889682d1beb0/ca1dc/img_6.png&apos; srcset=&apos;/static/71e4bdedc855b2738ed0889682d1beb0/e7570/img_6.png 170w,
+/static/71e4bdedc855b2738ed0889682d1beb0/f46e7/img_6.png 340w,
+/static/71e4bdedc855b2738ed0889682d1beb0/ca1dc/img_6.png 680w,
+/static/71e4bdedc855b2738ed0889682d1beb0/02d09/img_6.png 1020w,
+/static/71e4bdedc855b2738ed0889682d1beb0/d2d74/img_6.png 1152w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/820f2411577d0046763b69bfa418d3a1/bbbf7/img_5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA90lEQVR42o1RXW+EMAzj///I3Z3GTf2mFFooL14dDoY06bYHK03qOk7aWVdg/YJhrMhLxTTNKCUj54x1XVFrlfhfdEEFmN7gSw149BYftzs++ydu9we01hjH8RTetu2CPWf92rRLU4LzDiF4DEOA976JpHYeYK2Dc05EU5oap9UcueSFxomCGMeLYEpC3C+iCB2R4GNCHsedwwYUYeOj2SlIgjYGxlhxx848K6VhW6RD3rPOvV7HrHX9PTI7hJeTeDqIIu68P11urx3++Sm+kcWNpRsve2OulBJndEnHWhu5z7m8FyylYJ5nGecA8yt+ahnLsrwV/AYQ/mXD9UuYSAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 5&apos; title=&apos;&apos; src=&apos;/static/820f2411577d0046763b69bfa418d3a1/ca1dc/img_5.png&apos; srcset=&apos;/static/820f2411577d0046763b69bfa418d3a1/e7570/img_5.png 170w,
+/static/820f2411577d0046763b69bfa418d3a1/f46e7/img_5.png 340w,
+/static/820f2411577d0046763b69bfa418d3a1/ca1dc/img_5.png 680w,
+/static/820f2411577d0046763b69bfa418d3a1/02d09/img_5.png 1020w,
+/static/820f2411577d0046763b69bfa418d3a1/bbbf7/img_5.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;회원을 삭제 기능에서 회원 ID로 삭제하지 않고 unique 컬럼인 kakaoId로 조회한 후 회원을 삭제하고 있음을 확인했습니다.&lt;/p&gt;
+&lt;p&gt;회원 객체가 이미 영속화되어 있는 상황에서 PK가 아닌 unique 컬럼으로 조회 후 삭제 질의를 날렸기 때문에 추가적인 select가 발생했고 &lt;strong&gt;PK를 이용해 삭제하도록 변경&lt;/strong&gt;했습니다. (OSIV가 켜져 있기 때문에 withdraw 메서드가 호출되는 시점에 member는 영속화가 되어 있습니다)&lt;/p&gt;
+&lt;h2&gt;Pagable 사용 시 불필요한 count 쿼리 발생&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/394ef40bb066ff254a206c8f2e6e815e/8d021/img_7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 133.52941176470588%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAbCAYAAAB836/YAAAACXBIWXMAAAsTAAALEwEAmpwYAAACiklEQVR42rVUS28SURjlN7l269q46Na41eCSRBe6MS5csJSEtCZQkzYFmkKHN8yUxnTRpJvuWNc2hvAQaadQhuF4z9WP3CFhrLVOcubc13e+152JlMtlFItF7O3tIZ/Pg/N/QaReryOdTiMajSIWi4HzUql0d0G+KLC1tYVUKoVaraYjlvXbIiBIVKtVLZTNZtFs2kq4rrnRaCo01PgXM4NlMIiAIMUymQzi8TiSyXVs72zgXfwl1j990AaZnQw2Nzexu7sLx3HQarVweHiISqWi7XiG40CERKFQwMdEAq/eP8PT2COsPX+I7VwK5VIVlrWvIzw4ONCgsG3bmomFIAcEo6Tg+sYG3r55gSePHyD6eg2VehHWvqX3aCAREqxdLpfTe0ybOosIObEsS6X2GQ1Vv3QygWIhr6JpLbzTiLVkZARTZSDEIkIeMMG0HMfGl6MjOErMVmuSlqQpMNfFPjKZTCAYj8dwXRc3Nzd6TMi6Ce4LTHsignt+FoLz+VzDfPr9Pnq9HjqdDgaDAc7OztDtdgNnlm0Cgr7vLzZmsxlOT09xcnKC4+NjtNttXTeOTSHTJiD4X1JmQ+jx8vJS89XVlWYW2/M8PWfkbAz5+vo6XJBdI9OAPJ1ONVNM5nQg57i+UvBvnlX1u7Mg05WIQwXlID2TZS6pydzkUEGp2TKzZiJIZ+Z+aFOk6NIEsu6m6j6Z3Zbuktn1P3aZgmaqHPMaed4Uo+EQnnL6YzTSzvn1rBSkkHgeKQO5j5zzfk4HPbgX5/B5hjX+nUmooFxceiYPVUSMmt/0+NsFRudf4Q2/Y6KikwsemrKZqsmMyOfvSon5My9wwW+VsrC71AyX68qJee5eLnbYz+EngPK1ezdhIggAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 7&apos; title=&apos;&apos; src=&apos;/static/394ef40bb066ff254a206c8f2e6e815e/ca1dc/img_7.png&apos; srcset=&apos;/static/394ef40bb066ff254a206c8f2e6e815e/e7570/img_7.png 170w,
+/static/394ef40bb066ff254a206c8f2e6e815e/f46e7/img_7.png 340w,
+/static/394ef40bb066ff254a206c8f2e6e815e/ca1dc/img_7.png 680w,
+/static/394ef40bb066ff254a206c8f2e6e815e/8d021/img_7.png 902w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/333ceb673850ac1c3b6a4674837c1c6d/7bff9/img_8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 107.6470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsTAAALEwEAmpwYAAACMUlEQVR42p1V2Y7bMAzM/39eC2Sby44P2ZIsyfeR7cOUZNZBDyCN8zAJYdjj0QxJ7ypbIk1j5CrDMg2Ypx7T2Mn/O9iNfYOysrjkBZrGy8XP24zbMr5HeCeYYHSO43GPODohSyMEb+T6Mg/bCfkhOfo1QhKfcT59IM+uaGqHllRvseBBqMscp9MPRKTQVaW8oCwyqjXGod1GeCNCRwQRKyw1KfMY+lpu2OqlEI5jD60VHXWPj/03wnfxse/q7aEs9BM6TrpC1zjU5FsdKqxWrDeyj694+SCMVYFLksA7I1iPusyj1CuW/1iwW4vgKyR5Jk1+pnDi6IjL+QBrCknbVUYCYvXPQtrd5h421NAhoCcvfXDw9KCnpFe1DCa25HPw9jmh+EOwRiGJDoguh0dzF/kVPEnc4Iz12M89JIW+aZDqEgUpqKyWo62q6poConDWUB5ggq+Qfg9rx0lOPCnkoaIFwQ1eqhSl0TBNC+UDDMGSFbnzKKlmGLLI1wHKOWgagNWGHaspiMDaAvMy/JHkO1tHto0yBuckR2ctajKdE98ybn+lPKAduG1oCTgrvm2d339Dae+NnagcjsLg1fXzc5YZX298dY1J2wzklaHGjdMUhhQqWl0cDnvbtUG8HMgaxjSy8u756NVdC1ffU+NPQXo9I0suMjUSGL+EepLB9dPGllluW+TUh6bMaHMraXL2sQlWjsqQ9L/ql/ZhFzRUekEcn5CQwjyLZXt7p4Xk1W3zCzeTj1pu9gFrAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 8&apos; title=&apos;&apos; src=&apos;/static/333ceb673850ac1c3b6a4674837c1c6d/ca1dc/img_8.png&apos; srcset=&apos;/static/333ceb673850ac1c3b6a4674837c1c6d/e7570/img_8.png 170w,
+/static/333ceb673850ac1c3b6a4674837c1c6d/f46e7/img_8.png 340w,
+/static/333ceb673850ac1c3b6a4674837c1c6d/ca1dc/img_8.png 680w,
+/static/333ceb673850ac1c3b6a4674837c1c6d/7bff9/img_8.png 874w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+피움 서비스의 물 주기 기능에서 validation을 진행하고 있습니다. 해당 반려 식물의 물주기 히스토리에서 마지막 물주기 이전, 즉 최신 물주기 히스토리 중 2번째 기록을 이용해 잘못된 요청을 하지 않도록 검증하고 있습니다. 그러므로 두 번째 히스토리를 조회하는 쿼리를 질의하고 있습니다. Pagable 객체를 이용해 이 쿼리를 질의하고 반환 타입을 Pagable로 반환받습니다.&lt;/p&gt;
+&lt;p&gt;그렇기 때문에 Pagable 객체에 필요한 총 데이터 수를 가져오는 count 쿼리가 발생합니다.&lt;/p&gt;
+&lt;p&gt;페이징이 필요 없는 기능에서 페이징 객체를 반환받고 있으므로 &lt;strong&gt;Pagable 대신 Slice 객체를 반환받도록 변경하여 count 쿼리가 발생하지 않도록 개선&lt;/strong&gt;했습니다.&lt;/p&gt;
+&lt;h2&gt;애플리케이션 단에서 처리할 수 있는 로직을 DB로 질의&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/337b116ca22b4d31585c6062eb202f76/bbbf7/img_9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 89.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAABiUlEQVR42q1US26DQAzlSL1Cz9AT9B5ddtVVpS56jW56n0QiCX+GYYCBmeHVJoIQhSZRqSVLHts8PfzzMBMhFfzdDrppJl9D9uFwwH6/R9u2k7/SNXaHHZI4mUPA6/serCzW9eg6M71Nb6FtB2ssjDn5WRzZnTnGzgDzPIcQAksibY2oKwDCMdYMoLfEi+N4MVFrjThLkJkSYRiC84qiuA1orT37lVHYp00L5Ro46zAvzVXAa0GCQWokgjDAdrtFlmXrAG3voGxDjeqGEvwLw9woJEkC3/cRRdF6hpXTaOpmaAizXM1QEEMeqzA4dloptZ5hRSBpml4M999qWEsUokBOLLmW3KBVgLJVxLAa2LE6564DlmW5mGSIiVCS1k+j1S2klGfH4VdALvISoKXtkGWOtBJ0cTR1WdwHeOnqx93Dx/Mj3p4e0NGpGn13ATLD+YFgdiUx+v58xdf7CxTZzp3AuDF8A+Y3c/ze4wfPWRAEQ4CHl+3NZjN9wN3lLeEYK18f1vHNuWP8B3XwhPq8mvhbAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 9&apos; title=&apos;&apos; src=&apos;/static/337b116ca22b4d31585c6062eb202f76/ca1dc/img_9.png&apos; srcset=&apos;/static/337b116ca22b4d31585c6062eb202f76/e7570/img_9.png 170w,
+/static/337b116ca22b4d31585c6062eb202f76/f46e7/img_9.png 340w,
+/static/337b116ca22b4d31585c6062eb202f76/ca1dc/img_9.png 680w,
+/static/337b116ca22b4d31585c6062eb202f76/02d09/img_9.png 1020w,
+/static/337b116ca22b4d31585c6062eb202f76/bbbf7/img_9.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/65b0642debc20ccfcf225dd8fecc7370/600ec/img_10.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 117.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAXCAYAAAALHW+jAAAACXBIWXMAAAsTAAALEwEAmpwYAAACGUlEQVR42qVV2Y7bMBDz/39gC6TbJOtbhy3fR7AAy5nY6TbtooDzMJFsKZSG5Iyjrq0RpzGst1iXEfPUvxTROvewISC3Bj3BXwaUn27okGYJ4vcznCthTQ5ni23MYcoMns9VZWHq6rHuubfIE523TYVlHjbAvoPnxrbxulB4D1sfu23UESBO3uGUw0FPeSnlhT9t3+I9iVEWKULtMPTNaxwuFCZLLjidvuEHQ3gRxaexO3bDummQm0LJ3W/Zd+Ggbchb1VHlgsqZTAENQ8Q5BCg3qb3RaEKlQKL2/EW60/Pz075oGhqc0wyZc/i4zcrdbZ2wcFw/hTyLA1aJP9am+/rmjkgEGUaKQiGy5Mpb0ovBoSGPNY0casvRKK+SQd2E7b3TEHN/5jySE9uegMbAsiIqXyIrCxS2JIDTA+5gYvoaoQ0630MOk3G3mnIopwh3wsdICkLXoGU57qnuKT2nvDzNFXAkcloUSKiyXls38c9fqPhfUQT5to5Iaey303fE15/qx/lgCWql9EOroiTxGdfLmwIerWlV2bEfZmWpikprqvyd6OP9kO3LOarMSpHbOYIebRDaviRdaV/yYmT6Ei+1r8JX/ARYTATa7bFv2OeP8R/v/gIcxwE5G0ISX5S/ir70W4jRhQatdxrcsZP/XjP6eZBRPnb6CRDA0LUo3VZiLKucc1Pd3S/elJD5wEY8MIv9+bHG2P34C1zL4ijlVBMZAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 10&apos; title=&apos;&apos; src=&apos;/static/65b0642debc20ccfcf225dd8fecc7370/ca1dc/img_10.png&apos; srcset=&apos;/static/65b0642debc20ccfcf225dd8fecc7370/e7570/img_10.png 170w,
+/static/65b0642debc20ccfcf225dd8fecc7370/f46e7/img_10.png 340w,
+/static/65b0642debc20ccfcf225dd8fecc7370/ca1dc/img_10.png 680w,
+/static/65b0642debc20ccfcf225dd8fecc7370/02d09/img_10.png 1020w,
+/static/65b0642debc20ccfcf225dd8fecc7370/600ec/img_10.png 1126w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;반려 식물을 생성, 환경 변화, 물 주기 등 반려 식물과 관련된 이벤트가 발생했을 때 히스토리를 저장하고 있고, 한 동작에서 여러 히스토리가 생성되고 있습니다. 히스토리를 저장할 때 어떤 히스토리인지 히스토리 카테고리를 이용해 구분합니다. 이때 해당 카테고리가 DB에 존재하는지 확인하고 저장하기 때문에 카테고리 조회가 발생합니다. 현재 카테고리가 총 6개 존재하고 요구사항으로 카테고리가 추가적으로 생길 가능성이 많고 그에 따라 발생하는 쿼리는 증가할 것입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryCategory&lt;/span&gt; historyCategory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; historyCategoryRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findByHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+                historyEvent&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;NoSuchElementException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;일치하는 카테고리가 없습니다&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;그러므로 히스토리를 생성하는 시점에 모든 카테고리를 조회한 후, 애플리케이션 단에서 검증하도록 변경했습니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryCategory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; categories &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; historyCategoryRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAll&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token class-name&quot;&gt;HistoryCategory&lt;/span&gt; historyCategory &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; categories&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;it &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; it&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; historyEvent&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAny&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;NoSuchElementException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f64b382df097ec78f4d880c99d6c5df6/bbbf7/img_11.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 91.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC20lEQVR42pVUy27bMBDM5/av+gU99VAU6DWoU6R5uKmTNLFlW5ZFPShRFPWWPN2lVSUGckgFrEmR6+HszlBnoOfm8we4tx95imHocDgcpvjf54x/vOUXqGhuF94Dwik9xVuZZ33fY7la4/fiHovFHa6vf+LH7DvWzgrz+Q3CMHj3QRPg2lkijkJEUQQhfOz3HuI4smBlWVIbBnTdsRU8n61rfLoxcNNuYjwBcpLWOZqmscmv62rHNd7TWqPtWjQU96LC+apAqBmQDhn7zbm2h77uIZVGmkgwY7tJo/f8gIyY8zFCRdgnIQIVI9Yhilq/OvtFRAu4iluIWEFQqVw2l8cMnV9XkN4W3UBtCfdYChdhJiFzDVUYYtyhGwmcAAqiLlVuGSYUdV1TmTWU+4jwzxWM9KFNCl0QkNHIywK6NEhNhqzM7eEngE9RCy+Q8HZbeJ6H7XYDlSYIFzM4F1+h98/opYND17yU+KadRsCsGlDWDSlaoKBS8vwoUpUK5KGLWifIPQeGlM+SxO4XxkApBUPzsijs+wSoawKsapvY96MVSLFKhTAEWBCgK4g59XPru/AigSCNEVE/k1wh0QppnpHao8rS9FC6sGX2XT9ewQGKQEzCIjVWDEEKCwah3iUEULcNehKMg4WbbMMq76Nk7OHuaGJK8O5m2M3PoaXAJg5I5Q2e/DVEGsGTgY1dLODGvhVoKjkpBpiyhjE5pIxR0e1gw5pwC7V7Qp4GiBR7r0ReFRTGjobeWWUzzidAP+uQZAaZSq0P2TLcQ7ZNvJyjJMAql6joT3XboqL9sqnsAVVb29IPr1Vekm38KIXvuXDd7XhTOojFBTaX35D6DpUZUokCoZKWETNkL/KcQU98uB8ZJmQLScYe7L0kobb3iB4vUcR7lDoiJxTE7MjoXzTEmNnyOAE6cWMZBvSl2e1caLpa7H7v4RaB84C2rmAIiBlp6ll+wrC0awzOX5u/eGxosRaBAu8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;img 11&apos; title=&apos;&apos; src=&apos;/static/f64b382df097ec78f4d880c99d6c5df6/ca1dc/img_11.png&apos; srcset=&apos;/static/f64b382df097ec78f4d880c99d6c5df6/e7570/img_11.png 170w,
+/static/f64b382df097ec78f4d880c99d6c5df6/f46e7/img_11.png 340w,
+/static/f64b382df097ec78f4d880c99d6c5df6/ca1dc/img_11.png 680w,
+/static/f64b382df097ec78f4d880c99d6c5df6/02d09/img_11.png 1020w,
+/static/f64b382df097ec78f4d880c99d6c5df6/bbbf7/img_11.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;현재 서비스에서 사용하는 쿼리를 정리하고 개선이 필요한 쿼리는 모두 개선을 마쳤습니다.&lt;/p&gt;
+&lt;p&gt;또한 각 쿼리에서 사용하는 인덱스 설정을 확인하였고 인덱스 설정이 필요한 쿼리는 실행 계획을 통해 확인했습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[톰캣 스레드 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 우아한테크코스 레벨4 5차 데모데이 요구사항으로부터 Tomcat Thread의 적절한 설정값에 대해 고민하게 되었다.  현재 피움 서비스는 Tomcat의 Thread…]]></description><link>https://pium-official.github.io/tomcat-thread-config/</link><guid isPermaLink="false">https://pium-official.github.io/tomcat-thread-config/</guid><pubDate>Wed, 20 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -5800,121 +5800,7 @@ select 쿼리가 잘못된게 아닌가? 확인해봤지만 예상한대로 나�
 이제는 스레드 B에서도 동일한 데이터를 확인할 수 있다.&lt;/p&gt;
 &lt;h2&gt;결론&lt;/h2&gt;
 &lt;p&gt;결국 메소드 레벨에 &lt;code class=&quot;language-text&quot;&gt;@Transactional&lt;/code&gt; 어노테이션이 붙은 탓에 save 메소드를 성공적으로 수행해도, 트랜잭션이 끝나지 않아(정확히 말하면 커밋되지 않아) 랜덤 포트 서버의 스레드에서 확인할 수 없는 것이다.
-따라서 랜덤 포트 환경의 격리성을 보장하고자 할 때는 &lt;code class=&quot;language-text&quot;&gt;@Transactional&lt;/code&gt; 어노테이션을 사용하기 보다는, truncate를 하는 sql 스크립트를 사용하는 방법을 고려하는게 더 적절하다고 생각한다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Table Drop 못하게 막아버리기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 본 설명 글은 다음과 같은 환경에서 진행됩니다. 배포서버 : Ubuntu 22.04.2 LTS DB서버 : Ubuntu 22.04.2 LTS 배포서버와 DB…]]></description><link>https://pium-official.github.io/db-drop-stop/</link><guid isPermaLink="false">https://pium-official.github.io/db-drop-stop/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;서론&lt;/h2&gt;
-&lt;p&gt;본 설명 글은 다음과 같은 환경에서 진행됩니다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;배포서버 : Ubuntu 22.04.2 LTS&lt;/li&gt;
-&lt;li&gt;DB서버 : Ubuntu 22.04.2 LTS&lt;/li&gt;
-&lt;li&gt;배포서버와 DB서버는 동일한 VPC를 사용하고 있습니다.&lt;/li&gt;
-&lt;li&gt;DB : MySQL 8.0.33&lt;/li&gt;
-&lt;li&gt;Application : SpringBoot 3.1.1&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;개발 과정에서 실수로 Application 단에서 DB 혹은 테이블을 Drop 해버리는 상황이 있을 수 있다.&lt;/p&gt;
-&lt;p&gt;테이블의 수정이 제한된 유저를 생성하여 해당 유저를 Application에서 사용하도록 구성해보자. &lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;도움을 주신 G선생님께 감사의 인사 올리며 시작하겠습니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 636px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 43.529411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABIUlEQVR42q2STU/CQBCG9w+ZUAoCtbAf7bYV6ZbS8pGoCYL+BS9evXvy6G99nd0WgiExRj08eWd2JjOzmWFT84zgSmM40vB7Ar2+/BPsdv8BzlMEYfY/Bb2LAF6Xo0vYgl2f1BcNv2jA5NMWWlfIrldIsiXSVg/IaA6hih/Dbt5eUOR3qFd7LOod6vUjymqLarlDWT8gm26gM9vke3S6dLCQFiLUHBNhWnJwaTDmufObzvMzmskPdgkVLxDRT1m5eUU4TiCVoYBxKmSOWJeUnENF1p85XE4b52KGKC7Ib+xRkKB/qcDW9+90NpFLskFJau0kXUCImXuz2sQNTVI4tUWOzcgeDCJaJAfrdIa0WUGbnnyh443P3k6x13D0fX68iE9C9T4iTjV+ggAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c34a6c3a&apos; title=&apos;&apos; src=&apos;/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png&apos; srcset=&apos;/static/8f933cb276f688c756d9cbf5800a4405/e7570/c34a6c3a.png 170w,
-/static/8f933cb276f688c756d9cbf5800a4405/f46e7/c34a6c3a.png 340w,
-/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png 636w&apos; sizes=&apos;(max-width: 636px) 100vw, 636px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;유저 생성하기&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;이후 진행할 작업에서 권한 부여를 위해 root 권한이 필요합니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;우선 root 권한을 가진 계정으로 MySQL에 로그인 한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# MySQL에 로그인&lt;/span&gt;
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; mysql &lt;span class=&quot;token parameter variable&quot;&gt;-u&lt;/span&gt; root &lt;span class=&quot;token parameter variable&quot;&gt;-p&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Application에서 사용할 유저를 생성한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;localhost&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;만약 외부에서 접근해야하는 유저의 경우 다음 명령어를 참고하세요&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# 외부 모든 IP에 대한 pium 이라는 유저 생성 &lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;%&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token comment&quot;&gt;# 특정 인스턴스에서만 접속가능한 pium 이라는 유저 생성 &lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;접속할 인스턴스의 private ip&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;권한 부여하기&lt;/h2&gt;
-&lt;p&gt;MySQL에서 설정할 수 있는 권한은 아래와 같다.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;권한&lt;/th&gt;
-&lt;th&gt;내용&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;CREATE, ALTER, DROP&lt;/td&gt;
-&lt;td&gt;테이블 생성, 변경, 삭제&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;SELECT, INSERT, UPDATE, DELETE&lt;/td&gt;
-&lt;td&gt;테이블의 레코드 조회, 입력, 수정, 삭제&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;RELOAD&lt;/td&gt;
-&lt;td&gt;권한 부여된 내용을 리로드&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;SHUTDOWN&lt;/td&gt;
-&lt;td&gt;서버 종료 작업 실행&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;ALL&lt;/td&gt;
-&lt;td&gt;모든 권한 허용&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;USAGE&lt;/td&gt;
-&lt;td&gt;권한 없이 계정만 생성&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;우리는 &lt;code class=&quot;language-text&quot;&gt;INSERT&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;UPDATE&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;SELECT&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;DELETE&lt;/code&gt;만 사용하면 되기 떄문에, 새로 생성한 유저에게 해당 권한만 부여한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;GRANT&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;SELECT&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;INSERT&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;UPDATE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;DELETE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;ON&lt;/span&gt; pium_db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;TO&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;localhost&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;설정한 권한을 &lt;code class=&quot;language-text&quot;&gt;flush&lt;/code&gt; 명령어를 이용해 적용한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;FLUSH &lt;span class=&quot;token keyword&quot;&gt;PRIVILEGES&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;확인하기&lt;/h2&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/dc3f7abd340d9d43646bcd6592067702/2573e/bd8e631c.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 4.705882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAR0lEQVR42mMwUFf7b6Sh8d9IR++/nqrGfy1ltf86Kur/tZXV/2sC2WqKKv8FBAT/c3Pz/Ofh4cXAXEBxKQmp/1pAPVrKqv8BQz4aj54VZi8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;bd8e631c&apos; title=&apos;&apos; src=&apos;/static/dc3f7abd340d9d43646bcd6592067702/ca1dc/bd8e631c.png&apos; srcset=&apos;/static/dc3f7abd340d9d43646bcd6592067702/e7570/bd8e631c.png 170w,
-/static/dc3f7abd340d9d43646bcd6592067702/f46e7/bd8e631c.png 340w,
-/static/dc3f7abd340d9d43646bcd6592067702/ca1dc/bd8e631c.png 680w,
-/static/dc3f7abd340d9d43646bcd6592067702/02d09/bd8e631c.png 1020w,
-/static/dc3f7abd340d9d43646bcd6592067702/9d567/bd8e631c.png 1360w,
-/static/dc3f7abd340d9d43646bcd6592067702/2573e/bd8e631c.png 1380w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;실제로 생성된 유저로 접속하여 Drop Table 명령어를 수행했을 때 권한 부족으로 수행되지 않음을 확인할 수 있다.&lt;/p&gt;
-&lt;h2&gt;Application properties 적용&lt;/h2&gt;
-&lt;p&gt;Application의 설정파일에 생성한 유저의 정보를 작성한다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7448/54161808.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 21.176470588235293%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjUlEQVR42pWOSQ7CMBAEx0uwsmLHdhIkC/H/TxZDTogLyqHUc2jVtMhakPZEjgdm2xlTYlkWombLK61WSh+4izAaYfii/0mnHZF7OmVSKlZxMfJqjWPbEGNwvsMai9Gy/YM5hXFF9uPE54KfZ+w00Q09LgQ68yldIWVdp2uSinPVe8frk9s0E8aBcFH4BvinVdVHH7LcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;54161808&apos; title=&apos;&apos; src=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/ca1dc/54161808.png&apos; srcset=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7570/54161808.png 170w,
-/static/a5fdcb6a4b9204f52f0ba28e89ec7605/f46e7/54161808.png 340w,
-/static/a5fdcb6a4b9204f52f0ba28e89ec7605/ca1dc/54161808.png 680w,
-/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7448/54161808.png 900w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이를 통해 Applicaiton에서는 Table의 생성, 수정, 삭제에 대한 조작을 할 수 없게 되었다.&lt;/p&gt;
-&lt;p&gt;만약 테이블의 생성, 수정, 삭제에 대한 작업이 필요할 경우 DBA 혹은 DB 담당자에게 요청하는 프로세스를 거쳐야만 한다.&lt;/p&gt;
-&lt;h2&gt;Reference&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Chat GTP 4&lt;/li&gt;
-&lt;li&gt;피움 백엔드 팀의 집단지성&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 피움팀 서버는  요청으로 이뤄져있다.
+따라서 랜덤 포트 환경의 격리성을 보장하고자 할 때는 &lt;code class=&quot;language-text&quot;&gt;@Transactional&lt;/code&gt; 어노테이션을 사용하기 보다는, truncate를 하는 sql 스크립트를 사용하는 방법을 고려하는게 더 적절하다고 생각한다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[내 서버에 HTTPS 설정하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 현재 피움팀 서버는  요청으로 이뤄져있다.
 는 WWW…]]></description><link>https://pium-official.github.io/apply-https/</link><guid isPermaLink="false">https://pium-official.github.io/apply-https/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -6037,7 +5923,121 @@ module&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;exports &lt;
 &lt;p&gt;&lt;img src=&quot;https://github.com/pium-official/pium-official.github.io/assets/50974359/6bc524c4-4866-4ebe-9daa-95035e0c0dd5&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
 &lt;p&gt;실행한 뒤에 bundle을 분석해 봤더니 react-icons에서 15.3m나 차지하고 있었습니다. 드디어 문제의 원흉을 찾아냈습니다. 그렇다면 react-icons를 대체할 수 있는 방법이 있을까요?&lt;/p&gt;
 &lt;h3&gt;Icons&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://icones.js.org/collection/all?s=material-symbols:cancel&quot;&gt;여기&lt;/a&gt;에 가시면 다양한 아이콘들을 찾아볼 수 있습니다. 원하는 아이콘을 선택한 다음에 SVG, Component 등으로 코드를 반환해 줍니다. 이를 통해서 react-icons를 제거하고 icons를 사용해서 아이콘을 대체할 수 있었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[PR 라벨로 젠킨스 빌드유발을 구분하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움팀의 젠킨스에서 빌드 트리거로 을 사용하고있다.  해당 설정은 Github에서 유발되는 모든 WebHook…]]></description><link>https://pium-official.github.io/jenkins-hook-by-label/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-hook-by-label/</guid><pubDate>Tue, 25 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://icones.js.org/collection/all?s=material-symbols:cancel&quot;&gt;여기&lt;/a&gt;에 가시면 다양한 아이콘들을 찾아볼 수 있습니다. 원하는 아이콘을 선택한 다음에 SVG, Component 등으로 코드를 반환해 줍니다. 이를 통해서 react-icons를 제거하고 icons를 사용해서 아이콘을 대체할 수 있었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Table Drop 못하게 막아버리기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'가 작성했습니다. 서론 본 설명 글은 다음과 같은 환경에서 진행됩니다. 배포서버 : Ubuntu 22.04.2 LTS DB서버 : Ubuntu 22.04.2 LTS 배포서버와 DB…]]></description><link>https://pium-official.github.io/db-drop-stop/</link><guid isPermaLink="false">https://pium-official.github.io/db-drop-stop/</guid><pubDate>Fri, 28 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/yeonkkk&quot;&gt;조이&lt;/a&gt;&apos;, &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;본 설명 글은 다음과 같은 환경에서 진행됩니다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;배포서버 : Ubuntu 22.04.2 LTS&lt;/li&gt;
+&lt;li&gt;DB서버 : Ubuntu 22.04.2 LTS&lt;/li&gt;
+&lt;li&gt;배포서버와 DB서버는 동일한 VPC를 사용하고 있습니다.&lt;/li&gt;
+&lt;li&gt;DB : MySQL 8.0.33&lt;/li&gt;
+&lt;li&gt;Application : SpringBoot 3.1.1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;개발 과정에서 실수로 Application 단에서 DB 혹은 테이블을 Drop 해버리는 상황이 있을 수 있다.&lt;/p&gt;
+&lt;p&gt;테이블의 수정이 제한된 유저를 생성하여 해당 유저를 Application에서 사용하도록 구성해보자. &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;도움을 주신 G선생님께 감사의 인사 올리며 시작하겠습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 636px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 43.529411764705884%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAABIUlEQVR42q2STU/CQBCG9w+ZUAoCtbAf7bYV6ZbS8pGoCYL+BS9evXvy6G99nd0WgiExRj08eWd2JjOzmWFT84zgSmM40vB7Ar2+/BPsdv8BzlMEYfY/Bb2LAF6Xo0vYgl2f1BcNv2jA5NMWWlfIrldIsiXSVg/IaA6hih/Dbt5eUOR3qFd7LOod6vUjymqLarlDWT8gm26gM9vke3S6dLCQFiLUHBNhWnJwaTDmufObzvMzmskPdgkVLxDRT1m5eUU4TiCVoYBxKmSOWJeUnENF1p85XE4b52KGKC7Ib+xRkKB/qcDW9+90NpFLskFJau0kXUCImXuz2sQNTVI4tUWOzcgeDCJaJAfrdIa0WUGbnnyh443P3k6x13D0fX68iE9C9T4iTjV+ggAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c34a6c3a&apos; title=&apos;&apos; src=&apos;/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png&apos; srcset=&apos;/static/8f933cb276f688c756d9cbf5800a4405/e7570/c34a6c3a.png 170w,
+/static/8f933cb276f688c756d9cbf5800a4405/f46e7/c34a6c3a.png 340w,
+/static/8f933cb276f688c756d9cbf5800a4405/44bb2/c34a6c3a.png 636w&apos; sizes=&apos;(max-width: 636px) 100vw, 636px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;유저 생성하기&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;이후 진행할 작업에서 권한 부여를 위해 root 권한이 필요합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;우선 root 권한을 가진 계정으로 MySQL에 로그인 한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# MySQL에 로그인&lt;/span&gt;
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; mysql &lt;span class=&quot;token parameter variable&quot;&gt;-u&lt;/span&gt; root &lt;span class=&quot;token parameter variable&quot;&gt;-p&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Application에서 사용할 유저를 생성한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;localhost&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;만약 외부에서 접근해야하는 유저의 경우 다음 명령어를 참고하세요&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# 외부 모든 IP에 대한 pium 이라는 유저 생성 &lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;%&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# 특정 인스턴스에서만 접속가능한 pium 이라는 유저 생성 &lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;접속할 인스턴스의 private ip&apos;&lt;/span&gt; IDENTIFIED &lt;span class=&quot;token keyword&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;password&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;권한 부여하기&lt;/h2&gt;
+&lt;p&gt;MySQL에서 설정할 수 있는 권한은 아래와 같다.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;권한&lt;/th&gt;
+&lt;th&gt;내용&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;CREATE, ALTER, DROP&lt;/td&gt;
+&lt;td&gt;테이블 생성, 변경, 삭제&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SELECT, INSERT, UPDATE, DELETE&lt;/td&gt;
+&lt;td&gt;테이블의 레코드 조회, 입력, 수정, 삭제&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;RELOAD&lt;/td&gt;
+&lt;td&gt;권한 부여된 내용을 리로드&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SHUTDOWN&lt;/td&gt;
+&lt;td&gt;서버 종료 작업 실행&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ALL&lt;/td&gt;
+&lt;td&gt;모든 권한 허용&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;USAGE&lt;/td&gt;
+&lt;td&gt;권한 없이 계정만 생성&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;우리는 &lt;code class=&quot;language-text&quot;&gt;INSERT&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;UPDATE&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;SELECT&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;DELETE&lt;/code&gt;만 사용하면 되기 떄문에, 새로 생성한 유저에게 해당 권한만 부여한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;GRANT&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;SELECT&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;INSERT&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;UPDATE&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;DELETE&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;ON&lt;/span&gt; pium_db&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;TO&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;pium&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;@&apos;localhost&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;설정한 권한을 &lt;code class=&quot;language-text&quot;&gt;flush&lt;/code&gt; 명령어를 이용해 적용한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sql&quot;&gt;&lt;pre class=&quot;language-sql&quot;&gt;&lt;code class=&quot;language-sql&quot;&gt;FLUSH &lt;span class=&quot;token keyword&quot;&gt;PRIVILEGES&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;확인하기&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/dc3f7abd340d9d43646bcd6592067702/2573e/bd8e631c.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 4.705882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAR0lEQVR42mMwUFf7b6Sh8d9IR++/nqrGfy1ltf86Kur/tZXV/2sC2WqKKv8FBAT/c3Pz/Ofh4cXAXEBxKQmp/1pAPVrKqv8BQz4aj54VZi8AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;bd8e631c&apos; title=&apos;&apos; src=&apos;/static/dc3f7abd340d9d43646bcd6592067702/ca1dc/bd8e631c.png&apos; srcset=&apos;/static/dc3f7abd340d9d43646bcd6592067702/e7570/bd8e631c.png 170w,
+/static/dc3f7abd340d9d43646bcd6592067702/f46e7/bd8e631c.png 340w,
+/static/dc3f7abd340d9d43646bcd6592067702/ca1dc/bd8e631c.png 680w,
+/static/dc3f7abd340d9d43646bcd6592067702/02d09/bd8e631c.png 1020w,
+/static/dc3f7abd340d9d43646bcd6592067702/9d567/bd8e631c.png 1360w,
+/static/dc3f7abd340d9d43646bcd6592067702/2573e/bd8e631c.png 1380w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;실제로 생성된 유저로 접속하여 Drop Table 명령어를 수행했을 때 권한 부족으로 수행되지 않음을 확인할 수 있다.&lt;/p&gt;
+&lt;h2&gt;Application properties 적용&lt;/h2&gt;
+&lt;p&gt;Application의 설정파일에 생성한 유저의 정보를 작성한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7448/54161808.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 21.176470588235293%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjUlEQVR42pWOSQ7CMBAEx0uwsmLHdhIkC/H/TxZDTogLyqHUc2jVtMhakPZEjgdm2xlTYlkWombLK61WSh+4izAaYfii/0mnHZF7OmVSKlZxMfJqjWPbEGNwvsMai9Gy/YM5hXFF9uPE54KfZ+w00Q09LgQ68yldIWVdp2uSinPVe8frk9s0E8aBcFH4BvinVdVHH7LcAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;54161808&apos; title=&apos;&apos; src=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/ca1dc/54161808.png&apos; srcset=&apos;/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7570/54161808.png 170w,
+/static/a5fdcb6a4b9204f52f0ba28e89ec7605/f46e7/54161808.png 340w,
+/static/a5fdcb6a4b9204f52f0ba28e89ec7605/ca1dc/54161808.png 680w,
+/static/a5fdcb6a4b9204f52f0ba28e89ec7605/e7448/54161808.png 900w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이를 통해 Applicaiton에서는 Table의 생성, 수정, 삭제에 대한 조작을 할 수 없게 되었다.&lt;/p&gt;
+&lt;p&gt;만약 테이블의 생성, 수정, 삭제에 대한 작업이 필요할 경우 DBA 혹은 DB 담당자에게 요청하는 프로세스를 거쳐야만 한다.&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Chat GTP 4&lt;/li&gt;
+&lt;li&gt;피움 백엔드 팀의 집단지성&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[PR 라벨로 젠킨스 빌드유발을 구분하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 현재 피움팀의 젠킨스에서 빌드 트리거로 을 사용하고있다.  해당 설정은 Github에서 유발되는 모든 WebHook…]]></description><link>https://pium-official.github.io/jenkins-hook-by-label/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-hook-by-label/</guid><pubDate>Tue, 25 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -7173,6 +7173,166 @@ server &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://jminie.tistory.com/110&quot;&gt;https://jminie.tistory.com/110&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://customer.gabia.com/manual/domain/287/1201&quot;&gt;https://customer.gabia.com/manual/domain/287/1201&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[젠킨스 설치하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다. 정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
+이에 Jenkins…]]></description><link>https://pium-official.github.io/jenkins-setting/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-setting/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다.&lt;/p&gt;
+&lt;p&gt;정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
+이에 Jenkins를 설치하고 환경설정을 빌드서버 환경을 구축한 일련의 과정을 기록해두려고한다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;작업 환경 : Ubuntu 22.04.2 LTS&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;공식문서 살펴보기&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;젠킨스 공식문서&lt;/a&gt;를 확인하면 설치 방법이 친절하게 나와있다.&lt;/p&gt;
+&lt;p&gt;아무것도 없는 EC2 환경에서 Jenkins를 설치하고 구동하는 과정을 따라가보자.&lt;/p&gt;
+&lt;h2&gt;(Optional) Swap 메모리 설정하기&lt;/h2&gt;
+&lt;p&gt;프리티어환경에서 Jenkins를 사용하면 자칫 메모리가 부족한 상황이 발생할 수도 있다.
+2GB의 메모리는 젠킨스와 빌드를 모두 견디기 어려울 수도 있다.&lt;/p&gt;
+&lt;p&gt;다음 명령어를 통해 서버에 Swap 메모리를 할당하자.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; fallocate &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt; 2G /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;600&lt;/span&gt; /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkswap&lt;/span&gt; /swapfile
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;swapon&lt;/span&gt; /swapfile
+
+&lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확인명령어&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://velog.io/@junho5336/Swap-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot;&gt;Swap 메모리 할당하기&lt;/a&gt;를 참고&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;java 설치하기&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;설치 방법은 &lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;공식문서&lt;/a&gt;를 확인하면서 진행하고있습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;현재 사용할 jenkins의 버전은 java 17을 사용한다.
+java 17버전을 설치하자&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; openjdk-17-jre
+&lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-version&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10.588235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAdElEQVR42mXNwQ6CMBRE0RIIW16j1LRpBfqoYP3/77tqF25cnGQyixnjHo75OXPdLshdkEW4RU/elJQSIQTGcWQYhj9932OM+em6DlOPF/WonOVkTSu6KJoz+74TY8Q510ZVlfzpSyktf8+891hrEZFmmibeU5cx4lWIWHEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;93d56503&apos; title=&apos;&apos; src=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png&apos; srcset=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/e7570/93d56503.png 170w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/f46e7/93d56503.png 340w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png 680w,
+/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png 775w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;jenkins 설치하기&lt;/h2&gt;
+&lt;p&gt;다음 명령어를 수행하여 jenkins를 설치한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-fsSL&lt;/span&gt; https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  /usr/share/keyrings/jenkins-keyring.asc &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
+&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;signed-by&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/usr/share/keyrings/jenkins-keyring.asc&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  https://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
+  /etc/apt/sources.list.d/jenkins.list &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins
+
+&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins &lt;span class=&quot;token comment&quot;&gt;# 실행상태 확인&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVR42m2OywrFIAxEleIjahdy1YIbBW3//w/n1oC7Lg5DEmYywmeHOipiiyi9oI2OOSfmPTHGQK3vLUbGOYcQAqy1EEJ8Q5bw3M8b1JBqAp0EpRRzHAer1ppDpJRs2vrJMqWc0XvHVS6kX+I2q4kxhtmhRMTs/Z699/xwNf8DtG9D56Z4n3UAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;99b45540&apos; title=&apos;&apos; src=&apos;/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png&apos; srcset=&apos;/static/377aacf35597393970adf4d2f550dffe/e7570/99b45540.png 170w,
+/static/377aacf35597393970adf4d2f550dffe/f46e7/99b45540.png 340w,
+/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png 680w,
+/static/377aacf35597393970adf4d2f550dffe/02d09/99b45540.png 1020w,
+/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png 1206w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;jenkins 접속하기 &amp;#x26; 초기설정&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;jenkins는 기본적으로 8080포트를 사용한다.
+jenkins의 포트를 변경하는 방법에 대해서는 본 글에서 다루지는 않는다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{인스턴스-public-ip}:8080&lt;/code&gt; 으로 접속하면 다음과 같은 화면을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVR42qVT7VLCMBDk6X0Xx1fwAQT8Ib+AoQ7IYBXblCYhTT9S1rtAwA9AGDOzXELJdm9v6QyHI8xmL5hOZ5BSoSgKrNdrFKbY77XWZ6HU9t5isUCHP3jxRYYhorKsfOVz0zT4a202G1+TJDkQTiYRug99DJ4GGI/G6HV7dO5hPufnGzjn0Lath3Nc3Zd9eyCM49gfDEleKY2VLiDUGqkyyKgqailnUFt5npNq49Vzi1wZoYtvhKU20EJCZtojF+SNIG9E7mGlRlVV+/ZOthwIraZBrCRsHqB8NRkRMmhgZVl6cPu8WBnvjxKmWYa35RLvHwm0MWjIl5ou1K7xtSKUpLCqazREYq3dDdF45b8Im8b5t50FD4FgSeXWR+vB0fGi0vRAeMybUxHZDoSGs4sa55An/S9CVhVaZl9/tXwJIf+GL0spPVEYyNGhXELIJJzFoOhsbNiD8LZT4JiwXyHI4fuj/5RrPPy5bO3wnBQYTV/RiaLIeyKEQEZZvAZCZFAyx3gW4+auj9v7R3wC/VKL2SHZQ34AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4492665d&apos; title=&apos;&apos; src=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png&apos; srcset=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/e7570/4492665d.png 170w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/f46e7/4492665d.png 340w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png 680w,
+/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png 1019w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;다시 EC2 화면으로 넘어와서 다음 명령어를 수행하여 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt;를 알 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.294117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARElEQVR42h2KOwrAMAzFegN/Y5OlS4OTqfe/3WvxIBBCF92EfBN5flbAlmE+E7sOqgrMDCKCqsLdYWbtItJ9jNFERL8f97MZQConaOsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f55b94c9&apos; title=&apos;&apos; src=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png&apos; srcset=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e7570/f55b94c9.png 170w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/f46e7/f55b94c9.png 340w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png 680w,
+/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png 734w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;확인한 암호를 화면에 입력한 뒤 Continue 버튼을 눌러 계속 진행한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpElEQVR42p1T7U7jMBDsq9/LIPEM9x+O4yh/oZxU2gM1JDTxR+wkTtthZ1FaQG2BW2lkx94dz35kNJlMMJ3eYzaboa5rNE2DEAJijLqPMej5MXjv1XexWGCUZRk2m41cBL0IIaJtOwQh9L5G3/f4zBhPK8tyIATuJn9x8es3rsfXuL25xdWfMc7PLjCf/VNnEm/Wa6w/YLVa6bolzPNcP6jIOI/SR5QuYCmoBFZUK5yDMVYzYTmGsnBNqd8RFkWhH42TWiwNzFKCSw8jcKVDlLMgaIxD6tJWzcGU3xLGyqKpGMzVKkksjZJG2XddJ8VvNc2hDHxgL2HxvMQie0KWF6ilMUmCmErqdyAh0csdu8oOM+VOlNOq6g1hK46tOLVtq13m61TyDmyCoBEf1i9yrAScBqqsqmpHOMj+zJji0AyCKp00jA/+FyH9os6o35Iy/deUv0lIH5aEikiksylne5vyFUIqs9Yq6cGxGQZ7aP8xpJRUHdeBiHj3p3y3hvss9Ws8mg7Thxyj+Xyu9WAqfP0YPvpYK4Mfakwfc/w4vcTJzzFeAINXjf7ZXI+HAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;28fea7e9&apos; title=&apos;&apos; src=&apos;/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png&apos; srcset=&apos;/static/34da90f6397f6f2e2761f50b1c127250/e7570/28fea7e9.png 170w,
+/static/34da90f6397f6f2e2761f50b1c127250/f46e7/28fea7e9.png 340w,
+/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png 680w,
+/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png 1013w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;초기 플러그인 세팅 화면이 나오는데 &lt;code class=&quot;language-text&quot;&gt;Install suggested plugins&lt;/code&gt; 를 눌러 초기 플러그인 설정을 진행한다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR42p1UiW6bQBT0/39SPyCRq9RxrMolji9ALAHMfS6Hp++9GIvUaatkpdGwCzs771hmhmFgt9sLwjBEksSI488hiiLal2C73WLmeR66rkdZlsQd2rYT7vte0Lat8L/G+XwWdhwHM9/3MQwDDGOD+fwB9/ffhde/nrFYLHF3Nyd+gtatbORvmafgtatgEAQyqasKNbmsqzdU9JxnGYqiEPd13VxQ01p5WatvHZ5OJ5mouMYhKGCFJfZ+DjdtEBQdorIT0TTNKE8p8ryQFHFqRmcfCq7sGN9WeyytAD9VBJVrRPqM16zDZrPBer2G67pSAMmt5Lu9hn0VDEmQp7tTiWNUwkpqqEzDJnaIraiSCmaX8PM8J7eprDHzGgvfCK6cGD8sHw+mj4Ud0HOAlRvjxctg2zZMy3zj4xGKNopbahk+iIUlbUpNQnYSLFWMJ5Vc8UiHPLsJAuoELh7D8z0Se4WjXBHi4rDojWDV9ig09eMEPNfdIDnrLn3JPZpluYTM4XPIY7XfFWVM7P+G1locVdRmfMBNUUbBgV+w8B+YDg6Pw2ya5u835TMO2R0Ljldxelu+HPJH370TNE2L/hjJtWJfAReG3R8OB/wGHbWCEuKtdfAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c78a9517&apos; title=&apos;&apos; src=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png&apos; srcset=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/e7570/c78a9517.png 170w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/f46e7/c78a9517.png 340w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png 680w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/02d09/c78a9517.png 1020w,
+/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png 1021w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVR42pWUWW+bQBSF+f8/qw9J5FRK89ImYrFZhp3BgPGKfTrnIlBsJY2LdDQznjvfXWXL85ZYLldYrXx0XYfNZnOlvu+/Fe12ux2UUrDW6zWGYcD5fMblcpk1fdzz7vb+VvyKohiBF2PcmLWsKjRNC61rUV3X2G638mAg8Asonc3ArmtxND/8eHjGYvFT9Pi4wNMT9YwgCMV4yuIz8W4G9ib/wUTc9Kc5RWYwpXEbybfAV+cVbuogrH2oWiHLMoRhhNY0iCn7fiDF1rqSc5pmxiY3pWnkzJVNORwOY1N+O3/w5r3DizwkZYI4SQXIGpZliSiKkOe5OCpLQtfSUUIIY40pAuM4hmXbDmKVoMgL6ErLg6Io59VxHDNSK+MkFCeVaVxl7DguhOz3e3FwOp2QJAks13WR5hmKskClR2OlYolAa42Xl19wXU+M6YSRMu227QT2OTBNJS0WlaOTm2jbtpVogiAQCMUaUSwDH38BdCR31o2GSkXzo/F8vb8D6MqGUGp69PF8e/dPoG3bYsCi3yuWgWCCqKsuE8bij927TxwnziCjI4wNPB6P0gtrmjNCOVf/I/4PUISzib7v4y8mPXFDELhsegAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82bae04f&apos; title=&apos;&apos; src=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png&apos; srcset=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/e7570/82bae04f.png 170w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/f46e7/82bae04f.png 340w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png 680w,
+/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png 1009w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;초기 Admin 유저를 생성할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABV0lEQVR42pWT3W6CMBiGufOd7VJ2suwSlp2pi2Yao6A7QMlQERVULD+l9F1b0TQRRL/kSf/fvv3aGpZlYT53YNszBEGAKIpwPB5VqSP76jgcDiCEwHEcGK7rQkaSpMiyDHmeI00zUadlmYHSXLUppeAcN8HLTs/zpOBCNZbLFTqdLnq9HwyHI/T7Q4zHFlqtDkYjE6Y5Qbv9rTbWRfT6er2GsVicBU8nIiYnKMSgnFAUxQ1MwMvxRkF5VLlACrJyMdOEdFFJzthVqNqhSKoUrXJWR4NDBsYeF2NNDqPopK6+Ln9PO6TiuFTsqufvHo05jOPkeoxHue9QPFq566PQJoeExCqHlwnPOCyKy0/RBOWjJnF8zmUDeVlyLi+GVzvkVZ+0JniJjH1M8buKMNummNgujOl0Ct/3lXoYhnfZCzbbAH+eL9hgs9vha2Dj5a2N1/cuPj57+AeZf421Ajk8yQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8f14e43&apos; title=&apos;&apos; src=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png&apos; srcset=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/e7570/a8f14e43.png 170w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/f46e7/a8f14e43.png 340w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png 680w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/02d09/a8f14e43.png 1020w,
+/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png 1023w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다. &lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABNklEQVR42u2Uy26DMBBF8/Vd9kMqddEv6CpRUJoqUtpUICIBKY+WDYSnbcytx0CiEDZRN13U0tHg8ej6zkh4ZpomXNeD47hI0xRFUSDPcx0Hzvtcf4/JsgxVVSkNB7MgCEGrLEtFBca4goFzpnNUyDnXZxSnVtu2Ovq+j1kYdoKed8BiYWC93mC7fYdl2XhZvarcUu/n8yVse38hMBYMguAsSK7yvDgdUiyVu0y1lB6ppRpSSjRE03RRIQi1v3LYtVVqYaKuaz3TJCESHPs5VSqvYw9dOinIWH0a/iBKCMH1ZYKLbrYDKsf7GnJ+1bIQQrsiBofkYMiNz6iehIiLGUZRNDnoW9a/4O8FpRz+lL/okAmJ3WeKXVjgzVKPA702pEzEcXwT0dc3PvYH3D8auHsw8PS8wg++b41+WLe4nQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;84efb2c8&apos; title=&apos;&apos; src=&apos;/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png&apos; srcset=&apos;/static/4035960bbafbca7af5331b1611fac0f0/e7570/84efb2c8.png 170w,
+/static/4035960bbafbca7af5331b1611fac0f0/f46e7/84efb2c8.png 340w,
+/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png 680w,
+/static/4035960bbafbca7af5331b1611fac0f0/02d09/84efb2c8.png 1020w,
+/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png 1024w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;여기까지 했으면 초기 설정은 완료했다고 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;만약 위 과정에서 admin 유저를 생성하지 않았다면 &lt;code class=&quot;language-text&quot;&gt;admin&lt;/code&gt; 이라는 기본 유저로 로그인 할 수 있다고 설명하고 있다.
+비밀번호는 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt; 과정에서 입력했던 값으로 설정되어있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR42u2Uy07DMBBF+/8s+QW+gBV71kioQNOmzqNpQiFt3onzqJ3L2G2A0iJUNmwY6WTuWJrrkZ1kNJ/PwZgFy7IRxzGyLDubNE1RFAWCIMBovV5DSqkZou979TyoB07FsJ4kCUZhGOpisfAxHk8wmzE47hIu1RPDhGla4LyF2k+InjJB/Z8RcmcYx2S42US6CDwGZt7DtR7hu1MsXQPm5A4ue0DXJNRZohcFevkFkUPS+vuE6txUiMZHU5io8xl4ZoCnBupsqnNTMrSlpekqG21laZTuKIvm+diwTB3kEZmUDupCNTlkRDq3CEabzDVKqzWeMU1DWrQvx4bblqOtS3RthbquUFUF2oar2ffIPaR7caCl3H4YJsnO8OrWxsX1Ey5vDIQp17c8HPZPcXDLw4R+XMF+LbBY05RbiXPipOF379i/4R8Yep6HKIp0of4YvyHPc/reOVarFd4AhmyNTDDm+BMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;60ba97ad&apos; title=&apos;&apos; src=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png&apos; srcset=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/e7570/60ba97ad.png 170w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/f46e7/60ba97ad.png 340w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png 680w,
+/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png 1011w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이렇게 Jenkins를 설치할 수 있다.&lt;/p&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;https://www.jenkins.io/doc/book/installing/linux/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</content:encoded></item><item><title><![CDATA[@NotNull과 nullable = false는 어떤 차이가 있을까?]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 서론 JPA를 이용해 엔티티를 설계하다가  어노테이션과 @Column의 의 차이점이 궁금해져 알아보았습니다. nullable = false ?? JPA는 엔티티를 매핑하고 설계하면 자동으로 DDL…]]></description><link>https://pium-official.github.io/jpa-notnull-nullable/</link><guid isPermaLink="false">https://pium-official.github.io/jpa-notnull-nullable/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -7373,167 +7533,7 @@ DDL을 자동으로 생성하고 애플리케이션의 영속성 컨텍스트에
 &lt;p&gt;하이버네이트에서는 nullable=false보다 @NotNull 사용을 조금 더 권장하고 있다.&lt;/p&gt;
 &lt;h2&gt;레퍼런스&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.baeldung.com/hibernate-notnull-vs-nullable&quot;&gt;https://www.baeldung.com/hibernate-notnull-vs-nullable&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://kafcamus.tistory.com/15&quot;&gt;https://kafcamus.tistory.com/15&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[젠킨스 설치하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노'가 작성했습니다. 서론 피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다. 정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
-이에 Jenkins…]]></description><link>https://pium-official.github.io/jenkins-setting/</link><guid isPermaLink="false">https://pium-official.github.io/jenkins-setting/</guid><pubDate>Sun, 16 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;서론&lt;/h2&gt;
-&lt;p&gt;피움팀에서 Jenkins를 도입하고 적용하는 과정을 거쳤다.&lt;/p&gt;
-&lt;p&gt;정확한 동작과정을 몰랐기 때문에 헤매는 상황이 빈번하게 있었다.
-이에 Jenkins를 설치하고 환경설정을 빌드서버 환경을 구축한 일련의 과정을 기록해두려고한다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;작업 환경 : Ubuntu 22.04.2 LTS&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;공식문서 살펴보기&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;젠킨스 공식문서&lt;/a&gt;를 확인하면 설치 방법이 친절하게 나와있다.&lt;/p&gt;
-&lt;p&gt;아무것도 없는 EC2 환경에서 Jenkins를 설치하고 구동하는 과정을 따라가보자.&lt;/p&gt;
-&lt;h2&gt;(Optional) Swap 메모리 설정하기&lt;/h2&gt;
-&lt;p&gt;프리티어환경에서 Jenkins를 사용하면 자칫 메모리가 부족한 상황이 발생할 수도 있다.
-2GB의 메모리는 젠킨스와 빌드를 모두 견디기 어려울 수도 있다.&lt;/p&gt;
-&lt;p&gt;다음 명령어를 통해 서버에 Swap 메모리를 할당하자.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; fallocate &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt; 2G /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;600&lt;/span&gt; /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;mkswap&lt;/span&gt; /swapfile
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;swapon&lt;/span&gt; /swapfile
-
-&lt;span class=&quot;token function&quot;&gt;free&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확인명령어&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://velog.io/@junho5336/Swap-%EB%A9%94%EB%AA%A8%EB%A6%AC-%ED%95%A0%EB%8B%B9%ED%95%98%EA%B8%B0&quot;&gt;Swap 메모리 할당하기&lt;/a&gt;를 참고&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;java 설치하기&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;설치 방법은 &lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;공식문서&lt;/a&gt;를 확인하면서 진행하고있습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;현재 사용할 jenkins의 버전은 java 17을 사용한다.
-java 17버전을 설치하자&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; update
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; openjdk-17-jre
-&lt;span class=&quot;token function&quot;&gt;java&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-version&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 10.588235294117647%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAYAAABYBvyLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAdElEQVR42mXNwQ6CMBRE0RIIW16j1LRpBfqoYP3/77tqF25cnGQyixnjHo75OXPdLshdkEW4RU/elJQSIQTGcWQYhj9932OM+em6DlOPF/WonOVkTSu6KJoz+74TY8Q510ZVlfzpSyktf8+891hrEZFmmibeU5cx4lWIWHEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;93d56503&apos; title=&apos;&apos; src=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png&apos; srcset=&apos;/static/d0e1b4065d85f4f0f9e8e290576873b8/e7570/93d56503.png 170w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/f46e7/93d56503.png 340w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/ca1dc/93d56503.png 680w,
-/static/d0e1b4065d85f4f0f9e8e290576873b8/49bb6/93d56503.png 775w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;h2&gt;jenkins 설치하기&lt;/h2&gt;
-&lt;p&gt;다음 명령어를 수행하여 jenkins를 설치한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-fsSL&lt;/span&gt; https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  /usr/share/keyrings/jenkins-keyring.asc &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
-&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; deb &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;signed-by&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;/usr/share/keyrings/jenkins-keyring.asc&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  https://pkg.jenkins.io/debian-stable binary/ &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tee&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;
-  /etc/apt/sources.list.d/jenkins.list &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; /dev/null
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; update
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;apt-get&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; jenkins
-
-&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; systemctl status jenkins &lt;span class=&quot;token comment&quot;&gt;# 실행상태 확인&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 16.470588235294116%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgElEQVR42m2OywrFIAxEleIjahdy1YIbBW3//w/n1oC7Lg5DEmYywmeHOipiiyi9oI2OOSfmPTHGQK3vLUbGOYcQAqy1EEJ8Q5bw3M8b1JBqAp0EpRRzHAer1ppDpJRs2vrJMqWc0XvHVS6kX+I2q4kxhtmhRMTs/Z699/xwNf8DtG9D56Z4n3UAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;99b45540&apos; title=&apos;&apos; src=&apos;/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png&apos; srcset=&apos;/static/377aacf35597393970adf4d2f550dffe/e7570/99b45540.png 170w,
-/static/377aacf35597393970adf4d2f550dffe/f46e7/99b45540.png 340w,
-/static/377aacf35597393970adf4d2f550dffe/ca1dc/99b45540.png 680w,
-/static/377aacf35597393970adf4d2f550dffe/02d09/99b45540.png 1020w,
-/static/377aacf35597393970adf4d2f550dffe/fcbeb/99b45540.png 1206w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;h2&gt;jenkins 접속하기 &amp;#x26; 초기설정&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;jenkins는 기본적으로 8080포트를 사용한다.
-jenkins의 포트를 변경하는 방법에 대해서는 본 글에서 다루지는 않는다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;{인스턴스-public-ip}:8080&lt;/code&gt; 으로 접속하면 다음과 같은 화면을 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABjklEQVR42qVT7VLCMBDk6X0Xx1fwAQT8Ib+AoQ7IYBXblCYhTT9S1rtAwA9AGDOzXELJdm9v6QyHI8xmL5hOZ5BSoSgKrNdrFKbY77XWZ6HU9t5isUCHP3jxRYYhorKsfOVz0zT4a202G1+TJDkQTiYRug99DJ4GGI/G6HV7dO5hPufnGzjn0Lath3Nc3Zd9eyCM49gfDEleKY2VLiDUGqkyyKgqailnUFt5npNq49Vzi1wZoYtvhKU20EJCZtojF+SNIG9E7mGlRlVV+/ZOthwIraZBrCRsHqB8NRkRMmhgZVl6cPu8WBnvjxKmWYa35RLvHwm0MWjIl5ou1K7xtSKUpLCqazREYq3dDdF45b8Im8b5t50FD4FgSeXWR+vB0fGi0vRAeMybUxHZDoSGs4sa55An/S9CVhVaZl9/tXwJIf+GL0spPVEYyNGhXELIJJzFoOhsbNiD8LZT4JiwXyHI4fuj/5RrPPy5bO3wnBQYTV/RiaLIeyKEQEZZvAZCZFAyx3gW4+auj9v7R3wC/VKL2SHZQ34AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4492665d&apos; title=&apos;&apos; src=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png&apos; srcset=&apos;/static/1a9e2cb6709d5c991de4fa4d0d15199d/e7570/4492665d.png 170w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/f46e7/4492665d.png 340w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/ca1dc/4492665d.png 680w,
-/static/1a9e2cb6709d5c991de4fa4d0d15199d/f5df9/4492665d.png 1019w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;다시 EC2 화면으로 넘어와서 다음 명령어를 수행하여 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt;를 알 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token function&quot;&gt;sudo&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;cat&lt;/span&gt; /var/lib/jenkins/secrets/initialAdminPassword&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 5.294117647058823%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAABCAYAAADeko4lAAAACXBIWXMAAAsTAAALEwEAmpwYAAAARElEQVR42h2KOwrAMAzFegN/Y5OlS4OTqfe/3WvxIBBCF92EfBN5flbAlmE+E7sOqgrMDCKCqsLdYWbtItJ9jNFERL8f97MZQConaOsAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;f55b94c9&apos; title=&apos;&apos; src=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png&apos; srcset=&apos;/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e7570/f55b94c9.png 170w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/f46e7/f55b94c9.png 340w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/ca1dc/f55b94c9.png 680w,
-/static/1bfdaa00e299a618f4e0d6f9a35b40f4/e42f2/f55b94c9.png 734w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;확인한 암호를 화면에 입력한 뒤 Continue 버튼을 눌러 계속 진행한다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABpElEQVR42p1T7U7jMBDsq9/LIPEM9x+O4yh/oZxU2gM1JDTxR+wkTtthZ1FaQG2BW2lkx94dz35kNJlMMJ3eYzaboa5rNE2DEAJijLqPMej5MXjv1XexWGCUZRk2m41cBL0IIaJtOwQh9L5G3/f4zBhPK8tyIATuJn9x8es3rsfXuL25xdWfMc7PLjCf/VNnEm/Wa6w/YLVa6bolzPNcP6jIOI/SR5QuYCmoBFZUK5yDMVYzYTmGsnBNqd8RFkWhH42TWiwNzFKCSw8jcKVDlLMgaIxD6tJWzcGU3xLGyqKpGMzVKkksjZJG2XddJ8VvNc2hDHxgL2HxvMQie0KWF6ilMUmCmErqdyAh0csdu8oOM+VOlNOq6g1hK46tOLVtq13m61TyDmyCoBEf1i9yrAScBqqsqmpHOMj+zJji0AyCKp00jA/+FyH9os6o35Iy/deUv0lIH5aEikiksylne5vyFUIqs9Yq6cGxGQZ7aP8xpJRUHdeBiHj3p3y3hvss9Ws8mg7Thxyj+Xyu9WAqfP0YPvpYK4Mfakwfc/w4vcTJzzFeAINXjf7ZXI+HAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;28fea7e9&apos; title=&apos;&apos; src=&apos;/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png&apos; srcset=&apos;/static/34da90f6397f6f2e2761f50b1c127250/e7570/28fea7e9.png 170w,
-/static/34da90f6397f6f2e2761f50b1c127250/f46e7/28fea7e9.png 340w,
-/static/34da90f6397f6f2e2761f50b1c127250/ca1dc/28fea7e9.png 680w,
-/static/34da90f6397f6f2e2761f50b1c127250/583a7/28fea7e9.png 1013w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;초기 플러그인 세팅 화면이 나오는데 &lt;code class=&quot;language-text&quot;&gt;Install suggested plugins&lt;/code&gt; 를 눌러 초기 플러그인 설정을 진행한다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR42p1UiW6bQBT0/39SPyCRq9RxrMolji9ALAHMfS6Hp++9GIvUaatkpdGwCzs771hmhmFgt9sLwjBEksSI488hiiLal2C73WLmeR66rkdZlsQd2rYT7vte0Lat8L/G+XwWdhwHM9/3MQwDDGOD+fwB9/ffhde/nrFYLHF3Nyd+gtatbORvmafgtatgEAQyqasKNbmsqzdU9JxnGYqiEPd13VxQ01p5WatvHZ5OJ5mouMYhKGCFJfZ+DjdtEBQdorIT0TTNKE8p8ryQFHFqRmcfCq7sGN9WeyytAD9VBJVrRPqM16zDZrPBer2G67pSAMmt5Lu9hn0VDEmQp7tTiWNUwkpqqEzDJnaIraiSCmaX8PM8J7eprDHzGgvfCK6cGD8sHw+mj4Ud0HOAlRvjxctg2zZMy3zj4xGKNopbahk+iIUlbUpNQnYSLFWMJ5Vc8UiHPLsJAuoELh7D8z0Se4WjXBHi4rDojWDV9ig09eMEPNfdIDnrLn3JPZpluYTM4XPIY7XfFWVM7P+G1locVdRmfMBNUUbBgV+w8B+YDg6Pw2ya5u835TMO2R0Ljldxelu+HPJH370TNE2L/hjJtWJfAReG3R8OB/wGHbWCEuKtdfAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;c78a9517&apos; title=&apos;&apos; src=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png&apos; srcset=&apos;/static/6be6be95dbd2b5d099883b8b0c45d285/e7570/c78a9517.png 170w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/f46e7/c78a9517.png 340w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/ca1dc/c78a9517.png 680w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/02d09/c78a9517.png 1020w,
-/static/6be6be95dbd2b5d099883b8b0c45d285/d8785/c78a9517.png 1021w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 76.47058823529412%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABwElEQVR42pWUWW+bQBSF+f8/qw9J5FRK89ImYrFZhp3BgPGKfTrnIlBsJY2LdDQznjvfXWXL85ZYLldYrXx0XYfNZnOlvu+/Fe12ux2UUrDW6zWGYcD5fMblcpk1fdzz7vb+VvyKohiBF2PcmLWsKjRNC61rUV3X2G638mAg8Asonc3ArmtxND/8eHjGYvFT9Pi4wNMT9YwgCMV4yuIz8W4G9ib/wUTc9Kc5RWYwpXEbybfAV+cVbuogrH2oWiHLMoRhhNY0iCn7fiDF1rqSc5pmxiY3pWnkzJVNORwOY1N+O3/w5r3DizwkZYI4SQXIGpZliSiKkOe5OCpLQtfSUUIIY40pAuM4hmXbDmKVoMgL6ErLg6Io59VxHDNSK+MkFCeVaVxl7DguhOz3e3FwOp2QJAks13WR5hmKskClR2OlYolAa42Xl19wXU+M6YSRMu227QT2OTBNJS0WlaOTm2jbtpVogiAQCMUaUSwDH38BdCR31o2GSkXzo/F8vb8D6MqGUGp69PF8e/dPoG3bYsCi3yuWgWCCqKsuE8bij927TxwnziCjI4wNPB6P0gtrmjNCOVf/I/4PUISzib7v4y8mPXFDELhsegAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;82bae04f&apos; title=&apos;&apos; src=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png&apos; srcset=&apos;/static/c5ec863604bfad00adc41e0bcd9ca6fd/e7570/82bae04f.png 170w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/f46e7/82bae04f.png 340w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/ca1dc/82bae04f.png 680w,
-/static/c5ec863604bfad00adc41e0bcd9ca6fd/9b7e9/82bae04f.png 1009w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;초기 Admin 유저를 생성할 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABV0lEQVR42pWT3W6CMBiGufOd7VJ2suwSlp2pi2Yao6A7QMlQERVULD+l9F1b0TQRRL/kSf/fvv3aGpZlYT53YNszBEGAKIpwPB5VqSP76jgcDiCEwHEcGK7rQkaSpMiyDHmeI00zUadlmYHSXLUppeAcN8HLTs/zpOBCNZbLFTqdLnq9HwyHI/T7Q4zHFlqtDkYjE6Y5Qbv9rTbWRfT6er2GsVicBU8nIiYnKMSgnFAUxQ1MwMvxRkF5VLlACrJyMdOEdFFJzthVqNqhSKoUrXJWR4NDBsYeF2NNDqPopK6+Ln9PO6TiuFTsqufvHo05jOPkeoxHue9QPFq566PQJoeExCqHlwnPOCyKy0/RBOWjJnF8zmUDeVlyLi+GVzvkVZ+0JniJjH1M8buKMNummNgujOl0Ct/3lXoYhnfZCzbbAH+eL9hgs9vha2Dj5a2N1/cuPj57+AeZf421Ajk8yQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;a8f14e43&apos; title=&apos;&apos; src=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png&apos; srcset=&apos;/static/407217b075d5dc4ab36ca58e5b6895fb/e7570/a8f14e43.png 170w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/f46e7/a8f14e43.png 340w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/ca1dc/a8f14e43.png 680w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/02d09/a8f14e43.png 1020w,
-/static/407217b075d5dc4ab36ca58e5b6895fb/bb4c7/a8f14e43.png 1023w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;jenkins의 기본 URL을 설정할 수 있다. 기본값을 권장한다. &lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 75.88235294117648%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABNklEQVR42u2Uy26DMBBF8/Vd9kMqddEv6CpRUJoqUtpUICIBKY+WDYSnbcytx0CiEDZRN13U0tHg8ej6zkh4ZpomXNeD47hI0xRFUSDPcx0Hzvtcf4/JsgxVVSkNB7MgCEGrLEtFBca4goFzpnNUyDnXZxSnVtu2Ovq+j1kYdoKed8BiYWC93mC7fYdl2XhZvarcUu/n8yVse38hMBYMguAsSK7yvDgdUiyVu0y1lB6ppRpSSjRE03RRIQi1v3LYtVVqYaKuaz3TJCESHPs5VSqvYw9dOinIWH0a/iBKCMH1ZYKLbrYDKsf7GnJ+1bIQQrsiBofkYMiNz6iehIiLGUZRNDnoW9a/4O8FpRz+lL/okAmJ3WeKXVjgzVKPA702pEzEcXwT0dc3PvYH3D8auHsw8PS8wg++b41+WLe4nQAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;84efb2c8&apos; title=&apos;&apos; src=&apos;/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png&apos; srcset=&apos;/static/4035960bbafbca7af5331b1611fac0f0/e7570/84efb2c8.png 170w,
-/static/4035960bbafbca7af5331b1611fac0f0/f46e7/84efb2c8.png 340w,
-/static/4035960bbafbca7af5331b1611fac0f0/ca1dc/84efb2c8.png 680w,
-/static/4035960bbafbca7af5331b1611fac0f0/02d09/84efb2c8.png 1020w,
-/static/4035960bbafbca7af5331b1611fac0f0/42a19/84efb2c8.png 1024w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;여기까지 했으면 초기 설정은 완료했다고 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;만약 위 과정에서 admin 유저를 생성하지 않았다면 &lt;code class=&quot;language-text&quot;&gt;admin&lt;/code&gt; 이라는 기본 유저로 로그인 할 수 있다고 설명하고 있다.
-비밀번호는 &lt;code class=&quot;language-text&quot;&gt;initialAdminPassword&lt;/code&gt; 과정에서 입력했던 값으로 설정되어있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAABXklEQVR42u2Uy07DMBBF+/8s+QW+gBV71kioQNOmzqNpQiFt3onzqJ3L2G2A0iJUNmwY6WTuWJrrkZ1kNJ/PwZgFy7IRxzGyLDubNE1RFAWCIMBovV5DSqkZou979TyoB07FsJ4kCUZhGOpisfAxHk8wmzE47hIu1RPDhGla4LyF2k+InjJB/Z8RcmcYx2S42US6CDwGZt7DtR7hu1MsXQPm5A4ue0DXJNRZohcFevkFkUPS+vuE6txUiMZHU5io8xl4ZoCnBupsqnNTMrSlpekqG21laZTuKIvm+diwTB3kEZmUDupCNTlkRDq3CEabzDVKqzWeMU1DWrQvx4bblqOtS3RthbquUFUF2oar2ffIPaR7caCl3H4YJsnO8OrWxsX1Ey5vDIQp17c8HPZPcXDLw4R+XMF+LbBY05RbiXPipOF379i/4R8Yep6HKIp0of4YvyHPc/reOVarFd4AhmyNTDDm+BMAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;60ba97ad&apos; title=&apos;&apos; src=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png&apos; srcset=&apos;/static/f1396e60734e9dddb0c6a43f0652fc07/e7570/60ba97ad.png 170w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/f46e7/60ba97ad.png 340w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/ca1dc/60ba97ad.png 680w,
-/static/f1396e60734e9dddb0c6a43f0652fc07/0d97d/60ba97ad.png 1011w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이렇게 Jenkins를 설치할 수 있다.&lt;/p&gt;
-&lt;h2&gt;Reference&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.jenkins.io/doc/book/installing/linux/&quot;&gt;https://www.jenkins.io/doc/book/installing/linux/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://kafcamus.tistory.com/15&quot;&gt;https://kafcamus.tistory.com/15&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 블로그 생성과정]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/blog-starter/</link><guid isPermaLink="false">https://pium-official.github.io/blog-starter/</guid><pubDate>Sun, 09 Jul 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
