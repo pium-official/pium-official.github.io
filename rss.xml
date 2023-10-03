@@ -1,4 +1,129 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 26 Sep 2023 05:13:22 GMT</lastBuildDate><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 03 Oct 2023 12:50:47 GMT</lastBuildDate><item><title><![CDATA[서버에서 이미지 리사이징하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/image-resize/</link><guid isPermaLink="false">https://pium-official.github.io/image-resize/</guid><pubDate>Tue, 03 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Choi-JJunho&quot;&gt;주노&lt;/a&gt;, &lt;a href=&quot;https://github.com/WaiNaat&quot;&gt;참새&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움 서비스를 이용하는 과정에서 불러오는 이미지의 크기가 너무 커서 사용자가 이미지 로드할 때 시간이 오래 걸린다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/2ed8271ed35b40c1ae486ed89912fb04/c4525/79ba487e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 101.76470588235296%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAADqElEQVR42pVU3WrjRhj1RaAXe1Ecgkm6sv7/Rv/SSLZk2XKcrBM29KalLJQ+Q+lFrwuFZUO60Jh9hUJp6UUfoA9U6OW69dKwWp1+4ziU0rDtCg7fzKA5850zR+o96uvvf/x4cjWfjV7M8uy6SoJVxdNVU41XTcFX502zujhdrC6W56vT4+NVRWsTQlMUqynnqypJruucv5iO+aUnSfu9o6MjNwyTG87HCMOocx0HPMtRjSqU9QLLRydYnj/GJ2cLPDlb4qNmhmUzx2x+gmZ+ilFZd2lWgPPRRpKkoLd/eMh0w3pl2qzTDfu1abE2CJN2XNbt1Reftz9/86z98dvn7S/Xl+2Xn33aLoqi/enZ1+33V0/bH55ftt89/ep1My5hmM7vkqSHvf39faaoxo2imlA1s1MUA6blIuI5eF4iKyskdYNovICZVLCyGm42QVDMwKj6vO4cWrMDvtF16W9CItsSqqohToNmOxgaLtQkgcRLSNEUSjqDls0xjKeQkymGBCmqOz0/hurzzaDf/zehouqw3QC8qOB7AUI/BE8zRIGPcV4gzzJ45HNGB2VxjDSJO06SPcaEh/cRGrBtRoYfo541GAvJROIHIUbVBGEUwzAMOrBAHCdIirxjsxNYlkOEg/sJHcdFXZVENkFOG5M0hef5VHMiL+CyYOuzYTlUnc6wXeiG+ZYOHQ/5aEQkHpjHECcpHJcuKuHIKF6eH0G8J/ZQ7RyyyLKdzWBwj4cyeSg6WJ6dk+w5SpJcT2fIyT9BGEQpNN2CZlhQ9VvCKE7B8smm74T3d2iSBOHdaFxtvRMbXJJM+UQYZyTPhiab0IYqVFkhwgyuH236g3s8FFV0sJNzK43msqJvu6ubBRzLg5S7GOYcQzvu4pSDsWDz4EH/7YR3EHNFM6jLGHE23qZAsSx8MPsQR+VFZzuMPPY2/f7/JFR3c8P2oZvetltNFZJlqJIkPlnxMfy35H90SNL9IEY5mSHlI4oPIa8RZpOOBamI0bsRihvV6ZMUkbJsb1tt16cL9DuLOqf3KDY7QpLw5+4C3ogY3P4k9E7eQazdjWVZ64YCNJZkXYzfGKoN+qncER4yavdme6LjdeJ0h3IobpRRgEOqIsgiMv4dSHoWRVtEQdixJIftha8eDh5GvYODA9txvN+YF/7h+eFLl/lrxsI1kaw1TV9rurGWFW1t0/oWrqgevXML1/VeWszbEH49pH9rj573CCGhIOR7e3v5HtXeu0HsjQTXXxRcEowLcwtWAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;79ba487e&apos; title=&apos;&apos; src=&apos;/static/2ed8271ed35b40c1ae486ed89912fb04/ca1dc/79ba487e.png&apos; srcset=&apos;/static/2ed8271ed35b40c1ae486ed89912fb04/e7570/79ba487e.png 170w,
+/static/2ed8271ed35b40c1ae486ed89912fb04/f46e7/79ba487e.png 340w,
+/static/2ed8271ed35b40c1ae486ed89912fb04/ca1dc/79ba487e.png 680w,
+/static/2ed8271ed35b40c1ae486ed89912fb04/02d09/79ba487e.png 1020w,
+/static/2ed8271ed35b40c1ae486ed89912fb04/9d567/79ba487e.png 1360w,
+/static/2ed8271ed35b40c1ae486ed89912fb04/c4525/79ba487e.png 2290w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+위와 같은 환경에서 이미지 로드 시간을 책정해봤다.
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/6e4a50d6f944540f32cab7c0cdedec9a/bf436/5020cb2e.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 72.94117647058825%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAACKUlEQVR42oVUyW4TQRCdfwBFHOJZumft8eyLZzyWYwtCkFBEiOAGFw7kgiKOHPj3R1XZsYwP9uGperpfv1p7rOnHX3Tf/6D48ozg/gnxI9mHX7h6/xPN4xPabkA/rNCQ9YMYSgcIwgRah4e1orWnfPm2xtt7THef0G0+IKgGFNNbZMstVLFAPW1R1p2IlXVPlw0cVwtczxfwmgW1H5EoCabGwCQGyvUILuIwQhgE8JVCFMaIzRxZXsGkOa0zucQ4FozidJcBRWvZjoa99+gwicjHllPKywZxMpfLp4IMjjDLa+FaxweMF7K3F5wTcViuRVDOTgRtR0kGq/UWUWTOC7JloW6YUFSdROLuoz+NsKxa4Z6PkFI08wJVs0CaVQgoAtclAe//CFnoZvtOanxWkJEQicGXuJMseMxnpyE1JStqOb+YcmJyDOMaTTvQhRiuZkfUnJkNz3YIrqRclK10+2LKaVbi9u6jDLchcdvXuG5azPIlZuUS12kjQl0/XhZkG8YZymaUGsY0ixzRm81XvPr8G68fnnF1+014ddtLjS/WMEprmHKC8hPa51cRQXsK2nEFyvEk5Tk55DPLPRlWJW80POxpPxQcRubFqWD3GBzqNO8xx+La5NShutm92arpaZgr9ItJXgiPTdsv6Xwh64TSZpisRTJvkJCNTEncVn4eFg+k45IHj6Exo87xNzcjpJow+nFFoiM6cnKwww1hg6pfI0x2XMfT+AeZ6rrU+Hi07gAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5020cb2e&apos; title=&apos;&apos; src=&apos;/static/6e4a50d6f944540f32cab7c0cdedec9a/ca1dc/5020cb2e.png&apos; srcset=&apos;/static/6e4a50d6f944540f32cab7c0cdedec9a/e7570/5020cb2e.png 170w,
+/static/6e4a50d6f944540f32cab7c0cdedec9a/f46e7/5020cb2e.png 340w,
+/static/6e4a50d6f944540f32cab7c0cdedec9a/ca1dc/5020cb2e.png 680w,
+/static/6e4a50d6f944540f32cab7c0cdedec9a/bf436/5020cb2e.png 745w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+사용자가 인터넷 환경이 느린 경우 1.8MB 사진을 로드하는 데 9.99초 이상의 로드시간이 걸린다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;피움 서비스는 사진 업로드가 유의미할 정도로 많이 일어나지 않는다.&lt;/p&gt;
+&lt;p&gt;따라서 다음과 같은 시나리오로 이미지를 압축하려고한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;markdown&quot;&gt;&lt;pre class=&quot;language-markdown&quot;&gt;&lt;code class=&quot;language-markdown&quot;&gt;&lt;span class=&quot;token list punctuation&quot;&gt;1.&lt;/span&gt; S3에서 이미지 불러오기
+&lt;span class=&quot;token list punctuation&quot;&gt;2.&lt;/span&gt; 이미지 압축
+&lt;span class=&quot;token list punctuation&quot;&gt;3.&lt;/span&gt; S3로 이미지 보내기&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;서버에서 특정 시간마다 이미지 압축을 수행하고 이를 S3에 업로드하는 과정을 통해 이미지 최적화를 진행해보자.&lt;/p&gt;
+&lt;h2&gt;시작하기&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;WebP(웹피)는 손실/비손실 압축 이미지 파일을 위한 이미지 포맷이다.
+&lt;a href=&quot;https://ko.wikipedia.org/wiki/WebP&quot;&gt;위키백과&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;이미지 압축을 진행하기에 앞서 다음 두가지 방식을 고려했다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;1. 서버에서 cwebp 프로그램을 이용해 이미지를 webp 형태로 변환하는 방법&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;2. node, python과 같은 언어를 이용해 이미지를 변환하는 방법&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;1번의 경우 서버에 직접 프로그램을 설치하고 관리해야하는 관리 소요가 있다&lt;/p&gt;
+&lt;p&gt;현재 빌드서버에서 배치로 작업을 수행할 것이기 때문에 npm이 이미 설치되어있다는 가정하에 javascript로 개발하는 것이 적합하다고 판단하여 node.js로 이미지 최적화 코드를 작성헀다.&lt;/p&gt;
+&lt;p&gt;추가로 해당 코드를 주기적으로 실행시키기 위한 쉘 스크립트도 함께 작성했다.&lt;/p&gt;
+&lt;h2&gt;코드&lt;/h2&gt;
+&lt;p&gt;코드를 하나씩 살펴보자.&lt;/p&gt;
+&lt;h3&gt;자바스크립트&lt;/h3&gt;
+&lt;p&gt;내부적으로 Sharp 라이브러리를 사용하여 변환하고 .png, .webp 형태로 제공된다.&lt;/p&gt;
+&lt;h3&gt;쉘 스크립트&lt;/h3&gt;
+&lt;p&gt;파일을 탐색하여 자바스크립트로 작성된 함수를 수행한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token comment&quot;&gt;# 전처리&lt;/span&gt;
+
+&lt;span class=&quot;token function-name function&quot;&gt;convert_image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;count_success&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;count_failure&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;count_skip&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;
+
+    &lt;span class=&quot;token builtin class-name&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;target_dir&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$1&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;$2&lt;/span&gt;
+    
+    &lt;span class=&quot;token builtin class-name&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;total_files&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;find&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$target_dir&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-type&lt;/span&gt; f &lt;span class=&quot;token parameter variable&quot;&gt;-iname&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;*.jpeg&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-iname&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;*.jpg&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-iname&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;*.png&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-iname&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;*.gif&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;
+
+    &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$total_files&lt;/span&gt; 개의 파일에 대한 작업 시작&quot;&lt;/span&gt;
+
+    &lt;span class=&quot;token comment&quot;&gt;# 대, 소문자 구분 없이 탐색 활성화&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;shopt&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-s&lt;/span&gt; nocaseglob
+    &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;token for-or-select variable&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$target_dir&lt;/span&gt;&quot;&lt;/span&gt;/*.&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;jpeg,jpg,png,gif&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;do&lt;/span&gt;
+	    &lt;span class=&quot;token comment&quot;&gt;# 대, 소문자 구분 없이 탐색 비활성화&lt;/span&gt;
+	    &lt;span class=&quot;token builtin class-name&quot;&gt;shopt&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-u&lt;/span&gt; nocaseglob
+
+	    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$file&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 파일인 경우에만 처리&lt;/span&gt;
+		    &lt;span class=&quot;token assign-left variable&quot;&gt;filename_full&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;basename&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$file&lt;/span&gt;&quot;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;
+		    &lt;span class=&quot;token assign-left variable&quot;&gt;extension&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;${filename&lt;span class=&quot;token operator&quot;&gt;##&lt;/span&gt;*.}&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 확장자 추출&lt;/span&gt;
+		    &lt;span class=&quot;token assign-left variable&quot;&gt;extension&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$extension&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;tr&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;[:upper:]&apos;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;[:lower:]&apos;&lt;/span&gt;&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;# 확장자 소문자로 변환&lt;/span&gt;
+		    &lt;span class=&quot;token assign-left variable&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;${filename_full&lt;span class=&quot;token operator&quot;&gt;%&lt;/span&gt;.*}&lt;/span&gt;&quot;&lt;/span&gt;
+
+		    &lt;span class=&quot;token assign-left variable&quot;&gt;output_file&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$target_dir&lt;/span&gt;/&lt;span class=&quot;token variable&quot;&gt;${filename}&lt;/span&gt;.&lt;span class=&quot;token variable&quot;&gt;${nick_name}&lt;/span&gt;.webp&quot;&lt;/span&gt;
+		    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$output_file&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 이미 존재하는 파일이라면 생략&lt;/span&gt;
+			    &lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;((&lt;/span&gt;count_skip&lt;span class=&quot;token operator&quot;&gt;+=&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;))&lt;/span&gt;&lt;/span&gt;
+		    &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt;
+			    &lt;span class=&quot;token comment&quot;&gt;# 여기에 이미지 압축!&lt;/span&gt;
+			    &lt;span class=&quot;token function&quot;&gt;node&lt;/span&gt; resize.js &lt;span class=&quot;token parameter variable&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$target_dir&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$filename_full&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$size&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$nick_name&lt;/span&gt;&quot;&lt;/span&gt;
+
+			    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token variable&quot;&gt;$?&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-ne&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;then&lt;/span&gt;
+				    &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;변환 실패: &lt;span class=&quot;token variable&quot;&gt;$file&lt;/span&gt; -&gt; &lt;span class=&quot;token variable&quot;&gt;$output_file&lt;/span&gt;&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;$error_log&lt;/span&gt;&quot;&lt;/span&gt;
+				    &lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;((&lt;/span&gt;count_failure&lt;span class=&quot;token operator&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;))&lt;/span&gt;&lt;/span&gt;
+			    &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt;
+				    &lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;((&lt;/span&gt;count_success&lt;span class=&quot;token operator&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;))&lt;/span&gt;&lt;/span&gt;
+			    &lt;span class=&quot;token keyword&quot;&gt;fi&lt;/span&gt;
+		    &lt;span class=&quot;token keyword&quot;&gt;fi&lt;/span&gt;
+	    &lt;span class=&quot;token keyword&quot;&gt;fi&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;done&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&quot;&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;SIZE &lt;span class=&quot;token variable&quot;&gt;$width&lt;/span&gt; 변환 실패 파일 개수: &lt;span class=&quot;token variable&quot;&gt;$count_failure&lt;/span&gt;&quot;&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;SIZE &lt;span class=&quot;token variable&quot;&gt;$width&lt;/span&gt; 변환 성공 파일 개수: &lt;span class=&quot;token variable&quot;&gt;$count_success&lt;/span&gt;&quot;&lt;/span&gt;
+    &lt;span class=&quot;token builtin class-name&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;SIZE &lt;span class=&quot;token variable&quot;&gt;$width&lt;/span&gt; 변환 생략 파일 개수: &lt;span class=&quot;token variable&quot;&gt;$count_skip&lt;/span&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# 함수 실행&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;crontab&lt;/h3&gt;
+&lt;p&gt;아래 쉘 스크립트를 crontab에 등록하여 이미지 저장 - 압축 - 등록 과정을 수행한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;&lt;span class=&quot;token shebang important&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# S3에서 이미지를 받아온다&lt;/span&gt;
+aws s3 &lt;span class=&quot;token function&quot;&gt;sync&lt;/span&gt; s3://&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;S3 이미지 경로&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;로컬 이미지 경로&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# 최적화를 진행한다.&lt;/span&gt;
+/home/ubuntu/resize-image/bash.sh &lt;span class=&quot;token parameter variable&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;512&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;small&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;{로컬 이미지 경로}&quot;&lt;/span&gt;
+/home/ubuntu/resize-image/bash.sh &lt;span class=&quot;token parameter variable&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;128&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;x-small&quot;&lt;/span&gt; &lt;span class=&quot;token parameter variable&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;{로컬 이미지 경로}&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# 최적화가 완료된 파일을 S3로 업로드한다.&lt;/span&gt;
+aws s3 &lt;span class=&quot;token function&quot;&gt;sync&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;로컬 이미지 경로&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; s3://&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;S3 이미지 경로&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;정리&lt;/h2&gt;
+&lt;p&gt;간단하게 배포 시나리오와 별개로 이미지 리사이징을 수행해봤다.&lt;/p&gt;
+&lt;p&gt;개발 일정이 이미 어느정도 잡혀있고 코드상으로 추가하기 어려운 부분이라면 서버에서 배치로 돌리는것도 고려해보면 좋을 것 같다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/pium-official/resize-image&quot;&gt;github 이미지 리사이징을 위한 코드&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://certbot.eff.org/instructions&quot;&gt;https://certbot.eff.org/instructions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우아한테크코스 5기, 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/bassyu&quot;&gt;쵸파&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
