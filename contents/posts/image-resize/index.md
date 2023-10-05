@@ -54,7 +54,46 @@ tags:
 
 ### 자바스크립트
 
-내부적으로 Sharp 라이브러리를 사용하여 변환하고 .png, .webp 형태로 제공된다.
+이미지 변환에는 [sharp](https://sharp.pixelplumbing.com/) 라이브러리를 사용하였다. [npm trends](https://npmtrends.com/@squoosh/lib-vs-imagemagick-vs-imagemin-vs-sharp)를 이용해 비교했을 때 다른 패키지들과의 다운로드 수 차이가 많이 나서 정보를 찾아봤었다. sharp는 [libvips](https://github.com/libvips/libvips)를 사용하기 때문에 다른 라이브러리에 비해서 속도가 훨씬 빠르고, 컴퓨터의 자원 자체를 최대한 조금만 사용하도록 설계했다는 이야기를 듣게 되었다. 이는 아마존 aws라는 굉장히 한정된 자원을 가진 서버에서 이미지 최적화를 해야 한다는 우리의 문제 해결에 가장 적합할 것이라는 생각이 들어 최종적으로 sharp를 선택하였다.
+
+![npm trends로 sharp, imagemin, imagemagick, squoosh의 다운로드 수를 비교한 결과 sharp가 압도적으로 많다](.index_images/npm-trends.png)
+
+사진은 압축률이 가장 좋은 최신 기술인 webp를 기본적으로 제공하되, 지원하지 않는 브라우저를 고려해 png 확장자로도 바꿔서 저장한다. 아래는 변환 함수 부분만 담은 코드이다. `outputPath`의 파일 이름을 정하는 방식은 피움 팀 프론트엔드의 회의를 통해 나온 규칙이며, [Github Discussions](https://github.com/woowacourse-teams/2023-pium/discussions/384)에서 확인 가능하다.
+
+```javascript
+import { join } from 'path';
+import sharp from 'sharp';
+
+const convertImageTo = async (dir, filename, width, type, format) => {
+  const filenameWithoutExt = filename.split('.')[0];
+  const inputPath = join(dir, filename);
+  const outputPath = join(dir, `${filenameWithoutExt}.${type}.${format.toLowerCase()}`);
+
+  const image = sharp(inputPath);
+  const { width: imageWidth } = await image.metadata();
+  
+  // 이미지가 목표보다 이미 작을 경우 굳이 조정하지 않음
+  if (imageWidth <= width) {
+    await image
+      .withMetadata()
+      .toFile(outputPath);
+
+    return false;
+  }
+
+  await image
+    .resize(width)
+    .withMetadata()
+    .toFormat(format.toLowerCase(), { quality: 100 })
+    .toFile(outputPath);
+
+  return true;
+};
+```
+
+변환 이후 똑바로 일어나 있던 사진이 눕는 현상이 생겼었다. 이는 사진 파일들이 `orientation`이라는 메타데이터를 갖고 있는데 변환을 하면서 해당 자료를 잃어버려 생기는 현상이었다. sharp의 `withMetadata()`를 사용하면 간단하게 해결이 가능하다.
+
+커맨드 라인에서 받은 정보들을 갖고 이 함수를 이용해 하나씩 파일을 변환하는 방식이다.
 
 ### 쉘 스크립트
 
@@ -141,3 +180,4 @@ aws s3 sync {로컬 이미지 경로} s3://{S3 이미지 경로}
 ## Reference
 
 - https://certbot.eff.org/instructions
+- https://sharp.pixelplumbing.com
