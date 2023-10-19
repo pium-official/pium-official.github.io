@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 19 Oct 2023 09:24:41 GMT</lastBuildDate><item><title><![CDATA[무중단 배포 환경 구성하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of pium.log]]></title><description><![CDATA[우아한테크코스 5기 피움팀 기술 블로그입니다.]]></description><link>https://pium-official.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 19 Oct 2023 09:25:09 GMT</lastBuildDate><item><title><![CDATA[무중단 배포 환경 구성하기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '주노', '그레이', '조이', '하마드'
 가 작성했습니다. 서론 다음 discussion으로부터 시작된 안건입니다.
 discussion…]]></description><link>https://pium-official.github.io/dont-stop-deploy/</link><guid isPermaLink="false">https://pium-official.github.io/dont-stop-deploy/</guid><pubDate>Thu, 19 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀&lt;/p&gt;
@@ -637,7 +637,169 @@ aws s3 &lt;span class=&quot;token function&quot;&gt;sync&lt;/span&gt; &lt;span c
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://certbot.eff.org/instructions&quot;&gt;https://certbot.eff.org/instructions&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://sharp.pixelplumbing.com&quot;&gt;https://sharp.pixelplumbing.com&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[피움 최적화하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/optimize-frontend/</link><guid isPermaLink="false">https://pium-official.github.io/optimize-frontend/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우아한테크코스 5기, 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/bassyu&quot;&gt;쵸파&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;서론&lt;/h2&gt;
+&lt;p&gt;피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다.&lt;/p&gt;
+&lt;p&gt;백엔드와의 &lt;strong&gt;관심사 분리&lt;/strong&gt;를 위해 EC2에서 &lt;strong&gt;S3&lt;/strong&gt;로 FE 정적 파일을 옮기고,
+&lt;strong&gt;보안과 CDN 캐시&lt;/strong&gt;를 적용하기 위해 &lt;strong&gt;CloudFront&lt;/strong&gt;를 통해 배포하였습니다.&lt;/p&gt;
+&lt;p&gt;더 나아가서, 같은 리소스는 더 빠르게 접근하고 네트워크 트래픽을 줄이기 위해 &lt;strong&gt;HTTP 캐시&lt;/strong&gt;를 적용했습니다.&lt;/p&gt;
+&lt;p&gt;해당 과정을 어떻게 적용하였는지 공유하고자 합니다.&lt;/p&gt;
+&lt;h2&gt;S3 + CloudFront 배포&lt;/h2&gt;
+&lt;p&gt;이미 S3와 CloudFront로 배포하는 방법은 &lt;a href=&quot;https://blog.pium.life/aws-s3-apply/&quot;&gt;피움 블로그&lt;/a&gt;에 잘 기록되어 있습니다!
+이외의 프론트엔드 배포를 위한 차이점만 다루었습니다.&lt;/p&gt;
+&lt;h3&gt;S3 업로드 자동화 하기&lt;/h3&gt;
+&lt;h4&gt;aws cli 설치&lt;/h4&gt;
+&lt;p&gt;가장 좋은 방법은 &lt;a href=&quot;https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/getting-started-install.html&quot;&gt;공식 문서의 설치 방법&lt;/a&gt;을 그대로 따라 하는 것이었습니다.
+피움의 빌드 EC2 환경은 Linux ARM 이어서 해당 명령어를 그대로 따라 해 설치했습니다.&lt;/p&gt;
+&lt;h4&gt;파이프라인 구성&lt;/h4&gt;
+&lt;p&gt;아래의 명령어는 빌드 후 dist 폴더의 파일들을 S3 버킷에 동기화하는(옮기는) 명령어입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;aws s3 sync ./dist s3://{프로젝트 S3 버킷 경로} --delete&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이 1줄만 젠킨스 파이프라인에서 실행하면 됩니다.&lt;/p&gt;
+&lt;h4&gt;빌드 EC2에 권한 주기&lt;/h4&gt;
+&lt;p&gt;이때, 빌드 EC2에서 S3에 업로드할 수 있도록 권한을 줘야 합니다.
+인스턴스 &gt; 작업 &gt; 보안 &gt; IAM역할 수정
+에서 권한을 줄 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;CloudFront&lt;/h3&gt;
+&lt;h4&gt;오류 페이지&lt;/h4&gt;
+&lt;p&gt;SPA로 정적 페이지를 배포하면 최상위뿐만 아니라 다른 path로 이동할 때가 많습니다.
+다른 path에 접근하더라도 index.html을 받을 수 있도록 오류 페이지를 설정해 줍니다.&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/9d567/1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABnUlEQVR42j1Ry47UMBDM/3Fl+RY+BWnhyAU4wE9w4SEusxLLaGc3k8dMEjuxHT8SO1N0e1haasXudFdXlYuqbiDGEceqhpwmlMcKyhjc1RK7SkLPJv+73z9AyBFNe0JZHjGIgc4NjNHQWl2T5goG0fOMXogM3A8CzfmM34cyZ3vuMEiZv5L+87nTASoAo9tgVkAvgKKczIzi3HWoiaXSGj4E+GWBdQ7OWlg757P1HuFf3fuAsP8M8e0Nxp/vIH7cQny/hf71Fk61KO7/7LHb3WGk7RxxXZFiRNoStm1DSgmzdbnOoGtMiF9fo3z/AvXHV2g+3aD6cIPpy0usco+CQaZJ4fHxCQ+HA/kk830gC+qmxUAWOGKmlMpe1nWLXiqENcFYj1MvcOoE2eZhZosiEhs2kyU757EQixhXkmvznVkxS7aDl4zjRLId1SI9iKHH0HnhygrCguJyuTKcCZ3jwgUKQwaz5Ofggaqq0NIrM4mrsikv/t9D9cyQhy35lAggEpuNkhu5gdlt5Gcghn0/QJIlC4HzYmb3PMd9rOYvslReAT0ajTgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;error_page&apos; title=&apos;&apos; src=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/ca1dc/1.png&apos; srcset=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/e7570/1.png 170w,
+/static/5f98c07b753b77ef35dae3e9779697bd/f46e7/1.png 340w,
+/static/5f98c07b753b77ef35dae3e9779697bd/ca1dc/1.png 680w,
+/static/5f98c07b753b77ef35dae3e9779697bd/02d09/1.png 1020w,
+/static/5f98c07b753b77ef35dae3e9779697bd/9d567/1.png 1360w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;error_page&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;h2&gt;HTTP 캐시를 위한 응답 헤더 정책&lt;/h2&gt;
+&lt;p&gt;FE 배포는 성공적으로 마무리되었습니다.
+이제 더 나은 사용자 경험을 위해 &lt;strong&gt;HTTP 캐시&lt;/strong&gt;를 적용하고자 합니다.&lt;/p&gt;
+&lt;h3&gt;HTTP 캐시를 적용하는 이유&lt;/h3&gt;
+&lt;p&gt;똑같은 리소스는 웹페이지에 들어갈 때마다 새로 요청할 필요가 없습니다.
+디스크에 저장해 두었다가 새로운 버전만 요청하면 훨씬 더 빠르지 않을까요?
+네트워크 통신 비용도 크게 줄일 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTTP/Caching&quot;&gt;HTTP 캐시&lt;/a&gt;를 활용하면 같은 리소스는 네트워크를 거치지 않고 디스크나 메모리에서 바로 사용할 수 있습니다!&lt;/p&gt;
+&lt;h3&gt;Cache-Control 헤더&lt;/h3&gt;
+&lt;p&gt;리소스 &lt;strong&gt;응답 헤더의 Cache-Control 필드&lt;/strong&gt;를 통해 HTTP캐시를 설정할 수 있습니다.
+그중 Cache-Control: &quot;max-age=&lt;second&gt;&quot; 값으로 몇 초간 캐시 할지 설정할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;피움 서비스에서는 &apos;같은 리소스에 대해 한 달은 캐싱한다&apos;는 정책을 주기 위해 아래와 같이 CloudFront의 응답 헤더 정책을 만들었습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/eb638/2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAnklEQVR42oWP2Q7CIBRE+f/Pa4320aXRlhY1TdkuywjEVuuLNzkBhskwsJ5zVFWNQ9Og3u3BnzOstX8hItCPprUGk0phlhIqHaRU0IbgnFvx3sOHUNZvnRI2h9LHb4wBm0uIQYyxsEzea202wct45zGMAkI8ENJjq548bJomdF1fUKlteLfJCHHH9dbh0rbgfFjvcpPj6ZxCx40/f/sFStU2yuhlzdAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2&apos; title=&apos;&apos; src=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/ca1dc/2.png&apos; srcset=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/e7570/2.png 170w,
+/static/3729943c9ba25c16c2b9860332ff06c0/f46e7/2.png 340w,
+/static/3729943c9ba25c16c2b9860332ff06c0/ca1dc/2.png 680w,
+/static/3729943c9ba25c16c2b9860332ff06c0/02d09/2.png 1020w,
+/static/3729943c9ba25c16c2b9860332ff06c0/9d567/2.png 1360w,
+/static/3729943c9ba25c16c2b9860332ff06c0/eb638/2.png 1422w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;그리고 동작에 추가합니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/69083/3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAoklEQVR42o3P2w6DIBBFUf//G1svYEVAe5FWQdRd9LkxnWRl3s6cyZRqqYRAyBrVaspK4NybuCyEEA7btvHvZMZaZH2j1YYmhdc3hTY27QaZaNPhfSDGeCrMM5P3ZLbruVxz8rygLCu01pgU3qa2u3Gajstraryu60/7B/snw+DI1PNDaV4UZkD2b+rHhHp55H1EJOo5UnWO3LrUIjKfiHHhC6fONAXwg2aIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3&apos; title=&apos;&apos; src=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/ca1dc/3.png&apos; srcset=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/e7570/3.png 170w,
+/static/587b8c13d9dd6575bdaec5fefb316887/f46e7/3.png 340w,
+/static/587b8c13d9dd6575bdaec5fefb316887/ca1dc/3.png 680w,
+/static/587b8c13d9dd6575bdaec5fefb316887/02d09/3.png 1020w,
+/static/587b8c13d9dd6575bdaec5fefb316887/69083/3.png 1158w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이제 CDN이 보내주는 리소스 헤더에 Cach-Control이 더해져서 HTTP 캐시가 적용됩니다! 🎉&lt;/p&gt;
+&lt;h3&gt;캐시 버스팅&lt;/h3&gt;
+&lt;p&gt;클라이언트는 설정해 준 시간이 지나지 않으면 동일한 URL의 GET 요청에는 항상 캐시가 적용됩니다.
+새로운 버전이 업데이트되면 원래의 캐시를 어떻게 지울까요?&lt;/p&gt;
+&lt;p&gt;피움은 &lt;strong&gt;새로운 버전의 URL이 바뀔 수 있도록 번들에 해시&lt;/strong&gt;를 줘서 캐시 버스팅을 적용했습니다.&lt;/p&gt;
+&lt;p&gt;아래는 번들 파일에 해시를 주는 webpack.config 설정입니다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// webpack.config.js
+
+output: {
+  path: path.join(__dirname, &apos;dist&apos;),
+  filename: &apos;[name].[contenthash].bundle.js&apos;,
+  chunkFilename: &apos;[name].[chunkhash].chunk.bundle.js&apos;,
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;이후 빌드된 번들에 해시가 들어간 모습입니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 512px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3f48d51bfe664acf174d6e396c9b72b8/06341/4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABhElEQVR42pVQyUrEQBSMnvwAFxSXmDiTdMcsk6SzJzOjDipuiCjuoAfnIoIn0Ys3T/rNZb8eFU+Ch6Lqhfeqq6JN9IaYX7/D0/AV/PgZGw/vmNt9hCauMV7cYCz/H7SZdB+zyQG2D8+Q7J3AHlxgqT7CVLKHaYnJeBeT4hfiPzjegeYwC23bw+0Rx8fLJhw3RF0W6DcNvFUHpq5jxTAkltGSTGib5o/+gWnAaq1AY4xhybCx1bNxdeigzQKEUQTPCxBFAkHQkRwjDCN0OqGcQ7iuD9/vIKD565vn+bAsGxpnNhZ0hvMdA4+XujSMUMqEQiRomq7UpeQGVVUrXZYViqKQGOk0zZDnBbIsU6aazTgsU4dVHcBaO0focrmUq1Sjg1Qd5HmujpMkVWnpQTKhmUD7nDvfhgZYNoA7OAW3WvIgVlVpUQihTMlgBDLIEMdCYrRHmh5xXU9W5jbmFhmGxybe7pfR5rJqXal0ZEDpqC4dU81+fw11XStNv4L2ut2eYt8P8AlNNQNxRb5xqgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4&apos; title=&apos;&apos; src=&apos;/static/3f48d51bfe664acf174d6e396c9b72b8/06341/4.png&apos; srcset=&apos;/static/3f48d51bfe664acf174d6e396c9b72b8/e7570/4.png 170w,
+/static/3f48d51bfe664acf174d6e396c9b72b8/f46e7/4.png 340w,
+/static/3f48d51bfe664acf174d6e396c9b72b8/06341/4.png 512w&apos; sizes=&apos;(max-width: 512px) 100vw, 512px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;그런데 webpack.config를 자세히 보면 chunkhash와 contenthash가 있는 것을 알 수 있습니다.
+둘은 어떤 차이일까요?&lt;/p&gt;
+&lt;h4&gt;webpack 해시의 종류&lt;/h4&gt;
+&lt;p&gt;우선 하나의 엔트리 포인트에서 나온 파일들을 청크라고 부릅니다.
+webpack 설정으로 청크를 어떻게 나눌지는 커스텀할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;chunkhash는 청크를 기준으로 해시값을 주고, contenthash는 청크가 같더라도 각 파일의 내용을 기준으로 해시값을 줍니다.&lt;/p&gt;
+&lt;p&gt;만약 하나의 청크에 하나의 파일이 나온다면 chunkhash를 줘도 무방합니다.
+하나의 청크에서 .js .css 처럼 여러 파일이 나온다면 contenthash로 더욱 뾰족하게 해싱할 수 있습니다.&lt;/p&gt;
+&lt;h3&gt;index.html은 예외&lt;/h3&gt;
+&lt;p&gt;index.html 파일은 해시를 주면 안됩니다.
+유저가 저희의 서비스를 들어올 때 &apos;www.pium.life/index.hash.html&apos;이런 식으로 요청하지 않기 때문입니다.&lt;/p&gt;
+&lt;p&gt;다른 리소스와는 달리 파일이 신선하지 않음을 URL로 판단하기 힘들기 때문에
+CloudFront의 동작으로 예외처리해서 해결했습니다.&lt;/p&gt;
+&lt;h4&gt;새로운 동작 생성&lt;/h4&gt;
+&lt;p&gt;index.html을 위한 동작을 위해 경로 패턴에 &apos;/index.html&apos;을 적어줍니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/daf0356cb6fe61c361ccfb626936443b/64756/5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 47.64705882352941%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA1ElEQVR42q3SSXKDMBAFUN3/ZE4WHjdxCB4KE+yABEIMag3+6fgGQBaveqWuX/0ltrs9Vm/v2O0PMF2H1phFxHdR4OP4ifR0/p+FUkr4EOC9h7V2MbHebGGJ4JxbjJgInIzIgnhGTvqMcbbIRHK6oiglck2wPsKF5yzEb/+I5F7jkGbYHM9I8hIPQ5NVvcfXvUH6o7nlUuH2qJAz3fNhA9C7MAtxUnG5XJFlGbtBceMdf50Q/CQxBozj8OpCqEajaVvUWqNSClLVr7amcFxoazoMw4hfJ48F3ZE6Q40AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5&apos; title=&apos;&apos; src=&apos;/static/daf0356cb6fe61c361ccfb626936443b/ca1dc/5.png&apos; srcset=&apos;/static/daf0356cb6fe61c361ccfb626936443b/e7570/5.png 170w,
+/static/daf0356cb6fe61c361ccfb626936443b/f46e7/5.png 340w,
+/static/daf0356cb6fe61c361ccfb626936443b/ca1dc/5.png 680w,
+/static/daf0356cb6fe61c361ccfb626936443b/02d09/5.png 1020w,
+/static/daf0356cb6fe61c361ccfb626936443b/64756/5.png 1200w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;캐시 정책은 CachingDisabled를 사용합니다.
+그리고 응답 헤더 정책은 주지 않습니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/af70e/6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 41.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABCklEQVR42p1Ry26DQAzk//+r7TFCVdsLoSFJJSA89s3CAtO1SdVLyaGWRt61YeyZTbI8x9v7B9L0FU/PLzgcUpRVhXGaMAweg/ew1sE6B+e2TPV1XfFXJD42ldaQSkNFSKniWcEYw0TGWu5RXWsDce8ve4RX4dH2En3fQwjBue06tG2LptnQ8b1DXdfoYv9RJI00yD9PKIoCxyg/y458dneJPyCZWx4eE4YQWB59vK4LlmXDfyPxfsTl+oVTcWa/jLHsHflFXvVCQsfaPP8O2wM9FG94uzVMytLPF1izvaZiUs2DwhQQwryLcZxAyyV0KcuKNyQyIq7iANqQJ8fN5pl+CrugvovekrpvEftrfZT8c/YAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;6&apos; title=&apos;&apos; src=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/ca1dc/6.png&apos; srcset=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/e7570/6.png 170w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/f46e7/6.png 340w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/ca1dc/6.png 680w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/02d09/6.png 1020w,
+/static/8cb1e8730f62dd45ab74fc633f16d8dc/af70e/6.png 1184w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;완성된 모습입니다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1b4637919ace76ee198291e378358d80/39d99/7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAABhUlEQVR42m1SCY7bMAz0/79XYFGgBdIkTmzLsnzLZzKdYeLtYlECA4kUjyGp5J7nuGc5qrrGOU1RVh4/fp/x65zCh4A/l6vBhxquqnC+pqZX1DPncLpcEJoGyuO8RzLNM4R+HO1sux51HYga3fCyCQPfhxg/9ZH38a0PY0ScIt9HJKfTCR8fP/F8PrFtGx6PnXgSD+z7jp22dV3tbXvfl2VlscH0aZrQdB06FpSeNKTrfYWBDn3/Bll2RCtHnjFODJw/EZlEjGUXy56xptOeKKBkQsH7gCx3BulF6XG7ZxjZkljN8/IPy4LVWO9vbOaTLHpgGwPnFbiEkZWkN02LqgoWvK4L5PcdNbsLdcN5vyCWyTGfpm1xud7Qtp0lyfIC1/RmLW7bakW+YuYy8sJZB9pwertbrDHU8BWoRUi0ILEtioJwpn+HRAlyFtZIjjgy3LAz0cKqOuUqBP4zJdOsDttXSDR/V5ZcTjTbwxLaV3l9kaOyRDMsuZSD9f+k75nQlbbdQ/4CPagEiTgQb5EAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;7&apos; title=&apos;&apos; src=&apos;/static/1b4637919ace76ee198291e378358d80/ca1dc/7.png&apos; srcset=&apos;/static/1b4637919ace76ee198291e378358d80/e7570/7.png 170w,
+/static/1b4637919ace76ee198291e378358d80/f46e7/7.png 340w,
+/static/1b4637919ace76ee198291e378358d80/ca1dc/7.png 680w,
+/static/1b4637919ace76ee198291e378358d80/02d09/7.png 1020w,
+/static/1b4637919ace76ee198291e378358d80/39d99/7.png 1102w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이제 index.html도 최신 버전으로 잘 받아옵니다. 🎉🎉&lt;/p&gt;
+&lt;h4&gt;s-maxage + 무효화&lt;/h4&gt;
+&lt;p&gt;HTML에 캐시를 안주는 방법만 있는 것은 아닙니다.
+응답 헤더 정책에서 Cache-Control의 s-maxage를 통해 CDN에서만 캐싱을 적용하고, 배포할 때 무효화를 해줄 수 있습니다.&lt;/p&gt;
+&lt;p&gt;다만 무효화를 자동으로 하기 위해서는 추가적인 IAM 권한이 필요하고, 속도 차이가 크지 않음을 확인해서 아직 적용하지 않았습니다.&lt;/p&gt;
+&lt;h3&gt;HTTP 캐시를 한 달로 설정한 이유&lt;/h3&gt;
+&lt;p&gt;설정을 한 달로 하면 한달 후에는 같은 리소스도 다시 검증해야합니다.
+왜 캐싱하는 시간을 최댓값인 1년으로 하지 않았을까요?&lt;/p&gt;
+&lt;p&gt;HTTP 캐시는 사용자의 디스크나 메모리에 리소스를 저장합니다.
+만약 max-age를 최댓값인 1년으로 설정하면 새로운 버전의 해시가 배포되어도 사용자는 이전 버전의 리소스를 1년간 가지고 있게 됩니다.&lt;/p&gt;
+&lt;p&gt;그래서 서비스 배포 주기에 맞는 적절한 기간을 논의하여 한 달로 설정하였습니다.
+소중한 고객님이 불필요한 리소스를 1년간 저장할 필요는 없으니까요!&lt;/p&gt;
+&lt;h2&gt;정리&lt;/h2&gt;
+&lt;p&gt;HTTP 캐시는 처음 접해보는 분야이고 index.html은 예외를 줘야 한다는 점이 흥미로웠습니다!
+캐시 기간도 길다고 무조건 좋은 게 아니었습니다.
+결과적으로 네트워크 트래픽을 줄이고 더 빠른 사용자 경험을 줄 수 있어서 뿌듯한 경험이 되었습니다.&lt;/p&gt;
+&lt;h3&gt;참고한 자료&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://toss.tech/article/smart-web-service-cache&quot;&gt;웹 서비스 캐시 똑똑하게 다루기&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 최적화하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/optimize-frontend/</link><guid isPermaLink="false">https://pium-official.github.io/optimize-frontend/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/hozzijeong&quot;&gt;클린&lt;/a&gt;&apos;가 작성했습니다. 이미지 최적화는 참새가 숟가락 얹었어요.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1&gt;피움 최적화 하기&lt;/h1&gt;
@@ -999,169 +1161,7 @@ filenames&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span 
 &lt;p&gt;SVG &lt;code class=&quot;language-text&quot;&gt;&amp;lt;use&gt;&lt;/code&gt; elements don’t currently have any way to ask for cross-origin permissions. They just don’t work cross-origin, at all. - &lt;a href=&quot;https://oreillymedia.github.io/Using_SVG/extras/ch10-cors.html#:~:text=SVG%20%3Cuse%3E%20elements%20don%E2%80%99t%20currently%20have%20any%20way%20to%20ask%20for%20cross-origin%20permissions.%20They%20just%20don%E2%80%99t%20work%20cross-origin%2C%20at%20all.&quot;&gt;cors&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;따라서 html에 직접 삽입하는 방법밖에 없었는데, 그렇게 된다면 icon이 추가될 때마다 &lt;code class=&quot;language-text&quot;&gt;index&lt;/code&gt;파일을 바꿔야 하는 번거로움이 있었습니다. SPA로 구현하고 있는 상황에서 불특정한 상황에 따라 &lt;code class=&quot;language-text&quot;&gt;index&lt;/code&gt; 파일이 바뀌는 게 괜한 거부감이 있어서 현재는 리액트 컴포넌트로 삽입하고 있는데, 이 방법이 맞는지는 여전히 의문이긴 합니다. (icon 같은 경우에는 그렇게 많이 바뀌는 것이 아니라 상관이 없을 것 같다는 생각이 있어서 그냥 넣어도 되지 않을까 생각하기도 합니다.)&lt;/p&gt;
-&lt;p&gt;또 하나의 아쉬운 점은 SVG Sprite를 사용함으로써 파싱할 코드의 양이 줄어들어서 사용자에게 감동을 주는 정도로 변화가 있을까 생각했지만, 번들 크기는 30kb가 줄었고 (압축 전) 기능상 큰 변화는 없는 것 같아서 약간 아쉬운 결과를 남겼습니다. 최적화 수업 때 망치를 들면 뭐든지 못으로 보인다고 했는데 저는 오함마를 들고 서비스를 다지려고 하지 않았나 생각이 들었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[CloudFront와 HTTP 캐시]]></title><description><![CDATA[이 글은 우아한테크코스 5기, 피움팀 크루 '쵸파'가 작성했습니다. 서론 피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다. 백엔드와의 관심사 분리를 위해 EC2에서 S3로 FE…]]></description><link>https://pium-official.github.io/http-cache/</link><guid isPermaLink="false">https://pium-official.github.io/http-cache/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우아한테크코스 5기, 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/bassyu&quot;&gt;쵸파&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;서론&lt;/h2&gt;
-&lt;p&gt;피움 서비스는 기존에 EC2 + Nginx로 FE 정적 파일 서빙과 백엔드 API 응답을 하나의 EC2에서 하고 있었습니다.&lt;/p&gt;
-&lt;p&gt;백엔드와의 &lt;strong&gt;관심사 분리&lt;/strong&gt;를 위해 EC2에서 &lt;strong&gt;S3&lt;/strong&gt;로 FE 정적 파일을 옮기고,
-&lt;strong&gt;보안과 CDN 캐시&lt;/strong&gt;를 적용하기 위해 &lt;strong&gt;CloudFront&lt;/strong&gt;를 통해 배포하였습니다.&lt;/p&gt;
-&lt;p&gt;더 나아가서, 같은 리소스는 더 빠르게 접근하고 네트워크 트래픽을 줄이기 위해 &lt;strong&gt;HTTP 캐시&lt;/strong&gt;를 적용했습니다.&lt;/p&gt;
-&lt;p&gt;해당 과정을 어떻게 적용하였는지 공유하고자 합니다.&lt;/p&gt;
-&lt;h2&gt;S3 + CloudFront 배포&lt;/h2&gt;
-&lt;p&gt;이미 S3와 CloudFront로 배포하는 방법은 &lt;a href=&quot;https://blog.pium.life/aws-s3-apply/&quot;&gt;피움 블로그&lt;/a&gt;에 잘 기록되어 있습니다!
-이외의 프론트엔드 배포를 위한 차이점만 다루었습니다.&lt;/p&gt;
-&lt;h3&gt;S3 업로드 자동화 하기&lt;/h3&gt;
-&lt;h4&gt;aws cli 설치&lt;/h4&gt;
-&lt;p&gt;가장 좋은 방법은 &lt;a href=&quot;https://docs.aws.amazon.com/ko_kr/cli/latest/userguide/getting-started-install.html&quot;&gt;공식 문서의 설치 방법&lt;/a&gt;을 그대로 따라 하는 것이었습니다.
-피움의 빌드 EC2 환경은 Linux ARM 이어서 해당 명령어를 그대로 따라 해 설치했습니다.&lt;/p&gt;
-&lt;h4&gt;파이프라인 구성&lt;/h4&gt;
-&lt;p&gt;아래의 명령어는 빌드 후 dist 폴더의 파일들을 S3 버킷에 동기화하는(옮기는) 명령어입니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;aws s3 sync ./dist s3://{프로젝트 S3 버킷 경로} --delete&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이 1줄만 젠킨스 파이프라인에서 실행하면 됩니다.&lt;/p&gt;
-&lt;h4&gt;빌드 EC2에 권한 주기&lt;/h4&gt;
-&lt;p&gt;이때, 빌드 EC2에서 S3에 업로드할 수 있도록 권한을 줘야 합니다.
-인스턴스 &gt; 작업 &gt; 보안 &gt; IAM역할 수정
-에서 권한을 줄 수 있습니다.&lt;/p&gt;
-&lt;h3&gt;CloudFront&lt;/h3&gt;
-&lt;h4&gt;오류 페이지&lt;/h4&gt;
-&lt;p&gt;SPA로 정적 페이지를 배포하면 최상위뿐만 아니라 다른 path로 이동할 때가 많습니다.
-다른 path에 접근하더라도 index.html을 받을 수 있도록 오류 페이지를 설정해 줍니다.&lt;/p&gt;
-&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/9d567/1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.23529411764706%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABnUlEQVR42j1Ry47UMBDM/3Fl+RY+BWnhyAU4wE9w4SEusxLLaGc3k8dMEjuxHT8SO1N0e1haasXudFdXlYuqbiDGEceqhpwmlMcKyhjc1RK7SkLPJv+73z9AyBFNe0JZHjGIgc4NjNHQWl2T5goG0fOMXogM3A8CzfmM34cyZ3vuMEiZv5L+87nTASoAo9tgVkAvgKKczIzi3HWoiaXSGj4E+GWBdQ7OWlg757P1HuFf3fuAsP8M8e0Nxp/vIH7cQny/hf71Fk61KO7/7LHb3WGk7RxxXZFiRNoStm1DSgmzdbnOoGtMiF9fo3z/AvXHV2g+3aD6cIPpy0usco+CQaZJ4fHxCQ+HA/kk830gC+qmxUAWOGKmlMpe1nWLXiqENcFYj1MvcOoE2eZhZosiEhs2kyU757EQixhXkmvznVkxS7aDl4zjRLId1SI9iKHH0HnhygrCguJyuTKcCZ3jwgUKQwaz5Ofggaqq0NIrM4mrsikv/t9D9cyQhy35lAggEpuNkhu5gdlt5Gcghn0/QJIlC4HzYmb3PMd9rOYvslReAT0ajTgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;error_page&apos; title=&apos;&apos; src=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/ca1dc/1.png&apos; srcset=&apos;/static/5f98c07b753b77ef35dae3e9779697bd/e7570/1.png 170w,
-/static/5f98c07b753b77ef35dae3e9779697bd/f46e7/1.png 340w,
-/static/5f98c07b753b77ef35dae3e9779697bd/ca1dc/1.png 680w,
-/static/5f98c07b753b77ef35dae3e9779697bd/02d09/1.png 1020w,
-/static/5f98c07b753b77ef35dae3e9779697bd/9d567/1.png 1360w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;error_page&lt;/figcaption&gt;
-  &lt;/figure&gt;&lt;/p&gt;
-&lt;h2&gt;HTTP 캐시를 위한 응답 헤더 정책&lt;/h2&gt;
-&lt;p&gt;FE 배포는 성공적으로 마무리되었습니다.
-이제 더 나은 사용자 경험을 위해 &lt;strong&gt;HTTP 캐시&lt;/strong&gt;를 적용하고자 합니다.&lt;/p&gt;
-&lt;h3&gt;HTTP 캐시를 적용하는 이유&lt;/h3&gt;
-&lt;p&gt;똑같은 리소스는 웹페이지에 들어갈 때마다 새로 요청할 필요가 없습니다.
-디스크에 저장해 두었다가 새로운 버전만 요청하면 훨씬 더 빠르지 않을까요?
-네트워크 통신 비용도 크게 줄일 수 있습니다.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTTP/Caching&quot;&gt;HTTP 캐시&lt;/a&gt;를 활용하면 같은 리소스는 네트워크를 거치지 않고 디스크나 메모리에서 바로 사용할 수 있습니다!&lt;/p&gt;
-&lt;h3&gt;Cache-Control 헤더&lt;/h3&gt;
-&lt;p&gt;리소스 &lt;strong&gt;응답 헤더의 Cache-Control 필드&lt;/strong&gt;를 통해 HTTP캐시를 설정할 수 있습니다.
-그중 Cache-Control: &quot;max-age=&lt;second&gt;&quot; 값으로 몇 초간 캐시 할지 설정할 수 있습니다.&lt;/p&gt;
-&lt;p&gt;피움 서비스에서는 &apos;같은 리소스에 대해 한 달은 캐싱한다&apos;는 정책을 주기 위해 아래와 같이 CloudFront의 응답 헤더 정책을 만들었습니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/eb638/2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAnklEQVR42oWP2Q7CIBRE+f/Pa4320aXRlhY1TdkuywjEVuuLNzkBhskwsJ5zVFWNQ9Og3u3BnzOstX8hItCPprUGk0phlhIqHaRU0IbgnFvx3sOHUNZvnRI2h9LHb4wBm0uIQYyxsEzea202wct45zGMAkI8ENJjq548bJomdF1fUKlteLfJCHHH9dbh0rbgfFjvcpPj6ZxCx40/f/sFStU2yuhlzdAAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2&apos; title=&apos;&apos; src=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/ca1dc/2.png&apos; srcset=&apos;/static/3729943c9ba25c16c2b9860332ff06c0/e7570/2.png 170w,
-/static/3729943c9ba25c16c2b9860332ff06c0/f46e7/2.png 340w,
-/static/3729943c9ba25c16c2b9860332ff06c0/ca1dc/2.png 680w,
-/static/3729943c9ba25c16c2b9860332ff06c0/02d09/2.png 1020w,
-/static/3729943c9ba25c16c2b9860332ff06c0/9d567/2.png 1360w,
-/static/3729943c9ba25c16c2b9860332ff06c0/eb638/2.png 1422w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;그리고 동작에 추가합니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/69083/3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 22.352941176470587%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAoklEQVR42o3P2w6DIBBFUf//G1svYEVAe5FWQdRd9LkxnWRl3s6cyZRqqYRAyBrVaspK4NybuCyEEA7btvHvZMZaZH2j1YYmhdc3hTY27QaZaNPhfSDGeCrMM5P3ZLbruVxz8rygLCu01pgU3qa2u3Gajstraryu60/7B/snw+DI1PNDaV4UZkD2b+rHhHp55H1EJOo5UnWO3LrUIjKfiHHhC6fONAXwg2aIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3&apos; title=&apos;&apos; src=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/ca1dc/3.png&apos; srcset=&apos;/static/587b8c13d9dd6575bdaec5fefb316887/e7570/3.png 170w,
-/static/587b8c13d9dd6575bdaec5fefb316887/f46e7/3.png 340w,
-/static/587b8c13d9dd6575bdaec5fefb316887/ca1dc/3.png 680w,
-/static/587b8c13d9dd6575bdaec5fefb316887/02d09/3.png 1020w,
-/static/587b8c13d9dd6575bdaec5fefb316887/69083/3.png 1158w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이제 CDN이 보내주는 리소스 헤더에 Cach-Control이 더해져서 HTTP 캐시가 적용됩니다! 🎉&lt;/p&gt;
-&lt;h3&gt;캐시 버스팅&lt;/h3&gt;
-&lt;p&gt;클라이언트는 설정해 준 시간이 지나지 않으면 동일한 URL의 GET 요청에는 항상 캐시가 적용됩니다.
-새로운 버전이 업데이트되면 원래의 캐시를 어떻게 지울까요?&lt;/p&gt;
-&lt;p&gt;피움은 &lt;strong&gt;새로운 버전의 URL이 바뀔 수 있도록 번들에 해시&lt;/strong&gt;를 줘서 캐시 버스팅을 적용했습니다.&lt;/p&gt;
-&lt;p&gt;아래는 번들 파일에 해시를 주는 webpack.config 설정입니다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// webpack.config.js
-
-output: {
-  path: path.join(__dirname, &apos;dist&apos;),
-  filename: &apos;[name].[contenthash].bundle.js&apos;,
-  chunkFilename: &apos;[name].[chunkhash].chunk.bundle.js&apos;,
-}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;이후 빌드된 번들에 해시가 들어간 모습입니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 512px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/3f48d51bfe664acf174d6e396c9b72b8/06341/4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 38.82352941176471%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABhElEQVR42pVQyUrEQBSMnvwAFxSXmDiTdMcsk6SzJzOjDipuiCjuoAfnIoIn0Ys3T/rNZb8eFU+Ch6Lqhfeqq6JN9IaYX7/D0/AV/PgZGw/vmNt9hCauMV7cYCz/H7SZdB+zyQG2D8+Q7J3AHlxgqT7CVLKHaYnJeBeT4hfiPzjegeYwC23bw+0Rx8fLJhw3RF0W6DcNvFUHpq5jxTAkltGSTGib5o/+gWnAaq1AY4xhybCx1bNxdeigzQKEUQTPCxBFAkHQkRwjDCN0OqGcQ7iuD9/vIKD565vn+bAsGxpnNhZ0hvMdA4+XujSMUMqEQiRomq7UpeQGVVUrXZYViqKQGOk0zZDnBbIsU6aazTgsU4dVHcBaO0focrmUq1Sjg1Qd5HmujpMkVWnpQTKhmUD7nDvfhgZYNoA7OAW3WvIgVlVpUQihTMlgBDLIEMdCYrRHmh5xXU9W5jbmFhmGxybe7pfR5rJqXal0ZEDpqC4dU81+fw11XStNv4L2ut2eYt8P8AlNNQNxRb5xqgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4&apos; title=&apos;&apos; src=&apos;/static/3f48d51bfe664acf174d6e396c9b72b8/06341/4.png&apos; srcset=&apos;/static/3f48d51bfe664acf174d6e396c9b72b8/e7570/4.png 170w,
-/static/3f48d51bfe664acf174d6e396c9b72b8/f46e7/4.png 340w,
-/static/3f48d51bfe664acf174d6e396c9b72b8/06341/4.png 512w&apos; sizes=&apos;(max-width: 512px) 100vw, 512px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;그런데 webpack.config를 자세히 보면 chunkhash와 contenthash가 있는 것을 알 수 있습니다.
-둘은 어떤 차이일까요?&lt;/p&gt;
-&lt;h4&gt;webpack 해시의 종류&lt;/h4&gt;
-&lt;p&gt;우선 하나의 엔트리 포인트에서 나온 파일들을 청크라고 부릅니다.
-webpack 설정으로 청크를 어떻게 나눌지는 커스텀할 수 있습니다.&lt;/p&gt;
-&lt;p&gt;chunkhash는 청크를 기준으로 해시값을 주고, contenthash는 청크가 같더라도 각 파일의 내용을 기준으로 해시값을 줍니다.&lt;/p&gt;
-&lt;p&gt;만약 하나의 청크에 하나의 파일이 나온다면 chunkhash를 줘도 무방합니다.
-하나의 청크에서 .js .css 처럼 여러 파일이 나온다면 contenthash로 더욱 뾰족하게 해싱할 수 있습니다.&lt;/p&gt;
-&lt;h3&gt;index.html은 예외&lt;/h3&gt;
-&lt;p&gt;index.html 파일은 해시를 주면 안됩니다.
-유저가 저희의 서비스를 들어올 때 &apos;www.pium.life/index.hash.html&apos;이런 식으로 요청하지 않기 때문입니다.&lt;/p&gt;
-&lt;p&gt;다른 리소스와는 달리 파일이 신선하지 않음을 URL로 판단하기 힘들기 때문에
-CloudFront의 동작으로 예외처리해서 해결했습니다.&lt;/p&gt;
-&lt;h4&gt;새로운 동작 생성&lt;/h4&gt;
-&lt;p&gt;index.html을 위한 동작을 위해 경로 패턴에 &apos;/index.html&apos;을 적어줍니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/daf0356cb6fe61c361ccfb626936443b/64756/5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 47.64705882352941%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA1ElEQVR42q3SSXKDMBAFUN3/ZE4WHjdxCB4KE+yABEIMag3+6fgGQBaveqWuX/0ltrs9Vm/v2O0PMF2H1phFxHdR4OP4ifR0/p+FUkr4EOC9h7V2MbHebGGJ4JxbjJgInIzIgnhGTvqMcbbIRHK6oiglck2wPsKF5yzEb/+I5F7jkGbYHM9I8hIPQ5NVvcfXvUH6o7nlUuH2qJAz3fNhA9C7MAtxUnG5XJFlGbtBceMdf50Q/CQxBozj8OpCqEajaVvUWqNSClLVr7amcFxoazoMw4hfJ48F3ZE6Q40AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5&apos; title=&apos;&apos; src=&apos;/static/daf0356cb6fe61c361ccfb626936443b/ca1dc/5.png&apos; srcset=&apos;/static/daf0356cb6fe61c361ccfb626936443b/e7570/5.png 170w,
-/static/daf0356cb6fe61c361ccfb626936443b/f46e7/5.png 340w,
-/static/daf0356cb6fe61c361ccfb626936443b/ca1dc/5.png 680w,
-/static/daf0356cb6fe61c361ccfb626936443b/02d09/5.png 1020w,
-/static/daf0356cb6fe61c361ccfb626936443b/64756/5.png 1200w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;캐시 정책은 CachingDisabled를 사용합니다.
-그리고 응답 헤더 정책은 주지 않습니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/af70e/6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 41.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABCklEQVR42p1Ry26DQAzk//+r7TFCVdsLoSFJJSA89s3CAtO1SdVLyaGWRt61YeyZTbI8x9v7B9L0FU/PLzgcUpRVhXGaMAweg/ew1sE6B+e2TPV1XfFXJD42ldaQSkNFSKniWcEYw0TGWu5RXWsDce8ve4RX4dH2En3fQwjBue06tG2LptnQ8b1DXdfoYv9RJI00yD9PKIoCxyg/y458dneJPyCZWx4eE4YQWB59vK4LlmXDfyPxfsTl+oVTcWa/jLHsHflFXvVCQsfaPP8O2wM9FG94uzVMytLPF1izvaZiUs2DwhQQwryLcZxAyyV0KcuKNyQyIq7iANqQJ8fN5pl+CrugvovekrpvEftrfZT8c/YAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;6&apos; title=&apos;&apos; src=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/ca1dc/6.png&apos; srcset=&apos;/static/8cb1e8730f62dd45ab74fc633f16d8dc/e7570/6.png 170w,
-/static/8cb1e8730f62dd45ab74fc633f16d8dc/f46e7/6.png 340w,
-/static/8cb1e8730f62dd45ab74fc633f16d8dc/ca1dc/6.png 680w,
-/static/8cb1e8730f62dd45ab74fc633f16d8dc/02d09/6.png 1020w,
-/static/8cb1e8730f62dd45ab74fc633f16d8dc/af70e/6.png 1184w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;완성된 모습입니다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1b4637919ace76ee198291e378358d80/39d99/7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 52.352941176470594%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAABhUlEQVR42m1SCY7bMAz0/79XYFGgBdIkTmzLsnzLZzKdYeLtYlECA4kUjyGp5J7nuGc5qrrGOU1RVh4/fp/x65zCh4A/l6vBhxquqnC+pqZX1DPncLpcEJoGyuO8RzLNM4R+HO1sux51HYga3fCyCQPfhxg/9ZH38a0PY0ScIt9HJKfTCR8fP/F8PrFtGx6PnXgSD+z7jp22dV3tbXvfl2VlscH0aZrQdB06FpSeNKTrfYWBDn3/Bll2RCtHnjFODJw/EZlEjGUXy56xptOeKKBkQsH7gCx3BulF6XG7ZxjZkljN8/IPy4LVWO9vbOaTLHpgGwPnFbiEkZWkN02LqgoWvK4L5PcdNbsLdcN5vyCWyTGfpm1xud7Qtp0lyfIC1/RmLW7bakW+YuYy8sJZB9pwertbrDHU8BWoRUi0ILEtioJwpn+HRAlyFtZIjjgy3LAz0cKqOuUqBP4zJdOsDttXSDR/V5ZcTjTbwxLaV3l9kaOyRDMsuZSD9f+k75nQlbbdQ/4CPagEiTgQb5EAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;7&apos; title=&apos;&apos; src=&apos;/static/1b4637919ace76ee198291e378358d80/ca1dc/7.png&apos; srcset=&apos;/static/1b4637919ace76ee198291e378358d80/e7570/7.png 170w,
-/static/1b4637919ace76ee198291e378358d80/f46e7/7.png 340w,
-/static/1b4637919ace76ee198291e378358d80/ca1dc/7.png 680w,
-/static/1b4637919ace76ee198291e378358d80/02d09/7.png 1020w,
-/static/1b4637919ace76ee198291e378358d80/39d99/7.png 1102w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이제 index.html도 최신 버전으로 잘 받아옵니다. 🎉🎉&lt;/p&gt;
-&lt;h4&gt;s-maxage + 무효화&lt;/h4&gt;
-&lt;p&gt;HTML에 캐시를 안주는 방법만 있는 것은 아닙니다.
-응답 헤더 정책에서 Cache-Control의 s-maxage를 통해 CDN에서만 캐싱을 적용하고, 배포할 때 무효화를 해줄 수 있습니다.&lt;/p&gt;
-&lt;p&gt;다만 무효화를 자동으로 하기 위해서는 추가적인 IAM 권한이 필요하고, 속도 차이가 크지 않음을 확인해서 아직 적용하지 않았습니다.&lt;/p&gt;
-&lt;h3&gt;HTTP 캐시를 한 달로 설정한 이유&lt;/h3&gt;
-&lt;p&gt;설정을 한 달로 하면 한달 후에는 같은 리소스도 다시 검증해야합니다.
-왜 캐싱하는 시간을 최댓값인 1년으로 하지 않았을까요?&lt;/p&gt;
-&lt;p&gt;HTTP 캐시는 사용자의 디스크나 메모리에 리소스를 저장합니다.
-만약 max-age를 최댓값인 1년으로 설정하면 새로운 버전의 해시가 배포되어도 사용자는 이전 버전의 리소스를 1년간 가지고 있게 됩니다.&lt;/p&gt;
-&lt;p&gt;그래서 서비스 배포 주기에 맞는 적절한 기간을 논의하여 한 달로 설정하였습니다.
-소중한 고객님이 불필요한 리소스를 1년간 저장할 필요는 없으니까요!&lt;/p&gt;
-&lt;h2&gt;정리&lt;/h2&gt;
-&lt;p&gt;HTTP 캐시는 처음 접해보는 분야이고 index.html은 예외를 줘야 한다는 점이 흥미로웠습니다!
-캐시 기간도 길다고 무조건 좋은 게 아니었습니다.
-결과적으로 네트워크 트래픽을 줄이고 더 빠른 사용자 경험을 줄 수 있어서 뿌듯한 경험이 되었습니다.&lt;/p&gt;
-&lt;h3&gt;참고한 자료&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://toss.tech/article/smart-web-service-cache&quot;&gt;웹 서비스 캐시 똑똑하게 다루기&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[서비스 내에서 발생하는 쿼리를 분석하고 개선하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/query-analysis/</link><guid isPermaLink="false">https://pium-official.github.io/query-analysis/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;또 하나의 아쉬운 점은 SVG Sprite를 사용함으로써 파싱할 코드의 양이 줄어들어서 사용자에게 감동을 주는 정도로 변화가 있을까 생각했지만, 번들 크기는 30kb가 줄었고 (압축 전) 기능상 큰 변화는 없는 것 같아서 약간 아쉬운 결과를 남겼습니다. 최적화 수업 때 망치를 들면 뭐든지 못으로 보인다고 했는데 저는 오함마를 들고 서비스를 다지려고 하지 않았나 생각이 들었습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[서비스 내에서 발생하는 쿼리를 분석하고 개선하기]]></title><description><![CDATA[…]]></description><link>https://pium-official.github.io/query-analysis/</link><guid isPermaLink="false">https://pium-official.github.io/query-analysis/</guid><pubDate>Thu, 21 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;서론&lt;/h2&gt;
@@ -3744,352 +3744,7 @@ controller의 경우 각 서비스의 명세에 맞게 작성하시면 됩니다
 /static/6b09ac3ef7223cffd063400459ee7f05/bbbf7/img_23.png 1280w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
   &lt;/a&gt;
     &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;로그가 정상적으로 출력되는 것을 확인할 수 있습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 서비스의 Querydsl 적용 과정]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '하마드'가 작성했습니다. 개요 우아한테크코스 5기 피움 프로젝트를 진행하면서, 필터링 기능 구현을 위해 Querydsl…]]></description><link>https://pium-official.github.io/querydsl_apply_procedure/</link><guid isPermaLink="false">https://pium-official.github.io/querydsl_apply_procedure/</guid><pubDate>Wed, 16 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
-&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;개요&lt;/h2&gt;
-&lt;hr&gt;
-&lt;p&gt;우아한테크코스 5기 피움 프로젝트를 진행하면서, 필터링 기능 구현을 위해 Querydsl을 적용한 과정을 정리한다&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://pium-official.github.io/why_we_applied_querydsl/&quot;&gt;이전글&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;과정&lt;/h2&gt;
-&lt;hr&gt;
-&lt;blockquote&gt;
-&lt;p&gt;본 프로젝트는 다음과 같은 환경에서 구성되었다&lt;/p&gt;
-&lt;p&gt;Springboot 3.1.1&lt;/p&gt;
-&lt;p&gt;JAVA 17&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;Querydsl 설정&lt;/h2&gt;
-&lt;hr&gt;
-&lt;h3&gt;build.gradle에 관련 코드 추가&lt;/h3&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/fda9bdedd608b74362b48ecab9e7ce73/5fbd7/1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAACbElEQVR42m2T63LaMBCFeZY2TWLJutmWbGPA4ZIhQC6l0+ZH2+n7v8XpkQQJzfTH513vyMfS7tHEhxb9dEA/zBDaDtoYlEoyKihdknO8yFX5XlMq11mTUmJS8jHMFthsd1jdbzFf3ME1BmGoE+2sSbHpK/jIKY+EaY26c/Axtg5lWWIS/1BVDeJOGx+Y1+nPxhmiYSqdo9XQNufaqrfc2LxDIWTeYaE0d+T59ymatmceUHKRqS10pDJQ8cMm57rOWG+5TiduZAkhT4K/xSc8qlscTYEXfYsX5k/yCx4j4oKP7ySuO5Dv4jOMFEl08iyu4HyLOYcyTKdovYdWAs6xFcRyOI47jNHa07vNNU2BWx71QPFaFiii4IGC1TDHuFxjWCzJHXoOyQWXGl61H2Dd8bh1V6EOFgV7vS0uBF/UNfx8xHpzn0TH1Qbj3Rq+82gHDqurUwz9O03L2rRJuK7BsS7RcjCl1pgcLbet2WT6T7OgmWtj0+R08pd685pO6BwNBxWny/jE/vvoQ66bfFNXKCjmXAVHy1jrYPiu6Kmzwc8oIkuZLCKEgCTXPOZDcfV+5J/BoB/X6LoeTQj0okfdNMmPtnLJb5ksGgXlySLxUkTL7C6H8kybqJoiFIgi0dyREI1Of0b3nwXO5pWn2n8Fj7rANRe6eCzekHycfKSi4KLbjGAeBaQo3ijJDWv/CH5ln8b1En9+7fH64wHb7Qr73X2Kq+UM81nAYh7Qc5qKA7FVxStXpehIHOiDuOjhq77BItQ48MPdELCfRVrshxx3MZ+32NA+PXu58A0W7PHIXo/MgzV4Kj6j4k2Jgn8B68PbdTAtWFUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;1&apos; title=&apos;&apos; src=&apos;/static/fda9bdedd608b74362b48ecab9e7ce73/ca1dc/1.png&apos; srcset=&apos;/static/fda9bdedd608b74362b48ecab9e7ce73/e7570/1.png 170w,
-/static/fda9bdedd608b74362b48ecab9e7ce73/f46e7/1.png 340w,
-/static/fda9bdedd608b74362b48ecab9e7ce73/ca1dc/1.png 680w,
-/static/fda9bdedd608b74362b48ecab9e7ce73/02d09/1.png 1020w,
-/static/fda9bdedd608b74362b48ecab9e7ce73/5fbd7/1.png 1276w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;dependencies {
-    implementation &apos;org.springframework.boot:spring-boot-starter-data-jpa&apos;
-    implementation &apos;org.springframework.boot:spring-boot-starter-validation&apos;
-    implementation &apos;org.springframework.boot:spring-boot-starter-web&apos;
-
-    implementation &apos;com.github.maricn:logback-slack-appender:1.6.1&apos;
-
-    //querydsl 추가
-    implementation &apos;com.querydsl:querydsl-jpa:5.0.0:jakarta&apos;
-    annotationProcessor &quot;com.querydsl:querydsl-apt:5.0.0:jakarta&quot;
-    annotationProcessor &quot;jakarta.annotation:jakarta.annotation-api&quot;
-    annotationProcessor &quot;jakarta.persistence:jakarta.persistence-api&quot;
-}
-
-//querydsl 추가
-def querydslSrcDir = &apos;src/main/generated&apos;
-
-clean {
-    delete file(querydslSrcDir)
-}
-
-tasks.withType(JavaCompile) {
-    options.generatedSourceOutputDirectory = file(querydslSrcDir)
-}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;build.gradle&lt;/code&gt; 파일에 위 설정을 추가해 준다.
-&lt;code class=&quot;language-text&quot;&gt;dependencies&lt;/code&gt; 하부의 옵션 설정은 아래와 같은 의미를 가진다.&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;def querydslSrcDir = &apos;src/main/generated&apos;&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Querydsl이 생성한 소스 코드를 저장할 디렉토리를 정의한다. 여기서는 &apos;src/main/generated&apos;로 디렉토리 경로를 지정하고, 이를 querydslSrcDir 변수에 할당한다.&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;clean { delete file(querydslSrcDir) }&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Gradle의 clean 태스크를 정의하고, 해당 태스크가 실행될 때 querydslSrcDir 디렉토리를 삭제하도록 한다. 즉, 프로젝트를 clean 하면 Querydsl이 생성한 소스 코드도 삭제된다.&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;tasks.withType(JavaCompile) { options.generatedSourceOutputDirectory = file(querydslSrcDir) }&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;JavaCompile 태스크 유형을 가진 모든 태스크에 대해, 컴파일 옵션 중에서 생성된 소스 코드의 출력 디렉토리를 querydslSrcDir로 설정한다. Querydsl이 생성한 소스 코드가 지정한 디렉토리에 컴파일되도록 보장한다.&lt;/p&gt;
-&lt;h3&gt;build 수행 및 Q Class 생성&lt;/h3&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 610px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c403e5c3d0be112b1ba88b848597f89e/5d5ad/2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 70.58823529411764%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAABYlAAAWJQFJUiTwAAACF0lEQVR42o2S3W7UMBCF80YItFTtxs7/f5xsEidOsil0t1CEqHgCrlCvEdzxuIdxsoUu3RYujsaxZz5NzoyRdXuo3Sd0JJYqmEk3ax21S4wpxsudjutkyTkPJaLmCsP1Z9hihC8UumGE4acVwryBn1VgfgbTS+fopcu3HRVz1LJCASvIj87BoY57CYZxglGUFdIsRxglcDwfjFtw/QBqGuB5ARrZIU4yFOUGhVQo3tzAiyO00wTX9TFOl3OerpVtB8N2PPhhgjgVCMJ4FrMcmNwGp2hTkWV7JBecxIIY3KEz1XGb3nWkPP3ej1sYDhWkYgPZb6nlLcq6mQs1hB8gM4iK5rNlH6JzdG8ReFNLGOxATwha7j5iU9UYthO8IMKaWXOnv2FPSMN07qvVGYyHl1FWoH57Q11K8kOhaiRaNZAd+T+hjDoX5PMRME5SNO9usaFBdP2ATJQEo4kH4X91+Ajo00DEdI2qG1A3LdwDSE/wPufJDsmaq93+D/DeYJPWRlTtbLD2Ug1bqH6kVQpxYfKTv750yGHT1I2/H/UaFATUPtayRad6tOSn7Ho6D8iL8iRUe2g6wWMgo3WpGvKQgIqGomhZs6IiOyKkuZhtOdkl6XL//oGHpAvqrmfn+J45+CoC3JUhfmQ2djbDijtgZPxz066pgSPgmePjw3qFn5GJLyLCnRT4xl/i9vULrNwQzjOT1pKqxy/ZQ/01dKKAJgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2&apos; title=&apos;&apos; src=&apos;/static/c403e5c3d0be112b1ba88b848597f89e/5d5ad/2.png&apos; srcset=&apos;/static/c403e5c3d0be112b1ba88b848597f89e/e7570/2.png 170w,
-/static/c403e5c3d0be112b1ba88b848597f89e/f46e7/2.png 340w,
-/static/c403e5c3d0be112b1ba88b848597f89e/5d5ad/2.png 610w&apos; sizes=&apos;(max-width: 610px) 100vw, 610px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;
-&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/2dc4a522b3257f1c773f681382f950f1/cfc60/3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 67.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAABYlAAAWJQFJUiTwAAABEklEQVR42qWS23KCMBRF/abWqUSEHLmEBNRh0IJTcXjr///B7jmp8lZF+rAhAzMr61wWsd4iyQxO5x51cwKlGeTb3CwifkgyY9FdBjTHTxSuwiYm3P+9khGYsmU9fKPtBxwONQM1YvoHMNYEbUrY7gv7vYKxAVy1AiUxw2cAfbjM3Do0XQvjFJeuYMuAs+JzwJcof85MyJckE4CSSCMqdiA2rao3bynJzRoREbfhN9MMPZBLNDvorkdZvntDsbu/H8EeAomBzi09KM03t//0Yg9HYAXdXuDKJQpvpnz/xFCGNN9QgDIYF9x6+QG91fOBMhQpWewE9Az2tGQZiphJqWGU/Lkq0wzP13FtZPfyIpy02D8v/soDs0ql4wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3&apos; title=&apos;&apos; src=&apos;/static/2dc4a522b3257f1c773f681382f950f1/ca1dc/3.png&apos; srcset=&apos;/static/2dc4a522b3257f1c773f681382f950f1/e7570/3.png 170w,
-/static/2dc4a522b3257f1c773f681382f950f1/f46e7/3.png 340w,
-/static/2dc4a522b3257f1c773f681382f950f1/ca1dc/3.png 680w,
-/static/2dc4a522b3257f1c773f681382f950f1/cfc60/3.png 776w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이제 바뀐 설정 파일로 &lt;code class=&quot;language-text&quot;&gt;build&lt;/code&gt;를 수행하면 우리가 지정한&lt;code class=&quot;language-text&quot;&gt;src/main/generated&lt;/code&gt; 경로에 위와 같은 Q Class가 생성된다.&lt;/p&gt;
-&lt;p&gt;QueryDsl은 빌드 시점에 애플리케이션의 도메인 중 &lt;code class=&quot;language-text&quot;&gt;@Entity&lt;/code&gt;와 &lt;code class=&quot;language-text&quot;&gt;@Embeddable&lt;/code&gt; 어노테이션이 포함된 클래스를 찾아 Q Class를 생성한다. 이 Q class를 가지고 애플리케이션 내부에서 QueryDsl 관련 로직을 적용해야 한다.&lt;/p&gt;
-&lt;h2&gt;적용&lt;/h2&gt;
-&lt;hr&gt;
-&lt;h3&gt;JPAQueryFactory Bean 등록&lt;/h3&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4d3053434736eb33e9f1a587f870c838/5c9dd/4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 70%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAABYlAAAWJQFJUiTwAAAB30lEQVR42qWTyZKjMBBE/TdGG4hFEmI1dndP+Dz//y3ZKYHbExMT9mEODykQkarKLE5xUBhGjT4qhKDQ9wp1XUAKCSkFhNhJe6UkUS85bRS8Ro2JQhvXlQxjhA8R/TAe64S2cyjL6q3oqS0VXKVQ8cOuJJVG6zw65+B84OozTdPCGPO+QiEVhNT82EKTc6FwPksiMkWxt763rN4LSpk8Y8tTzVZruE4ScVCwst07KXdE8vXFBblCT5FtkrgMEstU4rI5rGuL2y1gWT3qpoEtazS2RWu7TGMbGK3/USEf1lCU3kWr0FQWLkz0jcH0M+KwcB+ySGh7wpDciJ770mjIvwXTQyqdfZTaHClKaK2g016ro2Xx0+6DFx6WnL+WBFQcDWtrdF2XcUy7qqrDP16eQ3zy8PbpoWC7TuH+JRF9qsxQwDL1MqM5KgnDSmurYWmNLZ+rOc4f83lSNLbhLK6txtzyr4k9bp9fWJYV63bD5fqBcd6wDA6/7wPuV4/75vGLYd0vHvM4soueF5qnh5qiBcsPdRJNAy4w8vcLrsOyfXCcZgzTgjhd4CMDCTM6y3C6GaPnmZsZVKRdBqckZuuaiZkjjDQK5BiJ5M/+bg/q4ZXOheyBqeM8V5hm7E9T/5dvW3qycq74yzIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4&apos; title=&apos;&apos; src=&apos;/static/4d3053434736eb33e9f1a587f870c838/ca1dc/4.png&apos; srcset=&apos;/static/4d3053434736eb33e9f1a587f870c838/e7570/4.png 170w,
-/static/4d3053434736eb33e9f1a587f870c838/f46e7/4.png 340w,
-/static/4d3053434736eb33e9f1a587f870c838/ca1dc/4.png 680w,
-/static/4d3053434736eb33e9f1a587f870c838/5c9dd/4.png 836w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Configuration&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;QueryDslConfig&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-    &lt;span class=&quot;token annotation punctuation&quot;&gt;@PersistenceContext&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;EntityManager&lt;/span&gt; entityManager&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JPAQueryFactory&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;jpaQueryFactory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JPAQueryFactory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entityManager&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;JPAQueryFactory는 Querydsl을 사용하여 JPA 쿼리를 생성하고 실행하기 위한 클래스다. &lt;code class=&quot;language-text&quot;&gt;EntityManager&lt;/code&gt;를 주입해 JPAQueryFactory가 db 상호 작용을 수행할 수 있도록 해주는 Config 파일을 작성한다.&lt;/p&gt;
-&lt;h3&gt;Querydsl 질의용 Repository 생성 및 적용&lt;/h3&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryCustomRepository&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-    &lt;span class=&quot;token class-name&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pageable&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;먼저 해당 기능을 추상화한 Repository 인터페이스를 정의한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token import static&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;com&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;official&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;pium&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;domain&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;QHistory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token static&quot;&gt;history&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;token annotation punctuation&quot;&gt;@Repository&lt;/span&gt;
-&lt;span class=&quot;token annotation punctuation&quot;&gt;@RequiredArgsConstructor&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryCustomRepositoryImpl&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryCustomRepository&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JPAQueryFactory&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
-    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pageable&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-        &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; histories &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;selectFrom&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orderBy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;OrderSpecifier&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;DESC&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;createdAt&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;OrderSpecifier&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;DESC&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;date&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;pageable&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getOffset&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;pageable&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getPageSize&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PageImpl&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;histories&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetchOne&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BooleanExpression&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;||&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;historyCategory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;historyType&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;가장 중요한 부분이다. HistoryCustomRepository를 implements한 HistoryCustomRepositoryImpl를 작성한다.&lt;/p&gt;
-&lt;p&gt;여기서 &lt;strong&gt;인터페이스명+impl 네이밍 규약을 반드시 지켜야&lt;/strong&gt; 향후 HistoryRepository에 extends 할 시 해당 구현체가 주입될 수 있다.&lt;/p&gt;
-&lt;p&gt;또 여기서 사용하려는 Q class(QHistory)를 위와 같이 static import하여 사용한다.&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;import static com.official.pium.domain.QHistory.history;&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;먼저, 우리가 수행하려는 동작과 도출하고자 하는 쿼리 형태는 아래와 같다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;기능 : 리스트로 받은 히스토리 타입들에 해당하는 히스토리를 시간순으로 조회하고, 페이징 정보(size, page)에 해당하는 만큼 데이터를 가져온다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;select *
-    from
-        history h1_0 
-    join
-        history_category h2_0 
-            on h2_0.id=h1_0.history_category_id 
-    where
-        h1_0.pet_plant_id=(반려식물_id) 
-        and h2_0.history_type in (타입1,타입2...) 
-    order by
-        h1_0.created_at desc,
-        h1_0.event_date desc 
-        offset (페이지번호 * 페이지사이즈) rows fetch first (페이지사이즈) rows only&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/7c2c065972391c9a85d2001b1e8b5c13/7b3ec/5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 34.11764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABFklEQVR42m2RWXaEIBBF3U0UlEFQBBHUJPtf0ktR6e6PpD/eqRkuRWeMxew8tDGYlIKxMwz54zhBK0sy0JOGmhT32FbXlnOtZxh6iGFgDaTOzg4zKZeKct7YY0UMOzafkJYDgeyxn9hz4XpMifyKvFNfyvAhYFk3rCFi3SI6ISTf4pYFiYZmIm40TKENlNJEbZnOtLiRUk5pzfXZOrKa+1quk1KiSYiG/YHiJdNen984768XWak38loQXEAOlegzSrzg3YqR5wWrk49gCRsT1uvmA/ej4KgX+Sec93zpOI40/BDtr8Vt9gnV1D2TG+3jSdT2sawBISb220fIP4O/+p97PXmi3Sit+Lf6vucfG5olibeHvdcPyCvchkMbUOgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5&apos; title=&apos;&apos; src=&apos;/static/7c2c065972391c9a85d2001b1e8b5c13/ca1dc/5.png&apos; srcset=&apos;/static/7c2c065972391c9a85d2001b1e8b5c13/e7570/5.png 170w,
-/static/7c2c065972391c9a85d2001b1e8b5c13/f46e7/5.png 340w,
-/static/7c2c065972391c9a85d2001b1e8b5c13/ca1dc/5.png 680w,
-/static/7c2c065972391c9a85d2001b1e8b5c13/02d09/5.png 1020w,
-/static/7c2c065972391c9a85d2001b1e8b5c13/7b3ec/5.png 1284w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;이제 위 코드를 천천히 파악해보자.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;jpaQueryFactory.selectFrom(history)&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;history를 대상으로 select 질의를 수행함을 의미한다&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.where(history.petPlant.id.eq(petPlantId), inHistoryType(historyTypes))&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;where 조건문을 사용하는 코드이다. &lt;code class=&quot;language-text&quot;&gt;eq&lt;/code&gt; 메소드를 통해 파라미터로 주입받은 &lt;code class=&quot;language-text&quot;&gt;petPlantId&lt;/code&gt;와의 비교를 수행한다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/98b00/6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 30.58823529411765%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBklEQVR42kWRW3aDMAxEWQ74KVsGl8RQ0ux/TdOxk7Qf90hIYtCISVNELRk5Z2y1opKsihAFEj00eaToiEcIkXUSAmJ4RZGEKJxNCd4HTCoOrVi0+x3teuL4/sHeTuz7DWcVPNqGx1nxvO64sd5p54XjfKCsG0ohW8X2tQ/xyVgLR2pJOLaMVnXkwTlEZ2D51SgZkpUulJvQjZaxkePMsix/GGMwdTHH1S2jNQuZ2eAAm2bAwfHC/Ib5PA9Gr8+8l+oaY8MULFbpd0rIoowZKoXoeJZRL/+9dR12tTAS7/1roS7YjxzdSzT6CAmJAjxykCHUBWLPWe+xk2g78Sd22/0MntY/gr8a2buaPBT/wwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;6&apos; title=&apos;&apos; src=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/6.png&apos; srcset=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/e7570/6.png 170w,
-/static/1805e041feeb92ebaea1a0c8c6377069/f46e7/6.png 340w,
-/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/6.png 680w,
-/static/1805e041feeb92ebaea1a0c8c6377069/02d09/6.png 1020w,
-/static/1805e041feeb92ebaea1a0c8c6377069/98b00/6.png 1202w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;위는 &lt;code class=&quot;language-text&quot;&gt;in&lt;/code&gt; 절을 수행하는 &lt;code class=&quot;language-text&quot;&gt;inHistoryType&lt;/code&gt; 메소드다. 여기서 반환 타입을 &lt;code class=&quot;language-text&quot;&gt;BooleanExpression&lt;/code&gt;으로 사용한 것에 주목하자. &lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;BooleanExpression&lt;/code&gt; 의 반환값이 null일 경우, 자동으로 조건절에서 제외된다.&lt;/strong&gt; 따라서 우리는 &lt;code class=&quot;language-text&quot;&gt;historyTypes&lt;/code&gt;가 들어오지 않았을 경우, in 절을 수행하지 않도록 지정했다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.orderBy(new OrderSpecifier&amp;lt;&gt;(Order.DESC, history.createdAt), new OrderSpecifier&amp;lt;&gt;(Order.DESC, history.date))&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;order by&lt;/code&gt;의 Sorting 조건을 지정하기 위한 부분이다.
-&lt;strong&gt;Sorting 조건은 &lt;code class=&quot;language-text&quot;&gt;OrderSpecifier&lt;/code&gt; 클래스로 정의해 지정해야 한다.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;첫 인자에 Sorting 방향 Enum(Order.DESC)을, 두 번째 인자에 Sorting 대상 필드(history.createdAt)를 지정한다. 우리는 Sorting 조건이 두 가지이므로, 두 개의 &lt;code class=&quot;language-text&quot;&gt;OrderSpecifier&lt;/code&gt; 를 정의해 정렬 순서대로 넣어주었다.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.offset(pageable.getOffset().limit(pageable.getPageSize())&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;페이징 처리를 위한 offset, limit을 지정하는 부분이다. 이 부분은 그냥 Long 타입을 넣어주면 된다. 넘길 부분을 지정하는 offset 값과, 가져올 양을 지정하는 limit 값을 넣어준다.(해당 애플리케이션에서 offset 값은 Pageable 객체에 미리 계산되어 있다)&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.fetch()&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;.fetch()&lt;/code&gt; 를 활용하면 결과를 리스트로 반환할 수 있다. &lt;/p&gt;
-&lt;p&gt;여기서 주의할 점은 &lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.fetch()&lt;/code&gt;를 사용한다고 &lt;code class=&quot;language-text&quot;&gt;fetch join&lt;/code&gt;을 수행하는 것이 아니다&lt;/strong&gt;. 결과 반환 방법은 아래 블로그에 자세히 설명되어 있어 첨부하겠다.
-&lt;a href=&quot;https://devocean.sk.com/blog/techBoardDetail.do?ID=163915&quot;&gt;참고&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetchOne&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;조건에 해당하는 레코드의 총 개수를 전달하는 Count 쿼리를 날리는 메소드다. 간단하게 &lt;code class=&quot;language-text&quot;&gt;.select()&lt;/code&gt; 메소드의 Qclass에 &lt;code class=&quot;language-text&quot;&gt;.count()&lt;/code&gt; 만 추가하면 count 쿼리를 생성해준다.
-&lt;code class=&quot;language-text&quot;&gt;.fetchOne()&lt;/code&gt; 을 통해 단건으로 &lt;code class=&quot;language-text&quot;&gt;Long&lt;/code&gt;을 반환할 수 있다.&lt;/p&gt;
-&lt;h3&gt;생성한 CustomRepository를 기존 사용하던 Repository에 extends&lt;/h3&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1374af122469ae78b798f58986f85d4c/44982/7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 31.176470588235293%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA7ElEQVR42k2Qa47EMAiDe53mAQRIMqO9/7m8hM6O9scnYqS6xpdLh1KBcYEOxjCH+YIMi32NfYPPBTV7UIXIwBgjtfnEXDsnx/5qvadQmzBTbBf46MmIHxBLGnBMZo6PjpbUtVaUWlBKyffhaq2FkYehh0GYKT0cQzkGmmmP8d97qGWact9p9nAnV4+Ea294xPY4YRtFSsaK+XLCO9jW8Z6c+uWR3kaazm8VUZPNnHFyJIxe3C07tDyXYlJq1ehVCML9CzOh06mD0TuBDnR2hOs8XBp+9nhYkmnm+cHpde6oQj9n1S/1c2r9x9G/zA67UCF53jQAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;7&apos; title=&apos;&apos; src=&apos;/static/1374af122469ae78b798f58986f85d4c/ca1dc/7.png&apos; srcset=&apos;/static/1374af122469ae78b798f58986f85d4c/e7570/7.png 170w,
-/static/1374af122469ae78b798f58986f85d4c/f46e7/7.png 340w,
-/static/1374af122469ae78b798f58986f85d4c/ca1dc/7.png 680w,
-/static/1374af122469ae78b798f58986f85d4c/02d09/7.png 1020w,
-/static/1374af122469ae78b798f58986f85d4c/9d567/7.png 1360w,
-/static/1374af122469ae78b798f58986f85d4c/44982/7.png 1592w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;  이제 만든 CustomRepository를 기존 사용하던 Repository에 extends 하기만 하면 기존 Service에 새로운 인터페이스 필드를 선언하지 않고도 사용할 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;HistoryService.java&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Service&lt;/span&gt;
-&lt;span class=&quot;token annotation punctuation&quot;&gt;@Transactional&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;readOnly &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;token annotation punctuation&quot;&gt;@RequiredArgsConstructor&lt;/span&gt;
-&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryService&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-   &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryRepository&lt;/span&gt; historyRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-   &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PetPlantRepository&lt;/span&gt; petPlantRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-   &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryResponse&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pageable&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Member&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; filters&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-       &lt;span class=&quot;token class-name&quot;&gt;PetPlant&lt;/span&gt; petPlant &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; petPlantRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;NoSuchElementException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;일치하는 반려 식물이 존재하지 않습니다. id :&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-       &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isNotOwnerOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-           &lt;span class=&quot;token keyword&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;요청 사용자와 반려 식물의 사용자가 일치하지 않습니다. id :&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-       &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-       &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-       &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;filters &lt;span class=&quot;token operator&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-           historyTypes &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; filters&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                   &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-                   &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toList&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-       &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-
-       &lt;span class=&quot;token class-name&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyPageByPetPlantId &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; historyRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-       &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryMapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toHistoryResponse&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyPageByPetPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;기존에 주입받은 &lt;code class=&quot;language-text&quot;&gt;historyRepository&lt;/code&gt;를 활용해, 새로 생성한 &lt;code class=&quot;language-text&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/code&gt; 메소드를 사용하는 것을 확인할 수 있다.&lt;/p&gt;
-&lt;h2&gt;결과&lt;/h2&gt;
-&lt;hr&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;  select
-      h1_0.id,
-      h1_0.created_at,
-      h1_0.event_date,
-      h1_0.history_category_id,
-      h1_0.curr,
-      h1_0.prev,
-      h1_0.pet_plant_id,
-      h1_0.updated_at 
-  from
-      history h1_0 
-  join
-      history_category h2_0 
-          on h2_0.id=h1_0.history_category_id 
-  where
-      h1_0.pet_plant_id=? 
-      and h2_0.history_type in (?,?) 
-  order by
-      h1_0.created_at desc,
-      h1_0.event_date desc offset ? rows fetch first ? rows only
-2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [1] as [BIGINT] - [1]
-2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [2] as [VARCHAR] - [FLOWERPOT]
-2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [3] as [VARCHAR] - [LOCATION]
-2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [4] as [INTEGER] - [0]
-2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [5] as [INTEGER] - [5]
-Hibernate: 
-  select
-      count(h1_0.id) 
-  from
-      history h1_0 
-  join
-      history_category h2_0 
-          on h2_0.id=h1_0.history_category_id 
-  where
-      h1_0.pet_plant_id=? 
-      and h2_0.history_type in (?,?)
-2023-08-16 17:10:47.919 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [1] as [BIGINT] - [1]
-2023-08-16 17:10:47.919 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [2] as [VARCHAR] - [FLOWERPOT]
-2023-08-16 17:10:47.919 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [3] as [VARCHAR] - [LOCATION]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;테스트 코드를 통해 실제 어떤 쿼리가 실행되는지 확인해 보니,
-우리가 위에서 구현하고자 했던 sql 쿼리와 정확히 일치하는 것을 볼 수 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/7069fcd0b567febef28cf64686154923/d5719/8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 177.64705882352942%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAkCAYAAACJ8xqgAAAACXBIWXMAABYlAAAWJQFJUiTwAAADn0lEQVR42rVW7W7iRhTlofZXn2G1j9E36I/+X6mP0AdppVW3VaNslUjkCwgQ85GYgPkKxtgYsI2/Tu+ZZihkSVCzqaVhhjvj47n3nntmCnGS4C/PwC/2Of6YVfDr9AJXvgmkwHK5xGKxwHw+V73v+wijCGmSYRGs4Ks5X9mDIECapii48QIfGj/hXeUHvDc+4rvqj/j+7mcgA8yOiVq9houLC9RqNZycnMCZOcizHKZtod42cH52htPTU1hWD3wKiaAaKwtFv4Vz/1b1ZjgGciBcRwiiEPF6jbW0MAyRiEd5niOOY2Vji2TXtGdZhgJ/3urhhwpED2UXbHESi6e5anx6kY0b2b1a/Gg7CNhqtVRsjo+PcXt7qybSLFV9cdFCedlR40wW8wX9Yr71fweQMaD/zBLHeoLPJPYQZOv/5nKlUsHR0dEOUKlUwu+fPqPh3qMTOHiYZxgO+iiVy6jX67i8vMSZZJfjsthIL+UFk7JareC67s6XFP88H4NwinkiO4+hMs21jDl7ruGYnunEqh3uy7JOwCSe77i8HcOntg0g2f1VcPENMdy3w56wvnJZRscfYhTNMQ8AZ2rDNE3c39/DMAyQHZ1OR9mY1E0M9wH2JQEtoymAA4wjH+4qh+e56Pf7mEwmCrTb7WI8HivbQcDnYvhql7PHmNpvBah3aCciW0mEtXgUCj0cx1EUs21bNY5p0y4fBHRSH04YYDhPMB4NUa3W0Gw2cX19rQjNxFDWyMuXY/i/ubyH2M+R+kVAimcaJ3hY/0tsFgDt28Kq/29X0F5ACsbnT7+h6XZhijiMPIqDhetqFTc3NygWi5tjgWu1Sj0bw0ikP5XUPkjpLdNIzpB/vq7LlO+w6fHBHT4Xw9cnJX9jcTAaDXz58xhtr4duOIO9yDEa9lER/lEYyEGKLMeM4Y7A7gOcuTOMrAH6gVSDCOwqyiXwkTrQSWLP81SVcMwLwKsF9puJ/WaA1Ll6pYrOYiTk9rEMpa6dqdJBy7KUqN7d3aHX6ykbz5YXYzidTkWxS0pghyKw9iKD5zpKoQeDgQJst9tqTNtBQO3yw2too9m/3VJ+RG5YE6nlVRptRJdrdZU8bbpqdgB5u9KTbIlcSQhOl9ieXkEoDHxH23ZcJjB5ptX36cGvRXT7oSgwgXt5SECqB28C2+XH+aqoTEOqh2u257iBq6sr1W+Swh1xIXseidpt2rSdRybnlE4+2riGOyd12KsQJQn+BvvD56hP/V+yAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8&apos; title=&apos;&apos; src=&apos;/static/7069fcd0b567febef28cf64686154923/ca1dc/8.png&apos; srcset=&apos;/static/7069fcd0b567febef28cf64686154923/e7570/8.png 170w,
-/static/7069fcd0b567febef28cf64686154923/f46e7/8.png 340w,
-/static/7069fcd0b567febef28cf64686154923/ca1dc/8.png 680w,
-/static/7069fcd0b567febef28cf64686154923/d5719/8.png 758w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;클라이언트 화면에서도 필터링이 잘 수행 된다. 기분이 좋다.&lt;/p&gt;
-&lt;h3&gt;어떻게 join이 걸렸을까?&lt;/h3&gt;
-&lt;p&gt;위 예시를 보면 join을 통해 연관관계가 있는 테이블 정보를 한 번에 가져와 n+1 문제가 발생하지 않는다. 그런데, 우리는 select where 설정만 했을 뿐, join 처리를 따로 하지 않았다. 그런데 어떻게 연관관계를 파악하고 Querydsl이 join을 생성해 준 걸까?&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Where 조건에 추가된 연관 관계 정보를 확인하고 join 쿼리 생성&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;아까 where 조건에서 사용했던 &lt;code class=&quot;language-text&quot;&gt;inHistoryTypes&lt;/code&gt; 메소드를 다시 파악해볼 필요가 있다.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/98b00/9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 30.58823529411765%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBklEQVR42kWRW3aDMAxEWQ74KVsGl8RQ0ux/TdOxk7Qf90hIYtCISVNELRk5Z2y1opKsihAFEj00eaToiEcIkXUSAmJ4RZGEKJxNCd4HTCoOrVi0+x3teuL4/sHeTuz7DWcVPNqGx1nxvO64sd5p54XjfKCsG0ohW8X2tQ/xyVgLR2pJOLaMVnXkwTlEZ2D51SgZkpUulJvQjZaxkePMsix/GGMwdTHH1S2jNQuZ2eAAm2bAwfHC/Ib5PA9Gr8+8l+oaY8MULFbpd0rIoowZKoXoeJZRL/+9dR12tTAS7/1roS7YjxzdSzT6CAmJAjxykCHUBWLPWe+xk2g78Sd22/0MntY/gr8a2buaPBT/wwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;9&apos; title=&apos;&apos; src=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/9.png&apos; srcset=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/e7570/9.png 170w,
-/static/1805e041feeb92ebaea1a0c8c6377069/f46e7/9.png 340w,
-/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/9.png 680w,
-/static/1805e041feeb92ebaea1a0c8c6377069/02d09/9.png 1020w,
-/static/1805e041feeb92ebaea1a0c8c6377069/98b00/9.png 1202w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;history.historyCategory.historyType.in(historyTypes)&lt;/code&gt; 와 같은 형태로 객체의 연관관계를 탐색하여 &lt;code class=&quot;language-text&quot;&gt;in&lt;/code&gt;절을 실행시키는 모습을 볼 수 있다. 따라서 해당 연관관계 정보가 필요함을 querydsl이 파악하고 join 쿼리를 실행시켜주는 것이다.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Where을 생략한 경우&lt;/strong&gt;
-&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
-      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/46fbcfb8b96b9db480697e71fb688d4d/70841/10.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
-    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 61.1764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAABYlAAAWJQFJUiTwAAAA10lEQVR42p2SRw7EMAwD/Zw0pPf+/09xMQIU7NU+MA6caExTCuu66r5vXdelqqpUFIXKskxWADAMg/Z9t7Wua4OmggOPLMvUtq3O8zRN02RwvsWCgxcBAMbVn+fR+75qmsZ+IopkIDCuj47j0LIsGscxHQiEHImBfdxFO8zzXH3f23XpuLvyHKMzxIF32qE49QyTxmaeZ+s0TlEK7HNIMQOOO2Bcl4OIInpsKOi6Ttu2mYAxh77yDbA3zw/4f/eD0dcUCskNl8iHHOfInXMITWNF7BMXgvEDwYxyfkQaXVIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
-  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;10&apos; title=&apos;&apos; src=&apos;/static/46fbcfb8b96b9db480697e71fb688d4d/ca1dc/10.png&apos; srcset=&apos;/static/46fbcfb8b96b9db480697e71fb688d4d/e7570/10.png 170w,
-/static/46fbcfb8b96b9db480697e71fb688d4d/f46e7/10.png 340w,
-/static/46fbcfb8b96b9db480697e71fb688d4d/ca1dc/10.png 680w,
-/static/46fbcfb8b96b9db480697e71fb688d4d/02d09/10.png 1020w,
-/static/46fbcfb8b96b9db480697e71fb688d4d/70841/10.png 1094w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
-  &lt;/a&gt;
-    &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;만약 where을 생략했을 때는 연관 관계 정보가 필요하지 않음을 파악하므로 join 쿼리가 날아가지 않는 모습을 볼 수 있다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Logback을 이용해 운영 환경 별 로그 남기기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 로깅이란 ? 우리가 처음 개발을 할 때 System.out.println(), cout << "hello world" << endl, print…]]></description><link>https://pium-official.github.io/server-logging/</link><guid isPermaLink="false">https://pium-official.github.io/server-logging/</guid><pubDate>Wed, 16 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;로그가 정상적으로 출력되는 것을 확인할 수 있습니다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Logback을 이용해 운영 환경 별 로그 남기기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '그레이'가 작성했습니다. 로깅이란 ? 우리가 처음 개발을 할 때 System.out.println(), cout << "hello world" << endl, print…]]></description><link>https://pium-official.github.io/server-logging/</link><guid isPermaLink="false">https://pium-official.github.io/server-logging/</guid><pubDate>Wed, 16 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/Kim0914&quot;&gt;그레이&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;로깅이란 ?&lt;/h2&gt;
@@ -4440,7 +4095,352 @@ RollingFileAppender는 &lt;strong&gt;maxFileSize&lt;/strong&gt;와 &lt;strong&gt
 &lt;li&gt;&lt;a href=&quot;https://www.baeldung.com/logback&quot;&gt;https://www.baeldung.com/logback&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=1MD5xbwznlI&quot;&gt;https://www.youtube.com/watch?v=1MD5xbwznlI&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=JqZzy7RyudI&quot;&gt;https://www.youtube.com/watch?v=JqZzy7RyudI&lt;/a&gt; &lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[피움 Cypress 자동화 구축기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '참새'가 작성했습니다. 우리는 왜 Cypress를 사용하게 되었나 tanstack query…]]></description><link>https://pium-official.github.io/github-actions-cypress/</link><guid isPermaLink="false">https://pium-official.github.io/github-actions-cypress/</guid><pubDate>Mon, 14 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[피움 서비스의 Querydsl 적용 과정]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '하마드'가 작성했습니다. 개요 우아한테크코스 5기 피움 프로젝트를 진행하면서, 필터링 기능 구현을 위해 Querydsl…]]></description><link>https://pium-official.github.io/querydsl_apply_procedure/</link><guid isPermaLink="false">https://pium-official.github.io/querydsl_apply_procedure/</guid><pubDate>Wed, 16 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
+&lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/rawfishthelgh&quot;&gt;하마드&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;개요&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;우아한테크코스 5기 피움 프로젝트를 진행하면서, 필터링 기능 구현을 위해 Querydsl을 적용한 과정을 정리한다&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://pium-official.github.io/why_we_applied_querydsl/&quot;&gt;이전글&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;과정&lt;/h2&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;본 프로젝트는 다음과 같은 환경에서 구성되었다&lt;/p&gt;
+&lt;p&gt;Springboot 3.1.1&lt;/p&gt;
+&lt;p&gt;JAVA 17&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Querydsl 설정&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h3&gt;build.gradle에 관련 코드 추가&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/fda9bdedd608b74362b48ecab9e7ce73/5fbd7/1.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 77.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAABYlAAAWJQFJUiTwAAACbElEQVR42m2T63LaMBCFeZY2TWLJutmWbGPA4ZIhQC6l0+ZH2+n7v8XpkQQJzfTH513vyMfS7tHEhxb9dEA/zBDaDtoYlEoyKihdknO8yFX5XlMq11mTUmJS8jHMFthsd1jdbzFf3ME1BmGoE+2sSbHpK/jIKY+EaY26c/Axtg5lWWIS/1BVDeJOGx+Y1+nPxhmiYSqdo9XQNufaqrfc2LxDIWTeYaE0d+T59ymatmceUHKRqS10pDJQ8cMm57rOWG+5TiduZAkhT4K/xSc8qlscTYEXfYsX5k/yCx4j4oKP7ySuO5Dv4jOMFEl08iyu4HyLOYcyTKdovYdWAs6xFcRyOI47jNHa07vNNU2BWx71QPFaFiii4IGC1TDHuFxjWCzJHXoOyQWXGl61H2Dd8bh1V6EOFgV7vS0uBF/UNfx8xHpzn0TH1Qbj3Rq+82gHDqurUwz9O03L2rRJuK7BsS7RcjCl1pgcLbet2WT6T7OgmWtj0+R08pd685pO6BwNBxWny/jE/vvoQ66bfFNXKCjmXAVHy1jrYPiu6Kmzwc8oIkuZLCKEgCTXPOZDcfV+5J/BoB/X6LoeTQj0okfdNMmPtnLJb5ksGgXlySLxUkTL7C6H8kybqJoiFIgi0dyREI1Of0b3nwXO5pWn2n8Fj7rANRe6eCzekHycfKSi4KLbjGAeBaQo3ijJDWv/CH5ln8b1En9+7fH64wHb7Qr73X2Kq+UM81nAYh7Qc5qKA7FVxStXpehIHOiDuOjhq77BItQ48MPdELCfRVrshxx3MZ+32NA+PXu58A0W7PHIXo/MgzV4Kj6j4k2Jgn8B68PbdTAtWFUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;1&apos; title=&apos;&apos; src=&apos;/static/fda9bdedd608b74362b48ecab9e7ce73/ca1dc/1.png&apos; srcset=&apos;/static/fda9bdedd608b74362b48ecab9e7ce73/e7570/1.png 170w,
+/static/fda9bdedd608b74362b48ecab9e7ce73/f46e7/1.png 340w,
+/static/fda9bdedd608b74362b48ecab9e7ce73/ca1dc/1.png 680w,
+/static/fda9bdedd608b74362b48ecab9e7ce73/02d09/1.png 1020w,
+/static/fda9bdedd608b74362b48ecab9e7ce73/5fbd7/1.png 1276w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;dependencies {
+    implementation &apos;org.springframework.boot:spring-boot-starter-data-jpa&apos;
+    implementation &apos;org.springframework.boot:spring-boot-starter-validation&apos;
+    implementation &apos;org.springframework.boot:spring-boot-starter-web&apos;
+
+    implementation &apos;com.github.maricn:logback-slack-appender:1.6.1&apos;
+
+    //querydsl 추가
+    implementation &apos;com.querydsl:querydsl-jpa:5.0.0:jakarta&apos;
+    annotationProcessor &quot;com.querydsl:querydsl-apt:5.0.0:jakarta&quot;
+    annotationProcessor &quot;jakarta.annotation:jakarta.annotation-api&quot;
+    annotationProcessor &quot;jakarta.persistence:jakarta.persistence-api&quot;
+}
+
+//querydsl 추가
+def querydslSrcDir = &apos;src/main/generated&apos;
+
+clean {
+    delete file(querydslSrcDir)
+}
+
+tasks.withType(JavaCompile) {
+    options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;build.gradle&lt;/code&gt; 파일에 위 설정을 추가해 준다.
+&lt;code class=&quot;language-text&quot;&gt;dependencies&lt;/code&gt; 하부의 옵션 설정은 아래와 같은 의미를 가진다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;def querydslSrcDir = &apos;src/main/generated&apos;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Querydsl이 생성한 소스 코드를 저장할 디렉토리를 정의한다. 여기서는 &apos;src/main/generated&apos;로 디렉토리 경로를 지정하고, 이를 querydslSrcDir 변수에 할당한다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;clean { delete file(querydslSrcDir) }&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Gradle의 clean 태스크를 정의하고, 해당 태스크가 실행될 때 querydslSrcDir 디렉토리를 삭제하도록 한다. 즉, 프로젝트를 clean 하면 Querydsl이 생성한 소스 코드도 삭제된다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;tasks.withType(JavaCompile) { options.generatedSourceOutputDirectory = file(querydslSrcDir) }&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;JavaCompile 태스크 유형을 가진 모든 태스크에 대해, 컴파일 옵션 중에서 생성된 소스 코드의 출력 디렉토리를 querydslSrcDir로 설정한다. Querydsl이 생성한 소스 코드가 지정한 디렉토리에 컴파일되도록 보장한다.&lt;/p&gt;
+&lt;h3&gt;build 수행 및 Q Class 생성&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 610px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/c403e5c3d0be112b1ba88b848597f89e/5d5ad/2.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 70.58823529411764%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAABYlAAAWJQFJUiTwAAACF0lEQVR42o2S3W7UMBCF80YItFTtxs7/f5xsEidOsil0t1CEqHgCrlCvEdzxuIdxsoUu3RYujsaxZz5NzoyRdXuo3Sd0JJYqmEk3ax21S4wpxsudjutkyTkPJaLmCsP1Z9hihC8UumGE4acVwryBn1VgfgbTS+fopcu3HRVz1LJCASvIj87BoY57CYZxglGUFdIsRxglcDwfjFtw/QBqGuB5ARrZIU4yFOUGhVQo3tzAiyO00wTX9TFOl3OerpVtB8N2PPhhgjgVCMJ4FrMcmNwGp2hTkWV7JBecxIIY3KEz1XGb3nWkPP3ej1sYDhWkYgPZb6nlLcq6mQs1hB8gM4iK5rNlH6JzdG8ReFNLGOxATwha7j5iU9UYthO8IMKaWXOnv2FPSMN07qvVGYyHl1FWoH57Q11K8kOhaiRaNZAd+T+hjDoX5PMRME5SNO9usaFBdP2ATJQEo4kH4X91+Ajo00DEdI2qG1A3LdwDSE/wPufJDsmaq93+D/DeYJPWRlTtbLD2Ug1bqH6kVQpxYfKTv750yGHT1I2/H/UaFATUPtayRad6tOSn7Ho6D8iL8iRUe2g6wWMgo3WpGvKQgIqGomhZs6IiOyKkuZhtOdkl6XL//oGHpAvqrmfn+J45+CoC3JUhfmQ2djbDijtgZPxz066pgSPgmePjw3qFn5GJLyLCnRT4xl/i9vULrNwQzjOT1pKqxy/ZQ/01dKKAJgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;2&apos; title=&apos;&apos; src=&apos;/static/c403e5c3d0be112b1ba88b848597f89e/5d5ad/2.png&apos; srcset=&apos;/static/c403e5c3d0be112b1ba88b848597f89e/e7570/2.png 170w,
+/static/c403e5c3d0be112b1ba88b848597f89e/f46e7/2.png 340w,
+/static/c403e5c3d0be112b1ba88b848597f89e/5d5ad/2.png 610w&apos; sizes=&apos;(max-width: 610px) 100vw, 610px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/2dc4a522b3257f1c773f681382f950f1/cfc60/3.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 67.05882352941177%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAABYlAAAWJQFJUiTwAAABEklEQVR42qWS23KCMBRF/abWqUSEHLmEBNRh0IJTcXjr///B7jmp8lZF+rAhAzMr61wWsd4iyQxO5x51cwKlGeTb3CwifkgyY9FdBjTHTxSuwiYm3P+9khGYsmU9fKPtBxwONQM1YvoHMNYEbUrY7gv7vYKxAVy1AiUxw2cAfbjM3Do0XQvjFJeuYMuAs+JzwJcof85MyJckE4CSSCMqdiA2rao3bynJzRoREbfhN9MMPZBLNDvorkdZvntDsbu/H8EeAomBzi09KM03t//0Yg9HYAXdXuDKJQpvpnz/xFCGNN9QgDIYF9x6+QG91fOBMhQpWewE9Az2tGQZiphJqWGU/Lkq0wzP13FtZPfyIpy02D8v/soDs0ql4wAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;3&apos; title=&apos;&apos; src=&apos;/static/2dc4a522b3257f1c773f681382f950f1/ca1dc/3.png&apos; srcset=&apos;/static/2dc4a522b3257f1c773f681382f950f1/e7570/3.png 170w,
+/static/2dc4a522b3257f1c773f681382f950f1/f46e7/3.png 340w,
+/static/2dc4a522b3257f1c773f681382f950f1/ca1dc/3.png 680w,
+/static/2dc4a522b3257f1c773f681382f950f1/cfc60/3.png 776w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이제 바뀐 설정 파일로 &lt;code class=&quot;language-text&quot;&gt;build&lt;/code&gt;를 수행하면 우리가 지정한&lt;code class=&quot;language-text&quot;&gt;src/main/generated&lt;/code&gt; 경로에 위와 같은 Q Class가 생성된다.&lt;/p&gt;
+&lt;p&gt;QueryDsl은 빌드 시점에 애플리케이션의 도메인 중 &lt;code class=&quot;language-text&quot;&gt;@Entity&lt;/code&gt;와 &lt;code class=&quot;language-text&quot;&gt;@Embeddable&lt;/code&gt; 어노테이션이 포함된 클래스를 찾아 Q Class를 생성한다. 이 Q class를 가지고 애플리케이션 내부에서 QueryDsl 관련 로직을 적용해야 한다.&lt;/p&gt;
+&lt;h2&gt;적용&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h3&gt;JPAQueryFactory Bean 등록&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/4d3053434736eb33e9f1a587f870c838/5c9dd/4.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 70%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAABYlAAAWJQFJUiTwAAAB30lEQVR42qWTyZKjMBBE/TdGG4hFEmI1dndP+Dz//y3ZKYHbExMT9mEODykQkarKLE5xUBhGjT4qhKDQ9wp1XUAKCSkFhNhJe6UkUS85bRS8Ro2JQhvXlQxjhA8R/TAe64S2cyjL6q3oqS0VXKVQ8cOuJJVG6zw65+B84OozTdPCGPO+QiEVhNT82EKTc6FwPksiMkWxt763rN4LSpk8Y8tTzVZruE4ScVCwst07KXdE8vXFBblCT5FtkrgMEstU4rI5rGuL2y1gWT3qpoEtazS2RWu7TGMbGK3/USEf1lCU3kWr0FQWLkz0jcH0M+KwcB+ySGh7wpDciJ770mjIvwXTQyqdfZTaHClKaK2g016ro2Xx0+6DFx6WnL+WBFQcDWtrdF2XcUy7qqrDP16eQ3zy8PbpoWC7TuH+JRF9qsxQwDL1MqM5KgnDSmurYWmNLZ+rOc4f83lSNLbhLK6txtzyr4k9bp9fWJYV63bD5fqBcd6wDA6/7wPuV4/75vGLYd0vHvM4soueF5qnh5qiBcsPdRJNAy4w8vcLrsOyfXCcZgzTgjhd4CMDCTM6y3C6GaPnmZsZVKRdBqckZuuaiZkjjDQK5BiJ5M/+bg/q4ZXOheyBqeM8V5hm7E9T/5dvW3qycq74yzIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;4&apos; title=&apos;&apos; src=&apos;/static/4d3053434736eb33e9f1a587f870c838/ca1dc/4.png&apos; srcset=&apos;/static/4d3053434736eb33e9f1a587f870c838/e7570/4.png 170w,
+/static/4d3053434736eb33e9f1a587f870c838/f46e7/4.png 340w,
+/static/4d3053434736eb33e9f1a587f870c838/ca1dc/4.png 680w,
+/static/4d3053434736eb33e9f1a587f870c838/5c9dd/4.png 836w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;QueryDslConfig&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@PersistenceContext&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;EntityManager&lt;/span&gt; entityManager&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JPAQueryFactory&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;jpaQueryFactory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JPAQueryFactory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;entityManager&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;JPAQueryFactory는 Querydsl을 사용하여 JPA 쿼리를 생성하고 실행하기 위한 클래스다. &lt;code class=&quot;language-text&quot;&gt;EntityManager&lt;/code&gt;를 주입해 JPAQueryFactory가 db 상호 작용을 수행할 수 있도록 해주는 Config 파일을 작성한다.&lt;/p&gt;
+&lt;h3&gt;Querydsl 질의용 Repository 생성 및 적용&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryCustomRepository&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token class-name&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pageable&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;먼저 해당 기능을 추상화한 Repository 인터페이스를 정의한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token import static&quot;&gt;&lt;span class=&quot;token namespace&quot;&gt;com&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;official&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;pium&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;domain&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;QHistory&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token static&quot;&gt;history&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Repository&lt;/span&gt;
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@RequiredArgsConstructor&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryCustomRepositoryImpl&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryCustomRepository&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;JPAQueryFactory&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token annotation punctuation&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pageable&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+        &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; histories &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;selectFrom&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orderBy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;OrderSpecifier&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;DESC&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;createdAt&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;OrderSpecifier&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Order&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;DESC&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;date&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;offset&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;pageable&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getOffset&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;limit&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;pageable&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getPageSize&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PageImpl&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;histories&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetchOne&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;BooleanExpression&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes &lt;span class=&quot;token operator&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;||&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;historyCategory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;historyType&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;가장 중요한 부분이다. HistoryCustomRepository를 implements한 HistoryCustomRepositoryImpl를 작성한다.&lt;/p&gt;
+&lt;p&gt;여기서 &lt;strong&gt;인터페이스명+impl 네이밍 규약을 반드시 지켜야&lt;/strong&gt; 향후 HistoryRepository에 extends 할 시 해당 구현체가 주입될 수 있다.&lt;/p&gt;
+&lt;p&gt;또 여기서 사용하려는 Q class(QHistory)를 위와 같이 static import하여 사용한다.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;import static com.official.pium.domain.QHistory.history;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;먼저, 우리가 수행하려는 동작과 도출하고자 하는 쿼리 형태는 아래와 같다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;기능 : 리스트로 받은 히스토리 타입들에 해당하는 히스토리를 시간순으로 조회하고, 페이징 정보(size, page)에 해당하는 만큼 데이터를 가져온다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;select *
+    from
+        history h1_0 
+    join
+        history_category h2_0 
+            on h2_0.id=h1_0.history_category_id 
+    where
+        h1_0.pet_plant_id=(반려식물_id) 
+        and h2_0.history_type in (타입1,타입2...) 
+    order by
+        h1_0.created_at desc,
+        h1_0.event_date desc 
+        offset (페이지번호 * 페이지사이즈) rows fetch first (페이지사이즈) rows only&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/7c2c065972391c9a85d2001b1e8b5c13/7b3ec/5.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 34.11764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABFklEQVR42m2RWXaEIBBF3U0UlEFQBBHUJPtf0ktR6e6PpD/eqRkuRWeMxew8tDGYlIKxMwz54zhBK0sy0JOGmhT32FbXlnOtZxh6iGFgDaTOzg4zKZeKct7YY0UMOzafkJYDgeyxn9hz4XpMifyKvFNfyvAhYFk3rCFi3SI6ISTf4pYFiYZmIm40TKENlNJEbZnOtLiRUk5pzfXZOrKa+1quk1KiSYiG/YHiJdNen984768XWak38loQXEAOlegzSrzg3YqR5wWrk49gCRsT1uvmA/ej4KgX+Sec93zpOI40/BDtr8Vt9gnV1D2TG+3jSdT2sawBISb220fIP4O/+p97PXmi3Sit+Lf6vucfG5olibeHvdcPyCvchkMbUOgAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;5&apos; title=&apos;&apos; src=&apos;/static/7c2c065972391c9a85d2001b1e8b5c13/ca1dc/5.png&apos; srcset=&apos;/static/7c2c065972391c9a85d2001b1e8b5c13/e7570/5.png 170w,
+/static/7c2c065972391c9a85d2001b1e8b5c13/f46e7/5.png 340w,
+/static/7c2c065972391c9a85d2001b1e8b5c13/ca1dc/5.png 680w,
+/static/7c2c065972391c9a85d2001b1e8b5c13/02d09/5.png 1020w,
+/static/7c2c065972391c9a85d2001b1e8b5c13/7b3ec/5.png 1284w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;이제 위 코드를 천천히 파악해보자.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;jpaQueryFactory.selectFrom(history)&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;history를 대상으로 select 질의를 수행함을 의미한다&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.where(history.petPlant.id.eq(petPlantId), inHistoryType(historyTypes))&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;where 조건문을 사용하는 코드이다. &lt;code class=&quot;language-text&quot;&gt;eq&lt;/code&gt; 메소드를 통해 파라미터로 주입받은 &lt;code class=&quot;language-text&quot;&gt;petPlantId&lt;/code&gt;와의 비교를 수행한다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/98b00/6.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 30.58823529411765%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBklEQVR42kWRW3aDMAxEWQ74KVsGl8RQ0ux/TdOxk7Qf90hIYtCISVNELRk5Z2y1opKsihAFEj00eaToiEcIkXUSAmJ4RZGEKJxNCd4HTCoOrVi0+x3teuL4/sHeTuz7DWcVPNqGx1nxvO64sd5p54XjfKCsG0ohW8X2tQ/xyVgLR2pJOLaMVnXkwTlEZ2D51SgZkpUulJvQjZaxkePMsix/GGMwdTHH1S2jNQuZ2eAAm2bAwfHC/Ib5PA9Gr8+8l+oaY8MULFbpd0rIoowZKoXoeJZRL/+9dR12tTAS7/1roS7YjxzdSzT6CAmJAjxykCHUBWLPWe+xk2g78Sd22/0MntY/gr8a2buaPBT/wwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;6&apos; title=&apos;&apos; src=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/6.png&apos; srcset=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/e7570/6.png 170w,
+/static/1805e041feeb92ebaea1a0c8c6377069/f46e7/6.png 340w,
+/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/6.png 680w,
+/static/1805e041feeb92ebaea1a0c8c6377069/02d09/6.png 1020w,
+/static/1805e041feeb92ebaea1a0c8c6377069/98b00/6.png 1202w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;위는 &lt;code class=&quot;language-text&quot;&gt;in&lt;/code&gt; 절을 수행하는 &lt;code class=&quot;language-text&quot;&gt;inHistoryType&lt;/code&gt; 메소드다. 여기서 반환 타입을 &lt;code class=&quot;language-text&quot;&gt;BooleanExpression&lt;/code&gt;으로 사용한 것에 주목하자. &lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;BooleanExpression&lt;/code&gt; 의 반환값이 null일 경우, 자동으로 조건절에서 제외된다.&lt;/strong&gt; 따라서 우리는 &lt;code class=&quot;language-text&quot;&gt;historyTypes&lt;/code&gt;가 들어오지 않았을 경우, in 절을 수행하지 않도록 지정했다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.orderBy(new OrderSpecifier&amp;lt;&gt;(Order.DESC, history.createdAt), new OrderSpecifier&amp;lt;&gt;(Order.DESC, history.date))&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;order by&lt;/code&gt;의 Sorting 조건을 지정하기 위한 부분이다.
+&lt;strong&gt;Sorting 조건은 &lt;code class=&quot;language-text&quot;&gt;OrderSpecifier&lt;/code&gt; 클래스로 정의해 지정해야 한다.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;첫 인자에 Sorting 방향 Enum(Order.DESC)을, 두 번째 인자에 Sorting 대상 필드(history.createdAt)를 지정한다. 우리는 Sorting 조건이 두 가지이므로, 두 개의 &lt;code class=&quot;language-text&quot;&gt;OrderSpecifier&lt;/code&gt; 를 정의해 정렬 순서대로 넣어주었다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.offset(pageable.getOffset().limit(pageable.getPageSize())&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;페이징 처리를 위한 offset, limit을 지정하는 부분이다. 이 부분은 그냥 Long 타입을 넣어주면 된다. 넘길 부분을 지정하는 offset 값과, 가져올 양을 지정하는 limit 값을 넣어준다.(해당 애플리케이션에서 offset 값은 Pageable 객체에 미리 계산되어 있다)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.fetch()&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;.fetch()&lt;/code&gt; 를 활용하면 결과를 리스트로 반환할 수 있다. &lt;/p&gt;
+&lt;p&gt;여기서 주의할 점은 &lt;strong&gt;&lt;code class=&quot;language-text&quot;&gt;.fetch()&lt;/code&gt;를 사용한다고 &lt;code class=&quot;language-text&quot;&gt;fetch join&lt;/code&gt;을 수행하는 것이 아니다&lt;/strong&gt;. 결과 반환 방법은 아래 블로그에 자세히 설명되어 있어 첨부하겠다.
+&lt;a href=&quot;https://devocean.sk.com/blog/techBoardDetail.do?ID=163915&quot;&gt;참고&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getCount&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; jpaQueryFactory&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;history&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;id&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;inHistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyTypes&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;fetchOne&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;조건에 해당하는 레코드의 총 개수를 전달하는 Count 쿼리를 날리는 메소드다. 간단하게 &lt;code class=&quot;language-text&quot;&gt;.select()&lt;/code&gt; 메소드의 Qclass에 &lt;code class=&quot;language-text&quot;&gt;.count()&lt;/code&gt; 만 추가하면 count 쿼리를 생성해준다.
+&lt;code class=&quot;language-text&quot;&gt;.fetchOne()&lt;/code&gt; 을 통해 단건으로 &lt;code class=&quot;language-text&quot;&gt;Long&lt;/code&gt;을 반환할 수 있다.&lt;/p&gt;
+&lt;h3&gt;생성한 CustomRepository를 기존 사용하던 Repository에 extends&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1374af122469ae78b798f58986f85d4c/44982/7.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 31.176470588235293%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA7ElEQVR42k2Qa47EMAiDe53mAQRIMqO9/7m8hM6O9scnYqS6xpdLh1KBcYEOxjCH+YIMi32NfYPPBTV7UIXIwBgjtfnEXDsnx/5qvadQmzBTbBf46MmIHxBLGnBMZo6PjpbUtVaUWlBKyffhaq2FkYehh0GYKT0cQzkGmmmP8d97qGWact9p9nAnV4+Ea294xPY4YRtFSsaK+XLCO9jW8Z6c+uWR3kaazm8VUZPNnHFyJIxe3C07tDyXYlJq1ehVCML9CzOh06mD0TuBDnR2hOs8XBp+9nhYkmnm+cHpde6oQj9n1S/1c2r9x9G/zA67UCF53jQAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;7&apos; title=&apos;&apos; src=&apos;/static/1374af122469ae78b798f58986f85d4c/ca1dc/7.png&apos; srcset=&apos;/static/1374af122469ae78b798f58986f85d4c/e7570/7.png 170w,
+/static/1374af122469ae78b798f58986f85d4c/f46e7/7.png 340w,
+/static/1374af122469ae78b798f58986f85d4c/ca1dc/7.png 680w,
+/static/1374af122469ae78b798f58986f85d4c/02d09/7.png 1020w,
+/static/1374af122469ae78b798f58986f85d4c/9d567/7.png 1360w,
+/static/1374af122469ae78b798f58986f85d4c/44982/7.png 1592w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;  이제 만든 CustomRepository를 기존 사용하던 Repository에 extends 하기만 하면 기존 Service에 새로운 인터페이스 필드를 선언하지 않고도 사용할 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HistoryService.java&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token annotation punctuation&quot;&gt;@Service&lt;/span&gt;
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@Transactional&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;readOnly &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;token annotation punctuation&quot;&gt;@RequiredArgsConstructor&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryService&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+   &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryRepository&lt;/span&gt; historyRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+   &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;PetPlantRepository&lt;/span&gt; petPlantRepository&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+   &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryResponse&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Long&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Pageable&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Member&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; filters&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;token class-name&quot;&gt;PetPlant&lt;/span&gt; petPlant &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; petPlantRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findById&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+               &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;orElseThrow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;NoSuchElementException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;일치하는 반려 식물이 존재하지 않습니다. id :&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; petPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+       &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlant&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isNotOwnerOf&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;member&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+           &lt;span class=&quot;token keyword&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;IllegalArgumentException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;요청 사용자와 반려 식물의 사용자가 일치하지 않습니다. id :&quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; member&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getId&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+       &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+       &lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyTypes &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+       &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;filters &lt;span class=&quot;token operator&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+           historyTypes &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; filters&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                   &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;HistoryType&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+                   &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toList&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+       &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+       &lt;span class=&quot;token class-name&quot;&gt;Page&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;History&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; historyPageByPetPlantId &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; historyRepository&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;petPlantId&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; historyTypes&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; pageable&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+       &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;HistoryMapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;toHistoryResponse&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;historyPageByPetPlantId&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+   &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;기존에 주입받은 &lt;code class=&quot;language-text&quot;&gt;historyRepository&lt;/code&gt;를 활용해, 새로 생성한 &lt;code class=&quot;language-text&quot;&gt;findAllByPetPlantIdAndHistoryTypes&lt;/code&gt; 메소드를 사용하는 것을 확인할 수 있다.&lt;/p&gt;
+&lt;h2&gt;결과&lt;/h2&gt;
+&lt;hr&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;  select
+      h1_0.id,
+      h1_0.created_at,
+      h1_0.event_date,
+      h1_0.history_category_id,
+      h1_0.curr,
+      h1_0.prev,
+      h1_0.pet_plant_id,
+      h1_0.updated_at 
+  from
+      history h1_0 
+  join
+      history_category h2_0 
+          on h2_0.id=h1_0.history_category_id 
+  where
+      h1_0.pet_plant_id=? 
+      and h2_0.history_type in (?,?) 
+  order by
+      h1_0.created_at desc,
+      h1_0.event_date desc offset ? rows fetch first ? rows only
+2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [1] as [BIGINT] - [1]
+2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [2] as [VARCHAR] - [FLOWERPOT]
+2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [3] as [VARCHAR] - [LOCATION]
+2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [4] as [INTEGER] - [0]
+2023-08-16 17:10:47.907 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [5] as [INTEGER] - [5]
+Hibernate: 
+  select
+      count(h1_0.id) 
+  from
+      history h1_0 
+  join
+      history_category h2_0 
+          on h2_0.id=h1_0.history_category_id 
+  where
+      h1_0.pet_plant_id=? 
+      and h2_0.history_type in (?,?)
+2023-08-16 17:10:47.919 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [1] as [BIGINT] - [1]
+2023-08-16 17:10:47.919 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [2] as [VARCHAR] - [FLOWERPOT]
+2023-08-16 17:10:47.919 [main] TRACE org.hibernate.orm.jdbc.bind - binding parameter [3] as [VARCHAR] - [LOCATION]&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;테스트 코드를 통해 실제 어떤 쿼리가 실행되는지 확인해 보니,
+우리가 위에서 구현하고자 했던 sql 쿼리와 정확히 일치하는 것을 볼 수 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/7069fcd0b567febef28cf64686154923/d5719/8.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 177.64705882352942%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAkCAYAAACJ8xqgAAAACXBIWXMAABYlAAAWJQFJUiTwAAADn0lEQVR42rVW7W7iRhTlofZXn2G1j9E36I/+X6mP0AdppVW3VaNslUjkCwgQ85GYgPkKxtgYsI2/Tu+ZZihkSVCzqaVhhjvj47n3nntmCnGS4C/PwC/2Of6YVfDr9AJXvgmkwHK5xGKxwHw+V73v+wijCGmSYRGs4Ks5X9mDIECapii48QIfGj/hXeUHvDc+4rvqj/j+7mcgA8yOiVq9houLC9RqNZycnMCZOcizHKZtod42cH52htPTU1hWD3wKiaAaKwtFv4Vz/1b1ZjgGciBcRwiiEPF6jbW0MAyRiEd5niOOY2Vji2TXtGdZhgJ/3urhhwpED2UXbHESi6e5anx6kY0b2b1a/Gg7CNhqtVRsjo+PcXt7qybSLFV9cdFCedlR40wW8wX9Yr71fweQMaD/zBLHeoLPJPYQZOv/5nKlUsHR0dEOUKlUwu+fPqPh3qMTOHiYZxgO+iiVy6jX67i8vMSZZJfjsthIL+UFk7JareC67s6XFP88H4NwinkiO4+hMs21jDl7ruGYnunEqh3uy7JOwCSe77i8HcOntg0g2f1VcPENMdy3w56wvnJZRscfYhTNMQ8AZ2rDNE3c39/DMAyQHZ1OR9mY1E0M9wH2JQEtoymAA4wjH+4qh+e56Pf7mEwmCrTb7WI8HivbQcDnYvhql7PHmNpvBah3aCciW0mEtXgUCj0cx1EUs21bNY5p0y4fBHRSH04YYDhPMB4NUa3W0Gw2cX19rQjNxFDWyMuXY/i/ubyH2M+R+kVAimcaJ3hY/0tsFgDt28Kq/29X0F5ACsbnT7+h6XZhijiMPIqDhetqFTc3NygWi5tjgWu1Sj0bw0ikP5XUPkjpLdNIzpB/vq7LlO+w6fHBHT4Xw9cnJX9jcTAaDXz58xhtr4duOIO9yDEa9lER/lEYyEGKLMeM4Y7A7gOcuTOMrAH6gVSDCOwqyiXwkTrQSWLP81SVcMwLwKsF9puJ/WaA1Ll6pYrOYiTk9rEMpa6dqdJBy7KUqN7d3aHX6ykbz5YXYzidTkWxS0pghyKw9iKD5zpKoQeDgQJst9tqTNtBQO3yw2too9m/3VJ+RG5YE6nlVRptRJdrdZU8bbpqdgB5u9KTbIlcSQhOl9ieXkEoDHxH23ZcJjB5ptX36cGvRXT7oSgwgXt5SECqB28C2+XH+aqoTEOqh2u257iBq6sr1W+Swh1xIXseidpt2rSdRybnlE4+2riGOyd12KsQJQn+BvvD56hP/V+yAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;8&apos; title=&apos;&apos; src=&apos;/static/7069fcd0b567febef28cf64686154923/ca1dc/8.png&apos; srcset=&apos;/static/7069fcd0b567febef28cf64686154923/e7570/8.png 170w,
+/static/7069fcd0b567febef28cf64686154923/f46e7/8.png 340w,
+/static/7069fcd0b567febef28cf64686154923/ca1dc/8.png 680w,
+/static/7069fcd0b567febef28cf64686154923/d5719/8.png 758w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;클라이언트 화면에서도 필터링이 잘 수행 된다. 기분이 좋다.&lt;/p&gt;
+&lt;h3&gt;어떻게 join이 걸렸을까?&lt;/h3&gt;
+&lt;p&gt;위 예시를 보면 join을 통해 연관관계가 있는 테이블 정보를 한 번에 가져와 n+1 문제가 발생하지 않는다. 그런데, 우리는 select where 설정만 했을 뿐, join 처리를 따로 하지 않았다. 그런데 어떻게 연관관계를 파악하고 Querydsl이 join을 생성해 준 걸까?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Where 조건에 추가된 연관 관계 정보를 확인하고 join 쿼리 생성&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;아까 where 조건에서 사용했던 &lt;code class=&quot;language-text&quot;&gt;inHistoryTypes&lt;/code&gt; 메소드를 다시 파악해볼 필요가 있다.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/98b00/9.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 30.58823529411765%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBklEQVR42kWRW3aDMAxEWQ74KVsGl8RQ0ux/TdOxk7Qf90hIYtCISVNELRk5Z2y1opKsihAFEj00eaToiEcIkXUSAmJ4RZGEKJxNCd4HTCoOrVi0+x3teuL4/sHeTuz7DWcVPNqGx1nxvO64sd5p54XjfKCsG0ohW8X2tQ/xyVgLR2pJOLaMVnXkwTlEZ2D51SgZkpUulJvQjZaxkePMsix/GGMwdTHH1S2jNQuZ2eAAm2bAwfHC/Ib5PA9Gr8+8l+oaY8MULFbpd0rIoowZKoXoeJZRL/+9dR12tTAS7/1roS7YjxzdSzT6CAmJAjxykCHUBWLPWe+xk2g78Sd22/0MntY/gr8a2buaPBT/wwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;9&apos; title=&apos;&apos; src=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/9.png&apos; srcset=&apos;/static/1805e041feeb92ebaea1a0c8c6377069/e7570/9.png 170w,
+/static/1805e041feeb92ebaea1a0c8c6377069/f46e7/9.png 340w,
+/static/1805e041feeb92ebaea1a0c8c6377069/ca1dc/9.png 680w,
+/static/1805e041feeb92ebaea1a0c8c6377069/02d09/9.png 1020w,
+/static/1805e041feeb92ebaea1a0c8c6377069/98b00/9.png 1202w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;history.historyCategory.historyType.in(historyTypes)&lt;/code&gt; 와 같은 형태로 객체의 연관관계를 탐색하여 &lt;code class=&quot;language-text&quot;&gt;in&lt;/code&gt;절을 실행시키는 모습을 볼 수 있다. 따라서 해당 연관관계 정보가 필요함을 querydsl이 파악하고 join 쿼리를 실행시켜주는 것이다.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Where을 생략한 경우&lt;/strong&gt;
+&lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; margin-bottom: 16px;&apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/46fbcfb8b96b9db480697e71fb688d4d/70841/10.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 61.1764705882353%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAABYlAAAWJQFJUiTwAAAA10lEQVR42p2SRw7EMAwD/Zw0pPf+/09xMQIU7NU+MA6caExTCuu66r5vXdelqqpUFIXKskxWADAMg/Z9t7Wua4OmggOPLMvUtq3O8zRN02RwvsWCgxcBAMbVn+fR+75qmsZ+IopkIDCuj47j0LIsGscxHQiEHImBfdxFO8zzXH3f23XpuLvyHKMzxIF32qE49QyTxmaeZ+s0TlEK7HNIMQOOO2Bcl4OIInpsKOi6Ttu2mYAxh77yDbA3zw/4f/eD0dcUCskNl8iHHOfInXMITWNF7BMXgvEDwYxyfkQaXVIAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;10&apos; title=&apos;&apos; src=&apos;/static/46fbcfb8b96b9db480697e71fb688d4d/ca1dc/10.png&apos; srcset=&apos;/static/46fbcfb8b96b9db480697e71fb688d4d/e7570/10.png 170w,
+/static/46fbcfb8b96b9db480697e71fb688d4d/f46e7/10.png 340w,
+/static/46fbcfb8b96b9db480697e71fb688d4d/ca1dc/10.png 680w,
+/static/46fbcfb8b96b9db480697e71fb688d4d/02d09/10.png 1020w,
+/static/46fbcfb8b96b9db480697e71fb688d4d/70841/10.png 1094w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;만약 where을 생략했을 때는 연관 관계 정보가 필요하지 않음을 파악하므로 join 쿼리가 날아가지 않는 모습을 볼 수 있다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[피움 Cypress 자동화 구축기]]></title><description><![CDATA[이 글은 우테코 피움팀 크루 '참새'가 작성했습니다. 우리는 왜 Cypress를 사용하게 되었나 tanstack query…]]></description><link>https://pium-official.github.io/github-actions-cypress/</link><guid isPermaLink="false">https://pium-official.github.io/github-actions-cypress/</guid><pubDate>Mon, 14 Aug 2023 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;이 글은 우테코 피움팀 크루 &apos;&lt;a href=&quot;https://github.com/WaiNaat&quot;&gt;참새&lt;/a&gt;&apos;가 작성했습니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;우리는 왜 Cypress를 사용하게 되었나&lt;/h2&gt;
