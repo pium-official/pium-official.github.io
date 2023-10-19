@@ -7,10 +7,7 @@ tags:
   - 무중단배포
 ---
 
-> 이 글은 우테코 피움팀
->
-크루 '[주노](https://github.com/Choi-JJunho)', '[그레이](https://github.com/kim0914)', '[조이](https://github.com/yeonkkk)', '[하마드](https://github.com/rawfishthelgh)'
-> 가 작성했습니다.
+> 이 글은 우테코 피움팀 크루 '[주노](https://github.com/Choi-JJunho)', '[그레이](https://github.com/kim0914)', '[조이](https://github.com/yeonkkk)', '[하마드](https://github.com/rawfishthelgh)'가 작성했습니다.
 
 ## 서론
 
