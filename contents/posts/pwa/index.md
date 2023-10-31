@@ -1,3 +1,16 @@
+---
+title: "PWA를 도입해보자"
+description: "PWA와 manifest.json"
+date: 2023-10-30
+update: 2023-10-31
+tags:
+  - PWA
+---
+
+> 이 글은 우테코 피움팀 크루 '[클린](https://github.com/hozzijeong)'가 작성했습니다.
+
+
+
 # PWA
 
 ## PWA란?
@@ -31,11 +44,11 @@ Service Worker란 브라우저와 네트워크 사이의 가상 프록시로 웹
 
 ### manifest.json 설정
 
-manifest를 설정하게 된다면 “홈 화면에 바로가기”를 추가할 수 있습니다. 즉, 매번 브라우저에 접속해서 데이터를 확인하는 것이 아니라 바로가기를 추가함으로써 어플처럼 사용이 가능한 것입니다. 
+`manifest`를 설정하게 된다면 “홈 화면에 바로가기”를 추가할 수 있습니다. 즉, 매번 브라우저에 접속해서 데이터를 확인하는 것이 아니라 바로가기를 추가함으로써 어플처럼 사용이 가능한 것입니다. 
 
 <img width="311" alt="스크린샷 2023-10-30 오후 10 44 32" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/4801a4fb-dd08-49bd-b331-bc08ea08c3f0">
 
-위 처럼 manifest 설정을 하게 된다면 바로가기 어플을 설치할 수 있습니다. 그렇다면 이제부터 어떻게 구성되어 있고 어떤 항목을 넣어야 하는지 확인해 보겠습니다.
+위 처럼 `manifest` 설정을 하게 된다면 바로가기 어플을 설치할 수 있습니다. 그렇다면 이제부터 어떻게 구성되어 있고 어떤 항목을 넣어야 하는지 확인해 보겠습니다.
 
 ```json
 /* mainfest.json */
@@ -103,13 +116,13 @@ manifest를 설정하게 된다면 “홈 화면에 바로가기”를 추가할
 
 [여기](https://www.pwabuilder.com/)에 설정하고자 하는 주소를 넣고, 보완해야 할 점을 확인할 수 있습니다. 아이콘들은 필수적으로 설정을 해야합니다. 주로 하나의 아이콘 파일을 받고 [maskable](https://maskable.app/) 사이트에서 원하는 형태와 사이즈로 아이콘을 추출할 수 있습니다. 
 
-`manifest`의 파일의 위치는 public 안에 위치하게 됩니다. 그리고 html에서 한번 해당 파일을 호출해야 합니다.
+`manifest`의 파일의 위치는 public 안에 위치하게 됩니다. 그리고 `html`에서 한번 해당 파일을 호출해야 합니다.
 
 ```html
 <link rel="manifest" href="/assets/manifest.json" />
 ```
 
-manifest 파일을 보면 ios에 관련한 설정이 따로 존재하지 않는 것을 알 수 있습니다. 따라서 하나하나 각자 설정해 줘야 합니다. index.html에 아래와 같이 설정할 수 있습니다.
+`manifest` 파일을 보면 ios에 관련한 설정이 따로 존재하지 않는 것을 알 수 있습니다. 따라서 하나하나 각자 설정해 줘야 합니다. `index.html`에 아래와 같이 설정할 수 있습니다.
 
 ```html
 // IOS 앱 웹 관련 설정을 적용하기 위한 코드 
@@ -136,7 +149,13 @@ manifest 파일을 보면 ios에 관련한 설정이 따로 존재하지 않는 
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-icon-180x180.png" />
 ```
 
-위와 같이 설정을 하게 된다면 IOS 브라우저 에서도 manifest를 설정한 것 같이 지정할 수 있습니다.
+위와 같이 설정을 하게 된다면 IOS 브라우저 에서도 `manifest`를 설정한 것 같이 지정할 수 있습니다.
+
+최종적으로 현재 페이지가 PWA 설치가 가능한지 여부를 확인하기 위해서는 검사 > Lighthouse를 통해서 PWA가 가능한지 확인할 수 있습니다. 
+
+![스크린샷 2023-10-31 오후 5 44 25](https://github.com/pium-official/pium-official.github.io/assets/50974359/2d43ad55-47e2-4665-b3ca-9ae5c9f65835)
+
+하지만 Lighthouse는 대략적인 값들만 확인이 가능할 뿐 좀 상세적인 옵션 및 문서에서 제공하는 [좋은 PWA의 조건](https://web.dev/articles/pwa-checklist?utm_source=lighthouse&utm_medium=devtools&hl=ko)을 확인하면서 부족한 점을 채워볼 수 있습니다.
 
 ## 참조
 
