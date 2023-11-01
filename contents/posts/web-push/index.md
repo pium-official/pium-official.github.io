@@ -21,7 +21,7 @@ PWA를 통해서 설치도 했고 Service Worker를 세팅함으로써 오프라
 
 > [user agent](https://developer.mozilla.org/en-US/docs/Glossary/User_agent)는 브라우저를, web page는 클라이언트 서비스를 의미한다.
 
-<img width="694" alt="스크린샷 2023-11-01 오후 9 14 14" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/de44e011-8320-4ff9-a46d-f406e06f2475">
+<img width="694" alt="web-push 스키마 이미지" src=".index_images/web_push_schema.png">
 
 
 웹 푸시에 대한 대략적인 그림을 보기 전에 용어 정리 먼저 하겠습니다.
@@ -51,7 +51,7 @@ PWA를 통해서 설치도 했고 Service Worker를 세팅함으로써 오프라
 
 FCM 콘솔로 이동 > 프로젝트 선택 > 프로젝트 설정 > 클라우드 메세징 > 웹 푸시 인증서 > Generate key pair
 
-<img width="973" alt="클라우드 콘솔" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/79e4e8eb-61e9-4d3d-a1b1-1532cff9bb5d">
+<img width="973" alt="fcm vapid key 등록" src=".index_images/fcm.png">
 
 
 다음 버튼을 클릭한다면 public키와 private키가 생성이 됩니다. 여기서 생성된 값을 각각 서버와 클라이언트에 저장해서 사용하면 됩니다.
@@ -64,7 +64,7 @@ public키는 클라이언트에서 푸시서비스에 구독을 할 때 사용�
 
 ### Create Push Subscription
 
-<img width="790" alt="스크린샷 2023-11-01 오후 9 05 37" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/1900fde7-b613-4a5a-935e-678bb689e8ba">
+<img width="790" alt="push subscription 과정" src=".index_images/notification.png">
 
 
 Push Suscription이란 ***푸시 서비스와 구독 정보를 주고 받는것*** 입니다. Push Subscription을 주고 받는 과정은 아래와 같습니다. 
@@ -121,7 +121,7 @@ function showNotification() {
 
 **push service로 subscribe 요청**
 
-push service로 구독 요청하기 위해서는 `[pushManager` 인터페이스](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/pushManager)에서 `subscribe` 메서드를 통해서 구독을 할 수 있습니다. 구독하는 과정에 앞서 FCM에서 생성한 public VAPID키가 필요합니다. 해당 public키를 `subscribe()`의 옵션으로 설정한다면 그 결과로 `pushSubscription`을 받을 수 있습니다. 
+push service로 구독 요청하기 위해서는 [pushManager 인터페이스](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/pushManager)에서 `subscribe` 메서드를 통해서 구독을 할 수 있습니다. 구독하는 과정에 앞서 FCM에서 생성한 public VAPID키가 필요합니다. 해당 public키를 `subscribe()`의 옵션으로 설정한다면 그 결과로 `pushSubscription`을 받을 수 있습니다. 
 
 ```jsx
 navigator.serviceWorker.register("serviceworker.js");
@@ -169,7 +169,7 @@ navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
 
 ### Send Push Message
 
-<img width="804" alt="스크린샷 2023-11-01 오후 9 05 45" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/afa9d56f-9080-461f-8c4d-d4865b6648ab">
+<img width="804" alt="서버 to 푸시 서비스" src=".index_images/server-push.png">
 
 서버에서 전달받은 `pushSubscription`와 `private`키를 통해 푸시 서비스로 알림을 보낼수 있습니다. 서비스 워커에서는 푸시 이벤트를 감지하고 해당 이벤트에 알맞는 행동을 하게 됩니다.
 
