@@ -304,7 +304,7 @@ messaging.onBackgroundMessage((payload) => {
 
 `FCM`에서 사용자 토큰을 입력하고 테스트 알림을 날리면 다음과 같이 받을 수 있습니다.
 
-<img width="812" alt="알림 성공" src="pium-apply-pwa/.images_index/notification_alert.png"/>
+<img width="812" alt="알림 성공" src=".index_images/notification_alert.png"/>
 
 ## Trouble Shooting
 
@@ -483,7 +483,7 @@ const SwMessagingFactory: InstanceFactory<'messaging'> = (
 
 배포를 끝마치고 핸드폰(아이폰)으로 서비스에 접속해보니 아예 렌더링 되지 않는 문제가 있었습니다. 디버깅을 해보니 아래와 같이 에러를 던졌습니다.
 
-<img width="812" alt="알림 성공" src="pium-apply-pwa/.images_index/notification_error.png"/>
+<img width="812" alt="알림 성공" src=".index_images/notification_error.png"/>
 
 변수 `Notification`을 찾을 수 없고, 그에따라 `request premission`이 적용되지 않은 상태에서 `firebase message`에 접근하는 것 자체가 잘못된 접근이라는 이유였습니다. 
 
@@ -516,7 +516,7 @@ myButton.addEventListener("click", async () => {
 
 Mac Safari에서는 완벽하게 지원을 하지만 iOS의 Safari에서는 홈 화면에 바로가기를 추가해야지만 Notifications API를 사용할 수 있었습니다.
 
-<img width="812" alt="알림 성공" src="pium-apply-pwa/.images_index/notification_can_i_use.png"/>
+<img width="812" alt="알림 성공" src=".index_images/notification_can_i_use.png"/>
 
 그렇다면 문제는 무엇이었을까요? 바로 다음 코드에 있습니다.
 
