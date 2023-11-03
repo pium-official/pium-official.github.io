@@ -16,7 +16,7 @@ tags:
 
 서비스 워커는 웹과는 다른 독립적인 환경 레이어에서 동작하기 때문에 DOM객체나 window 객체에 접근 할 수 없습니다. 또한 캐시 저장소를 통해 저장된 리소스 사용이 가능합니다. 이에 따라 일부 기능에는 제한이 있지만 어느정도 동작 구현이 가능합니다.
 
-![image](https://github.com/pium-official/pium-official.github.io/assets/50974359/b9a3d7b6-4c0f-48c8-b560-cb2df95cbdde)
+![image](.index_images/serviceworker_schema.png)
 
 
 > 사용자가 오프라인 상태일 때를 포함하여 앱이 서비스 워커 범위에 포함되는 리소스를 요청하면 서비스 워커가 네트워크 프록시 역할을 하여 요청을 가로챕니다. 그런 다음, 일반적으로 서비스 워커가 없는 경우와 마찬가지로 Cache Storage API를 통해 캐시로부터 리소스를 제공할지, 아니면 로컬 알고리즘에서 리소스를 생성할지 결정할 수 있습니다. 이를 통해 플랫폼 앱에서 제공하는 것과 유사한 환경을 제공할 수 있으며 완전히 오프라인으로 작동할 수도 있습니다. - [web.dev](https://web.dev/learn/pwa/service-workers?hl=ko)
@@ -32,7 +32,7 @@ tags:
 
 Service Worker API를 사용하는지를 먼저 확인한 다음에 등록을 할 수 있습니다. 모든 브라우저에서 Service Worker API를 제공하는 것이 아니기 때문에 필요한 조치입니다.
 
-![스크린샷 2023-10-31 오전 10 45 49](https://github.com/pium-official/pium-official.github.io/assets/50974359/3de583c8-b631-4728-8c4c-0a8f3a0ca8f0)
+![image](.index_images/serviceworker.png)
 
 
 ```jsx
@@ -51,7 +51,7 @@ Service Worker API를 통해 서비스 워커를 등록한다면 [ServiceWorkerG
 
 그렇다면 서비스 워커의 생명 주기에 대해서 한번 알아보겠습니다.
 
-![image](https://github.com/pium-official/pium-official.github.io/assets/50974359/444785ef-3b69-4426-8a1d-3768a7f195be)
+![image](.index_images/lifecycle.png)
 
 
 ### Installing
@@ -178,7 +178,7 @@ self.addEventListener("install", (event) => {
 
 개발하는 입장에서는 다음과 같은 옵션들을 통해서 서비스 워커 즉시 활성화가 가능합니다. 
 
-![스크린샷 2023-10-31 오후 2 22 18](https://github.com/pium-official/pium-official.github.io/assets/50974359/069073db-e1f0-494c-a636-ebf91fdb5800)
+![image](.index_images/update_service_worker.png)
 
 
 ---

@@ -14,17 +14,17 @@ tags:
 
 `manifest` 설정을 했다면 홈 화면에 바로가기를 추가할 수 있습니다. 보통은 “홈 화면에 바로가기 추가”를 통해 바로가기를 등록할 수 있지만 모든 사용자가 이 방법을 알고 있는 것도 아니고 접근성이 떨어지게 됩니다. 추가적으로 화면에 바로 들어왔을 때 아래와 같이 바로 알림이 나타난다면 그닥 이쁘지는 않고 이게 뭐지? 라는 생각이 들 수 있습니다.
 
-<img width="324" alt="스크린샷 2023-10-31 오후 9 46 51" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/b6b1f2c7-bb0e-41bb-a8d0-a96f1d91e282">
+<img width="324" alt="스크린샷 2023-10-31 오후 9 46 51" src=".index_images/prompt.png">
 
 
 그래서 사용자의 접근성을 높이기 위해 바로가기 prompt를 만들려고 합니다. 원하는 결과는 아래와 같습니다. 바로가기 추가 안내를 통해 설치를 유도해보겠습니다.
 
-<img width="302" alt="스크린샷 2023-10-31 오후 9 48 25" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/2c475f33-03b8-4829-9192-d07c8359b98e">
+<img width="302" alt="스크린샷 2023-10-31 오후 9 48 25" src=".index_images/install_prompt.png">
 
 
 설치 prompt를 띄우기 위해서는 `beforeinstallprompt`라는 window이벤트를 통해 띄울 수 있습니다. 그렇다면 해당 이벤트가 모든 브라우저에서 지원하는지 먼저 확인해 보겠습니다.
 
-<img width="1289" alt="스크린샷 2023-10-31 오후 9 59 11" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/a7839044-1bc8-41ba-b0a6-0778a7095534">
+<img width="1289" alt="스크린샷 2023-10-31 오후 9 59 11" src=".index_images/before_install_prompt.png">
 
 
 전 세계적으로 72%가 사용이 가능하다고 하지만 충격적이게도 IOS와 FireFox에서는 지원하지 않는 기능입니다. 일단은 지원한다는 가정하에 코드를 작성해 보겠습니다.
@@ -132,7 +132,7 @@ return isIos ? <IOSGuide/> : <buttonComponent/>
 
 아래와 같이 `beforeInstallPrompt`를 지원하는 여부에 따라 다르게 안내를 할 수있습니다.
 
-<img width="371" alt="스크린샷 2023-10-31 오후 11 19 20" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/b8731296-383b-424e-ab24-b94f1871f3e3">
+<img width="371" alt="스크린샷 2023-10-31 오후 11 19 20" src=".index_images/ios_prompt.png">
 
 
 ### Challenage

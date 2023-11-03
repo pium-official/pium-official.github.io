@@ -46,7 +46,7 @@ Service Worker란 브라우저와 네트워크 사이의 가상 프록시로 웹
 
 `manifest`를 설정하게 된다면 “홈 화면에 바로가기”를 추가할 수 있습니다. 즉, 매번 브라우저에 접속해서 데이터를 확인하는 것이 아니라 바로가기를 추가함으로써 어플처럼 사용이 가능한 것입니다. 
 
-<img width="311" alt="스크린샷 2023-10-30 오후 10 44 32" src="https://github.com/pium-official/pium-official.github.io/assets/50974359/4801a4fb-dd08-49bd-b331-bc08ea08c3f0">
+<img width="311" alt="스크린샷 2023-10-30 오후 10 44 32" src=".index_images/icons.png">
 
 위 처럼 `manifest` 설정을 하게 된다면 바로가기 어플을 설치할 수 있습니다. 그렇다면 이제부터 어떻게 구성되어 있고 어떤 항목을 넣어야 하는지 확인해 보겠습니다.
 
@@ -153,7 +153,7 @@ Service Worker란 브라우저와 네트워크 사이의 가상 프록시로 웹
 
 최종적으로 현재 페이지가 PWA 설치가 가능한지 여부를 확인하기 위해서는 검사 > Lighthouse를 통해서 PWA가 가능한지 확인할 수 있습니다. 
 
-![스크린샷 2023-10-31 오후 5 44 25](https://github.com/pium-official/pium-official.github.io/assets/50974359/2d43ad55-47e2-4665-b3ca-9ae5c9f65835)
+![스크린샷 2023-10-31 오후 5 44 25](.index_images/manifest_test.png)
 
 하지만 Lighthouse는 대략적인 값들만 확인이 가능할 뿐 좀 상세적인 옵션 및 문서에서 제공하는 [좋은 PWA의 조건](https://web.dev/articles/pwa-checklist?utm_source=lighthouse&utm_medium=devtools&hl=ko)을 확인하면서 부족한 점을 채워볼 수 있습니다.
 
