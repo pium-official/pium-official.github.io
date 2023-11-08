@@ -317,11 +317,7 @@ messaging.onBackgroundMessage((payload) => {
 
 따라서 구동 환경에 따라 다른 서비스 워커를 등록할까 생각을 했지만 그렇게 된다면 무의미한 PR이 너무 늘어날 것 같고 효율성 역시 떨어지기 때문에 정말 최후의 보루라고 생각을 했습니다. 옆에 있던 참새에게 물어보니 하나의 파일에 2개의 서비스 워커를 [importScripts](https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/importScripts)로 등록해서 사용하는 방법을 얘기해 줬습니다. 
 
-<aside>
-💡 **importScripts**
-`importScripts`는 웹 워커(WorkerGlobalScope)에서 사용되는 함수로, 웹 워커에서 다른 스크립트 코드를 가져오는 역할을 하고 있습니다. 이 함수를 통해 백그라운드 병렬 처리 및 백그라운드 계산을 하는데 사용됩니다.
-
-</aside>
+> `importScripts`는 웹 워커(WorkerGlobalScope)에서 사용되는 함수로, 웹 워커에서 다른 스크립트 코드를 가져오는 역할을 하고 있습니다. 이 함수를 통해 백그라운드 병렬 처리 및 백그라운드 계산을 하는데 사용됩니다.
 
 ```jsx
 // devLocalServiceWorker.js
