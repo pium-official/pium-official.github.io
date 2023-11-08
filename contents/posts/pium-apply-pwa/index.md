@@ -2,13 +2,13 @@
 title: "피움의 PWA 적용기"
 description: "피움에 PWA를 적용하는 과정과 그 사이에 발생한 문제들"
 date: 2023-11-03
-update: 2023-11-03
+update: 2023-11-08
 tags:
-- PWA
-- Trouble Shotting
-- Notifications API
-- Push API
-- FCM
+  - PWA
+  - Trouble Shotting
+  - Notifications API
+  - Push API
+  - FCM
 ---
 
 # 피움의 PWA 적용기
