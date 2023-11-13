@@ -62,11 +62,6 @@ sudo certbot --nginx
 
 ![](.index_images/5498d43a.png)
 
-```shell
-# certbot이 SSL 인증서를 자동 갱신하는 cron을 등록한다
-sudo certbot renew --dry-run
-```
-
 ## NGINX 설정 확인
 
 NGINX 설정에 다음과 같이 certbot이 HTTPS 설정을 추가한 것을 확인할 수 있다.
